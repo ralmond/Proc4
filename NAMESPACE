@@ -7,9 +7,9 @@ importFrom("mongolite","mongo")
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec")
 
 
-export(P4Message,app,uid,context,timestamp,details)
+export(P4Message,app,uid,context,timestamp,details,as.json)
 exportClasses(P4Message)
-exportMethods(app,uid,context,timestamp,details)
+exportMethods(app,uid,context,timestamp,details,as.json)
 
 #export(EvidenceSet)
 #exportClasses(EvidenceSet)
