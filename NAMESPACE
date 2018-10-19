@@ -7,13 +7,13 @@ importFrom("mongolite","mongo")
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec")
 
 
-export(StudentRecord)
-exportClasses(StudentRecord)
-exportMethods(app,uid,context,timestamp,evidence,sm,stats)
+export(P4Message,app,uid,context,timestamp,details)
+exportClasses(P4Message)
+exportMethods(app,uid,context,timestamp,details)
 
-export(EvidenceSet)
-exportClasses(EvidenceSet)
-exportMethods(app,uid,context,timestamp,mess,details)
+#export(EvidenceSet)
+#exportClasses(EvidenceSet)
+#exportMethods(app,uid,context,timestamp,mess,details)
 
 
 
