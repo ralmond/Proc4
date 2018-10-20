@@ -1,19 +1,20 @@
 import(methods)
-import(Peanut)
-import(CPTtools)
-## Use explict imports from RNetica so we can keep track of dependencies.
-#import(RNetica)
 importFrom("mongolite","mongo")
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec")
 
 
-export(P4Message,app,uid,context,timestamp,details,as.json)
+export(P4Message)
 exportClasses(P4Message)
-exportMethods(app,uid,context,timestamp,details,as.json)
+export(app,uid,context,timestamp,sender,mess,details)
+exportMethods(app,uid,context,timestamp,sender,mess,details)
 
-#export(EvidenceSet)
-#exportClasses(EvidenceSet)
-#exportMethods(app,uid,context,timestamp,mess,details)
+export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
+       parseMessage,parseData,unbox
+       getOneRec,getManyRecs)
+exportMethods(as.json,as.jlist)
+
+
+
 
 
 

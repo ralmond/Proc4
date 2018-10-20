@@ -11,16 +11,19 @@ setClass("P4Message",
                  data="list"              #More details.
                  ))
 setGeneric("app",function(x) standardGeneric("app"))
-setMethod("app","P4Message", function(x) x@app)
 setGeneric("uid",function(x) standardGeneric("uid"))
-setMethod("uid","P4Message", function(x) x@uid)
 setGeneric("mess",function(x) standardGeneric("mess"))
-setMethod("mess","P4Message", function(x) x@mess)
 setGeneric("context",function(x) standardGeneric("context"))
-setMethod("context","P4Message", function(x) x@context)
+setGeneric("sender",function(x) standardGeneric("sender"))
 setGeneric("timestamp",function(x) standardGeneric("timestamp"))
-setMethod("timestamp","P4Message", function(x) x@timestamp)
 setGeneric("details",function(x) standardGeneric("details"))
+
+setMethod("app","P4Message", function(x) x@app)
+setMethod("uid","P4Message", function(x) x@uid)
+setMethod("mess","P4Message", function(x) x@mess)
+setMethod("context","P4Message", function(x) x@context)
+setMethod("sender","P4Message", function(x) x@sender)
+setMethod("timestamp","P4Message", function(x) x@timestamp)
 setMethod("details","P4Message", function(x) x@data)
 
 P4Message <- function(uid,context,sender,mess,timestamp=Sys.time(),
@@ -41,16 +44,33 @@ setMethod("show","P4Message",function(object) {
 
 
 setGeneric("as.json",function(x) standardGeneric("as.json"))
+setGeneric("as.jlist",function(obj,ml) standardGeneric("as.jlist"))
+
 setMethod("as.json","P4Message", function(x) {
-  p4l <- attributes(x)
-  p4l$"_id" <- NULL
-  p4l$class <-NULL
-  raw <- toJSON(p4l,auto_unbox=TRUE,POSIXt="mongo")
-  ## Timestamp is not unboxed.  Need to do that manually.
-  sub('"timestamp":\\[(.*)\\]','"timestamp":\\1',raw)
+  jlist <- as.jlist(x,attributes(x))
+  toJSON(jlist,POSIXt="mongo")
+})
+
+setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
+  ml$"_id" <- NULL
+  ml$class <-NULL
+  ## Usue manual unboxing for finer control.
+  ml$app <- unbox(ml$app)
+  ml$uid <- unbox(ml$uid)
+  if (!is.null(ml$context) && length(ml$context)==1L)
+    ml$context <- unbox(ml$context)
+  if (!is.null(ml$sender) && length(ml$sender)==1L)
+    ml$sender <- unbox(ml$sender)
+  if (!is.null(ml$mess) && length(ml$mess)==1L)
+    ml$mess <- unbox(ml$mess)
+  ml$timestamp <- unbox(ml$timestamp) # Auto_unbox bug.
+  ## Saves name data
+  ml$data <- lapply(ml$data,
+                      function (s) lapply(s,unbox)) #Saves name data.
+  ml
   })
 
-saveMess <- function (mess, col) {
+saveRec <- function (mess, col) {
   if (is.na(mess@"_id")) {
     ## Insert
     jso <- as.json(mess)
@@ -66,119 +86,108 @@ saveMess <- function (mess, col) {
 }
 
 
-getMESSbyID <- function(id,col) {
-  it <- col$iterate(paste('{"_id":{"$oid":"',id,'"}}',sep=""),
-                    '{}',limit=1)
-  rec <- it$one()
-  if (is.null(rec)) return(rec)
-  parseMessage(rec)
-}
-
-
-
 parseMessage<- function (rec) {
   new("P4Message","_id"=rec$"_id", app=rec$app, uid=rec$uid,
       context=rec$context,sender=rec$sender,mess=rec$mess,
       timestamp=rec$timestamp,data=parseData(rec$data))
 }
 
-parseData <- function (obsData) {
-  ##Not sure if we need further processing.
-  obsData
+
+## Maybe I can use the jsonlite::serializeJSON, unserializeJSON
+## functions here to handle more cases than I'm currently handling.
+parseData <- function (messData) {
+  ##Need to convert back from list to numeric/character
+  for (i in 1:length(messData)) {
+    datum <- messData[[i]]
+    if (all(sapply(datum,is.character))) {
+      datum <- as.character(datum)
+      names(datum) <- names(messData[[i]])
+    }
+    if (all(sapply(datum,is.numeric))) {
+      if (all(sapply(datum,is.integer))) {
+        datum <- as.integer(datum)
+      } else {
+        datum <- as.numeric(datum)
+      }
+      names(datum) <- names(messData[[i]])
+    }
+    ## May need an extra step here to decode data which
+    ## are not one of the primative vector types.
+    messData[[i]] <- datum
+  }
+  messData
 }
 
-buildMessQuery <- function (uid,context,sender,mess,before,after,
-                          timestamp=NULL,seqno=NA_integer_,
-                          app="default") {
-  query <- '{'
-  ## app
-  if (length(app)> 1L) {
-    app <- paste('{"$in":',toJSON(app),'}',sep="")
-  }
-  query <- paste(query,'"app":"',app,'"',sep="")
-  ## uid
-  if (missing(uid)) {
-    stop("Must specify user/student id.")
-  }
-  if (length(uid) > 1L) {
-    uid <- paste('{"$in":',toJSON(uid),'}',sep="")
-  } else {
-    uid <- toJSON(uid,auto_unbox=TRUE)
-  }
-  query <- paste(query,', "uid":',uid,sep="")
-  ## Context
-  if (!missing(context)) {
-    if (length(context) > 1L) {
-      context <- paste('{"$in":',toJSON(context),'}',sep="")
-    } else {
-      context <- toJSON(context,auto_unbox=TRUE)
-    }
-    query <- paste(query,', "context":',context,sep="")
-  }
-  ## Sender
-  if (!missing(sender)) {
-    if (length(sender) > 1L) {
-      sender <- paste('{"$in":',toJSON(sender),'}',sep="")
-    } else {
-      sender <- toJSON(sender,auto_unbox=TRUE)
-    }
-    query <- paste(query,', "sender":',sender,sep="")
-  }
-  ## Mess(age)
-  if (!missing(mess)) {
-    if (length(mess) > 1L) {
-      mess <- paste('{"$in":',toJSON(mess),'}',sep="")
-    } else {
-      mess <- toJSON(mess,auto_unbox=TRUE)
-    }
-    query <- paste(query,', "mess":',mess,sep="")
-  }
-  ## Timestamp -- can be either single time or before or after range.
-  if (!missing(timestamp)) {
-    timestamp <- paste('"$in:"',toJSON(timestamp,POSIXt="mongo"))
-  } else {
-    lt <- NULL
-    if (!missing(before) && is(before,"POSIXt")) {
-      if (length(before) > 1L) {
-        stop("Before must be a single POSIXt or integer.")
-      }
-      ## Need to strip array marks off
-      lt <- paste('"$lt":',toJSON(unbox(before),POSIXt="mongo"))
-    }
-    gt <- NULL
-    if (!missing(after) && is(after,"POSIXt")) {
-      if (length(after) > 1L) {
-        stop("After must be a single POSIXt or integer.")
-      }
-      ## Need to strip array marks off
-      gt <- paste('"$gt":',toJSON(unbox(after),POSIXt="mongo"))
-    }
-    timestamp <- paste(c(lt,gt),collapse=",")
-  }
-  if (nchar(timestamp) > 0L) {
-    query <- paste(query,', "timestamp":{',timestamp,'}',sep="")
-  }
+mongoQueries <- c("eq","gt","gte","lt","lte","ne","nin","in","","oid")
 
-  #### Return as string.
-  paste(query,'}',sep="")
+#### Need to override jsonlite::unbox as it doesn't properly handle POSIXt objects.
+unbox <- function (x) {
+  if (length(x) == 1L && is(x,"POSIXt")) {
+    jsonlite:::as.scalar(x)
+  } else {
+    jsonlite::unbox(x)
+  }
+}
+
+buildJQterm <- function (name,value) {
+  if (length(value)==0L)
+    stop("Query term ",name,"has no value.")
+  compOps <- names(value)
+  names(value) <- NULL
+  if (is.null(compOps)) {
+    if (length(value) == 1L) {
+      ## Singleton query.
+      vstring <- toJSON(unbox(value),POSIXt="mongo")
+    } else {
+      ## Unmarked $in query
+      vstring <- paste('{"$in":',toJSON(value,POSIXt="mongo"),'}',sep="")
+    }
+  } else {
+    if(!all(compOps %in% mongoQueries)) {
+      stop("Unspported operator",compOps[!(compOps%in%mongoQueries)],
+           "in query for field",name)
+    }
+    if(compOps[1]=="nin" || compOps[1]=="in" || compOps[1]=="") {
+      ## Special Handling for (n)in query)
+      op <- ifelse(compOps[1]=="","in",compOps[1])
+      vstring <- paste('{"$',op,'":',toJSON(value,POSIXt="mongo"),'}',sep="")
+    } else {
+      ## iterate over values.
+      vstring <- sapply(1:length(compOps),
+                        function (i)
+                          paste('"$',compOps[i],'":',
+                                toJSON(unbox(value[i]),POSIXt="mongo"),
+                                sep=""))
+      vstring <- paste('{',paste(vstring,collapse=", "),'}')
+    }
+  }
+  paste('"',name,'":',vstring,sep="")
+}
+
+buildJQuery <- function (...,rawfields=character()) {
+  terms <- list(...)
+  fields <- names(terms)
+  jstrings <- sapply(fields,function(f) buildJQterm(f,terms[[f]]))
+  jstrings <- c(jstrings,rawfields)
+  paste('{',paste(jstrings,collapse=", "),'}')
 }
 
 
-getMESSone <- function(query,col) {
-  it <- col$iterate(query,'{}',sort='{"timestamp":-1}',limit=1)
+getOneRec <- function(jquery,col,parser) {
+  it <- col$iterate(jquery,'{}',sort='{"timestamp":-1}',limit=1)
   rec <- it$one()
   if (is.null(rec)) return(rec)
-  parseMessage(rec)
+  do.call(parser,list(rec))
 }
 
-getMESSmany <- function(query,sort=-1,col) {
-  n <- col$count(query)
+getManyRecs <- function(jquery,col,parser,sort=c("timestamp"=-1)) {
+  n <- col$count(jquery)
   result <- vector("list",n)
   it <- col$iterate(query,'{}',
                     sort=paste('{"timestamp":',sort,'}',sep=""))
   nn <- 1
   while (!is.null(rec <- it$one())) {
-    result[[nn]] <- parseMessage(rec)
+    result[[nn]] <- do.call(parser,list(rec))
     nn <- nn +1
   }
   result
