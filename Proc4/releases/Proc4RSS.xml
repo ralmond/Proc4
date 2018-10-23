@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+        
+    <title>Proc4 Assessment Tools Releases (RSS Feed)</title>
+    <link>//pluto.coe.fsu.edu/Proc4/</link>
+    <description>Tools for Evidence Identification, Evidence
+    Accumulation and Activity Selection</description>
+
+    <item>
+      <title>Launch</title>
+      <link>https://pluto.coe.fsu.edu/Proc4/index.html</link>
+      <guid>https://pluto.coe.fsu.edu/Proc4/Proc4_0</guid>
+      <pubDate>Tue Oct 23 17:38:03 EDT 2018</pubDate>
+      <description>[CDATA[ Basic Web site created. ]]</description>
+    </item>
+  </channel>
+</rss>
