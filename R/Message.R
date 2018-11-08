@@ -54,7 +54,7 @@ setMethod("as.json","P4Message", function(x) {
 setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
   ml$"_id" <- NULL
   ml$class <-NULL
-  ## Usue manual unboxing for finer control.
+  ## Use manual unboxing for finer control.
   ml$app <- unbox(ml$app)
   ml$uid <- unbox(ml$uid)
   if (!is.null(ml$context) && length(ml$context)==1L)

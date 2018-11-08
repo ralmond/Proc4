@@ -1,136 +1,127 @@
 \name{buildJQuery}
 \alias{buildJQuery}
 \alias{buildJQterm}
-\title{Builds a JSON (Mongo DB) query}
+\title{Transforms a query into JQuery JSON.}
 \description{
 
-  A JSON query is a list of name--value pairs.  This function turns its
-  argument, which should consist of named values, into a JSON query
-  string.  Comparison arguments can be added using names of the value
-  part of the argument.  See details for more descriptions.
+  This function takes a query which is expressed in the argument list
+  and transforms it into a JSON query document which can be used with
+  the Mongo Database.  The function \code{buildJQterm} is a helper
+  function which builds up a single term of the query.
 
 }
 \usage{
 buildJQuery(..., rawfields = character())
 buildJQterm(name,value)
 }
+%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{\dots}{
-    A named list consisting of a collection of field names and values.
+  \item{\dots}{This should be a named list of arguments.  The values
+    should be the desired query value, or a more complex expression (see
+    details).
   }
   \item{rawfields}{
-    Additional strings which are added to the end of the query, to
-    enable hand coding of terms which don't fit into the model.
+    These arguments are passed as character vectors directly into the
+    query document without processing.
   }
-  \item{name}{
-    A character scalar giving the name of a JSON field.
-  }
-  \item{value}{
-    The value for the field in the query.  Note that if names are
-    supplied for the value, they should be JSON query comparison
-    operators.
-  }
+  \item{name}{The name of the field.}
+  \item{value}{The value of the field or an expression which gives a
+    query for the resulting document.}
 }
 \details{
- 
-  A JSON query is a collection of name-value pairs which looks something
-  like: 
-  \preformatted{{
-      "name":"George",
-      "count":{ "$gt":3, "$lt":5 },
-      "context":{"$in":["normal","recovery"]}
-  }}
-  In this structure, the name of the field is followed by a colon and a
-  value.  This will match documents in the database in which that field
-  has that value.  Alternatively, a more complex expression can be given
-  which use the comparison query operators.
 
-  The \code{\dots} argument to \code{buildJQuery} should consist of
-  named values.  The \var{name} is used as the name of the JSON field and the
-  value is used as the value.  If the \var{value} is a vector of
-  possible values.  \code{names(\var{value})} are interpreted as 
-  query operators.  The function \code{buildJQterm} does most of the
-  lifting of calculating the sub-expressions used to calculate the final
-  query. 
+  A typical query to a Mongo database collection is done with a JSON
+  object which has a number of bits that look like
+  \dQuote{\emph{field}:\emph{value}}, where \emph{field} names a field in
+  the document, and \emph{value} is a value to be matched.  A record
+  matches the query if all of the fields specified in the query
+  match the corresponding fields in the record.
 
-  The following are the names of the operators currently supported.
-  \describe{
-    \item{No names}{If the \var{value} has length 1, this is interpreted
-    as a single value.  If it has length greater than 1, it is interpreted
-    as an \sQuote{in} query.}
-    \item{\sQuote{eq},\sQuote{ne},\sQuote{gt},\sQuote{gte},\sQuote{lt},\sQuote{lte}}{These are the equals, not equals, greater than, greater than or
-    equals, less than, and less than or equals operators.  Multiples of
-    these can be combined to form a conjunctive query.  Note that
-    multiple \sQuote{ne} terms work, but it is probably better to use
-    \sQuote{nin}. }
-    \item{\sQuote{in},\sQuote{nin}}{These check for whether the field
-    matches any (\sQuote{in}) or none (\sQuote{nin}) of the values.  If
-    \code{names(\var{value})[1]} is \sQuote{in} or \sQuote{nin}, then
-    the other names are ignored.  Note that \sQuote{in} needs to be
-    quoted in \R to be used as a name, however, in most cases it is
-    easier to just leave the value blank and use the implicit naming.}
-    \item{\sQuote{}}{This is a legal value mainly to support leaving the
-    other names blank after \sQuote{in} or \sQuote{nin}.}
-    \item{\sQuote{oid}}{This is a special operator that marks a mongo
-    database ID.}
-    }
+  Note that \emph{value} could be a special expression which gives
+  specifies a more complex expression allowing for ranges of values.
+  In particular, the Mongo query language supports the following
+  operators: \code{"$eq", "$ne", "$gt", "$lt", "$gte", "$lte"}.
+  These can be specified using a value of the form
+  \code{c(<op>=<value>)}, where \emph{op} is one of the mongo operators,
+  without the leading \sQuote{$}.  Multiple op--value pairs can be specified;
+  for example, \code{count=c(gt=3,lt=6)}.  If no op is specified, then
+  \code{"$eq"} is assumed.  Additionally, the \code{"$oid"} operator can
+  be used to specify that a value should be treated as a Mongo record
+  identifier. 
+  
+  The \code{"$in"} and \code{"$nin"} are also ops, but the corrsponding
+  value is a vector.  They test if the record is in or not in the
+  specified value.  If the value is vector valued, and no operator is
+  specified it defaults to \code{"$in"}.
 
-    After the arguments to \code{buildJQuery} are processed by
-    \code{buildJQterm}, they are concatenated together and surrounded by
-    braces.  The \code{rawfields} allows other preformated JSON strings
-    to be inserted between the braces.  This provides a limited
-    extension capability.  If this is insufficient, (for example
-    \sQuote{or} queries), it should be possible to build more complex
-    queries using \code{buildJQterm}.
+  The function \code{buildJQuery} processes each of its arguments,
+  adding them onto the query document.  The \code{rawfields} argument
+  adds the fields onto the document without further processing.  It is
+  useful for control arugments like \code{"$limit"} and \code{"$sort"}.
+  
 }
 \value{
-  For \code{buildJQquery}, a character scalar giving the JSON query.
-  For \code{buildJQterm}, a character scalar giving one term of the JSON
-  query. 
+  The function \code{buildJQuery} returns a unicode string which
+  contains the JSON query document.  The function \code{buildJQterm}
+  returns a unicode string with just one field in the query document.
 }
 \references{
-  \url{https://docs.mongodb.com/manual/tutorial/query-documents/}
+  The MongoDB 4.0 Manual:  \url{https://docs.mongodb.com/manual/}
+  
 }
 \author{Russell Almond}
-\note{
-  The \pkg{jsonlite} \code{\link[jsonlite]{unbox}} command does not
-  handle objects of type POSIXt correctly.  I've overrided with a
-  private version which fixes that.  (This is a non-exported object.)
-}
 \seealso{
-  \code{\link[jsonlite]{toJSON}} does much of the work behind the
-  scenes.
-  
+  \code{\link{as.json}}, \code{\link{parseMessage}},
+  \code{\link{getOneRec}}, \code{\link{getManyRecs}}
+  \code{\link[mongolite]{mongo}}
+
 }
 \examples{
 
-cat(buildJQterm("uid","Fred"),"\n")
+## Low level test of the JQterm possibilities for fields.
 
-cat(buildJQuery("uid"="Fred"),"\n")
-cat(buildJQuery("uid"=c("Phred","Fred")),"\n")
-cat(buildJQuery("time"=time1),"\n")
-cat(buildJQuery("time"=time1l),"\n")
-cat(buildJQuery("time"=c(time1,time2)),"\n")
-cat(buildJQuery("time"=c(gt=time1)),"\n")
-cat(buildJQuery("time"=c(lt=time1)),"\n")
-cat(buildJQuery("time"=c(gte=time1)),"\n")
-cat(buildJQuery("time"=c(lte=time1)),"\n")
-cat(buildJQuery("time"=c(ne=time1)),"\n")
-cat(buildJQuery("time"=c(eq=time1)),"\n")
-cat(buildJQuery("time"=c(gt=time1,lt=time2)),"\n")
-cat(buildJQuery("count"=c(nin=1,2:4)),"\n")
-cat(buildJQuery("count"=c("in"=1,2:4)),"\n")
-cat(buildJQuery("count"=c(ne=1,ne=5)),"\n")
+stopifnot(buildJQterm("uid","Fred")=='"uid":"Fred"')
+stopifnot(buildJQterm("uid",c("Phred","Fred"))=='"uid":{"$in":["Phred","Fred"]}')
+time1 <- as.POSIXct("2018-08-16 19:12:19 EDT")
+stopifnot(buildJQterm("time",time1)=='"time":{"$date":1534461139000}')
+time1l <- as.POSIXlt("2018-08-16 19:12:19 EDT")
+stopifnot(buildJQterm("time",time1l)=='"time":{"$date":1534461139000}')
+stopifnot(buildJQterm("time",c(time1,time2))==
+          '"time":{"$in":[{"$date":1534461139000},{"$date":1534461739000}]}')
+stopifnot(buildJQterm("time",c(gt=time1))==
+          '"time":{ "$gt":{"$date":1534461139000} }')
+stopifnot(buildJQterm("time",c(lt=time1))==
+          '"time":{ "$lt":{"$date":1534461139000} }')
+stopifnot(buildJQterm("time",c(gte=time1))==
+          '"time":{ "$gte":{"$date":1534461139000} }')
+stopifnot(buildJQterm("time",c(lte=time1))==
+          '"time":{ "$lte":{"$date":1534461139000} }')
+stopifnot(buildJQterm("time",c(ne=time1))==
+          '"time":{ "$ne":{"$date":1534461139000} }')
+stopifnot(buildJQterm("time",c(eq=time1))==
+          '"time":{ "$eq":{"$date":1534461139000} }')
+stopifnot(buildJQterm("time",c(gt=time1,lt=time2))==
+          '"time":{ "$gt":{"$date":1534461139000}, "$lt":{"$date":1534461739000} }')
+stopifnot(buildJQterm("count",c(nin=1,2:4))==
+          '"count":{"$nin":[1,2,3,4]}')
+stopifnot(buildJQterm("count",c("in"=1,2:4))==
+          '"count":{"$in":[1,2,3,4]}')
+stopifnot(buildJQterm("count",c(ne=1,ne=5))==
+          '"count":{ "$ne":1, "$ne":5 }')
 
-cat(buildJQuery(app="default",uid="Phred"),"\n")
-## oid is a special operator which indicates a mongo ID
-cat(buildJQuery("_id"=c(oid="123456789")),"\n")
-cat(buildJQuery(name="George",count=c(gt=3,lt=5)),"\n")
-cat(buildJQuery(name="George",count=c(gt=3,lt=5),
-                      rawfields=c('"$limit":1','"$sort":{timestamp:-1}')),"\n")
+## Some Examples of buildJQuery on complete queries.
+
+stopifnot(buildJQuery(app="default",uid="Phred")==
+          '{ "app":"default", "uid":"Phred" }')
+stopifnot(buildJQuery("_id"=c(oid="123456789"))==
+          '{ "_id":{ "$oid":"123456789" } }')
+stopifnot(buildJQuery(name="George",count=c(gt=3,lt=5))==
+          '{ "name":"George", "count":{ "$gt":3, "$lt":5 } }')
+stopifnot(buildJQuery(name="George",count=c(gt=3,lt=5),
+                      rawfields=c('"$limit":1','"$sort":{timestamp:-1}'))==
+          '{ "name":"George", "count":{ "$gt":3, "$lt":5 }, "$limit":1, "$sort":{timestamp:-1} }')
 
 
 }
-\keyword{ IO }
-\keyword{ interfaces }
+\keyword{ interface }
 \keyword{ database }
