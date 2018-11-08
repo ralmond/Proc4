@@ -16,15 +16,13 @@ testcol <- mongo("Messages",
 ## db = test
 ## collection = Messages
 
-m1 <- saveMess(m1,testcol)
-m2 <- saveMess(m2,testcol)
-m3 <- saveMess(m3,testcol)
+m1 <- saveRec(m1,testcol)
+m2 <- saveRec(m2,testcol)
+m3 <- saveRec(m3,testcol)
 
 ## Test update logic
 m1@data$time <- list("sec"=25.4)
-m1 <- saveMess(m1,testcol)
-
-
+m1 <- saveRec(m1,testcol)
 
 m1a <- getMESSbyID(m1@"_id",testcol)
 stopifnot(all.equal(m1,m1a))
