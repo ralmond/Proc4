@@ -28,7 +28,7 @@ m1a <- getMESSbyID(m1@"_id",testcol)
 stopifnot(all.equal(m1,m1a))
 
 buildMessQuery("Fred")
-cat(buildMessQuery("Fred",sender=c("EI","EA")),"\n")
-cat(buildMessQuery("Fred",before=Sys.time()),"\n")
-cat(buildMessQuery("Fred",after=Sys.time()-as.difftime(1,units="hours")),"\n")
+cat(buildJQuery("Fred",sender=c("EI","EA")),"\n")
+cat(buildJQuery("Fred",before=Sys.time()),"\n")
+cat(buildJQuery("Fred",after=Sys.time()-as.difftime(1,units="hours")),"\n")
 
