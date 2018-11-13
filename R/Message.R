@@ -87,9 +87,12 @@ saveRec <- function (mess, col) {
 
 
 parseMessage<- function (rec) {
-  new("P4Message","_id"=rec$"_id", app=rec$app, uid=rec$uid,
-      context=rec$context,sender=rec$sender,mess=rec$mess,
-      timestamp=rec$timestamp,data=parseData(rec$data))
+  if (is.null(rec$"_id")) rec$"_id" <- NA_character_
+  new("P4Message","_id"=ununbox(rec$"_id"),
+      app=ununbox(rec$app), uid=ununbox(rec$uid),
+      context=ununbox(rec$context),sender=ununbox(rec$sender),
+      mess=ununbox(rec$mess),
+      timestamp=ununbox(rec$timestamp),data=parseData(rec$data))
 }
 
 
@@ -101,6 +104,10 @@ parseData <- function (messData) {
     datum <- messData[[i]]
     if (all(sapply(datum,is.character))) {
       datum <- as.character(datum)
+      names(datum) <- names(messData[[i]])
+    }
+    if (all(sapply(datum,is.logical))) {
+      datum <- as.logical(datum)
       names(datum) <- names(messData[[i]])
     }
     if (all(sapply(datum,is.numeric))) {
@@ -127,6 +134,12 @@ unbox <- function (x) {
   } else {
     jsonlite::unbox(x)
   }
+}
+
+## Need this for testing.
+ununbox <- function (x) {
+  class(x) <- setdiff(class(x),"scalar")
+  x
 }
 
 buildJQterm <- function (name,value) {
