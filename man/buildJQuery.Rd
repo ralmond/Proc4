@@ -14,7 +14,6 @@
 buildJQuery(..., rawfields = character())
 buildJQterm(name,value)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{\dots}{This should be a named list of arguments.  The values
     should be the desired query value, or a more complex expression (see
