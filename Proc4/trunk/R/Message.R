@@ -186,18 +186,24 @@ buildJQuery <- function (...,rawfields=character()) {
 }
 
 
-getOneRec <- function(jquery,col,parser) {
-  it <- col$iterate(jquery,'{}',sort='{"timestamp":-1}',limit=1)
+getOneRec <- function(jquery,col,parser,sort=c("timestamp"=-1)) {
+  sorts <- paste('{',paste(paste('"',names(sort),'":',sort,sep=""),
+                           collapse=", "),'}')
+  it <- col$iterate(jquery,'{}',sort=sorts,limit=1)
   rec <- it$one()
   if (is.null(rec)) return(rec)
   do.call(parser,list(rec))
 }
 
-getManyRecs <- function(jquery,col,parser,sort=c("timestamp"=-1)) {
+getManyRecs <- function(jquery,col,parser,sort=c("timestamp"=1),
+                        limit = 0) {
+  sorts <- paste('{',paste(paste('"',names(sort),'":',sort,sep=""),
+                           collapse=", "),'}')
+
   n <- col$count(jquery)
+  if (limit>0) n <- min(n,limit)
   result <- vector("list",n)
-  it <- col$iterate(query,'{}',
-                    sort=paste('{"timestamp":',sort,'}',sep=""))
+  it <- col$iterate(jquery,'{}',sort=sorts,limit=limit)
   nn <- 1
   while (!is.null(rec <- it$one())) {
     result[[nn]] <- do.call(parser,list(rec))
