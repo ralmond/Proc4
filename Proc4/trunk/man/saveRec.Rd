@@ -12,7 +12,7 @@ saveRec(mess, col)
 \arguments{
   \item{mess}{The message (object) to be saved.}
   \item{col}{A mongo collection object, produced with a call to
-  \code{\link[mongolite]mong()}}.}
+  \code{\link[mongolite]{mongo}()}.}
 }
 \value{
 
