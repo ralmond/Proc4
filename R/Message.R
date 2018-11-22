@@ -63,10 +63,9 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
     ml$sender <- unbox(ml$sender)
   if (!is.null(ml$mess) && length(ml$mess)==1L)
     ml$mess <- unbox(ml$mess)
-  ml$timestamp <- unbox(ml$timestamp) # Auto_unbox bug.
+  ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
   ## Saves name data
-  ml$data <- lapply(ml$data,
-                      function (s) lapply(s,unbox)) #Saves name data.
+  ml$data <- unboxer(ml$data)
   ml
   })
 
@@ -88,11 +87,11 @@ saveRec <- function (mess, col) {
 
 parseMessage<- function (rec) {
   if (is.null(rec$"_id")) rec$"_id" <- NA_character_
-  new("P4Message","_id"=ununbox(rec$"_id"),
-      app=ununbox(rec$app), uid=ununbox(rec$uid),
-      context=ununbox(rec$context),sender=ununbox(rec$sender),
-      mess=ununbox(rec$mess),
-      timestamp=ununbox(rec$timestamp),data=parseData(rec$data))
+  new("P4Message","_id"=ununboxer(rec$"_id"),
+      app=ununboxer(rec$app), uid=ununboxer(rec$uid),
+      context=ununboxer(rec$context),sender=ununboxer(rec$sender),
+      mess=ununboxer(rec$mess),
+      timestamp=ununboxer(rec$timestamp),data=parseData(rec$data))
 }
 
 
@@ -128,17 +127,21 @@ parseData <- function (messData) {
 mongoQueries <- c("eq","gt","gte","lt","lte","ne","nin","in","","oid")
 
 #### Need to override jsonlite::unbox as it doesn't properly handle POSIXt objects.
-unbox <- function (x) {
+unboxer <- function (x) {
   if (length(x) == 1L && is(x,"POSIXt")) {
     jsonlite:::as.scalar(x)
+  } else if (is(x,"list")) {
+    lapply(x,function (s) lapply(s,unboxer)) #Saves name data.
   } else {
     jsonlite::unbox(x)
   }
 }
 
 ## Need this for testing.
-ununbox <- function (x) {
+ununboxer <- function (x) {
   class(x) <- setdiff(class(x),"scalar")
+  if (is.list(x))
+    x <- lapply(x, function(s) lapply(s,ununboxer))
   x
 }
 
@@ -150,7 +153,7 @@ buildJQterm <- function (name,value) {
   if (is.null(compOps)) {
     if (length(value) == 1L) {
       ## Singleton query.
-      vstring <- toJSON(unbox(value),POSIXt="mongo")
+      vstring <- toJSON(unboxer(value),POSIXt="mongo")
     } else {
       ## Unmarked $in query
       vstring <- paste('{"$in":',toJSON(value,POSIXt="mongo"),'}',sep="")
@@ -169,7 +172,7 @@ buildJQterm <- function (name,value) {
       vstring <- sapply(1:length(compOps),
                         function (i)
                           paste('"$',compOps[i],'":',
-                                toJSON(unbox(value[i]),POSIXt="mongo"),
+                                toJSON(unboxer(value[i]),POSIXt="mongo"),
                                 sep=""))
       vstring <- paste('{',paste(vstring,collapse=", "),'}')
     }
