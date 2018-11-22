@@ -46,7 +46,7 @@ setMethod("show","P4Message",function(object) {
 setGeneric("as.json",function(x) standardGeneric("as.json"))
 setGeneric("as.jlist",function(obj,ml) standardGeneric("as.jlist"))
 
-setMethod("as.json","P4Message", function(x) {
+setMethod("as.json","ANY", function(x) {
   jlist <- as.jlist(x,attributes(x))
   toJSON(jlist,POSIXt="mongo")
 })
