@@ -92,10 +92,9 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
     ml$sender <- unbox(ml$sender)
   if (!is.null(ml$mess) && length(ml$mess)==1L)
     ml$mess <- unbox(ml$mess)
-  ml$timestamp <- unbox(ml$timestamp) # Auto_unbox bug.
-  ## Saves name data
-  ml$data <- lapply(ml$data,
-                      function (s) lapply(s,unbox)) #Saves name data.
+  ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
+  ## Saves name data; need recursvie version.
+  ml$data <- unboxer(ml$data)
   ml
   })
 }

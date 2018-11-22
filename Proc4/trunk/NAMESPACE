@@ -9,7 +9,7 @@ export(app,uid,context,timestamp,sender,mess,details)
 exportMethods(app,uid,context,timestamp,sender,mess,details)
 
 export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
-       parseMessage,parseData,unbox,
+       parseMessage,parseData,unboxer,ununboxer,
        getOneRec,getManyRecs)
 exportMethods(as.json,as.jlist)
 

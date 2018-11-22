@@ -22,6 +22,8 @@ testcol <- mongo("Messages",
 ## ... pwd: "S3cr3t",
 ## ... roles: [{role: "readWrite", db: "test"}]
 ## ... });
+testcol$remove('{}')                    #Clear the collection.
+
 
 m1 <- saveRec(m1,testcol)
 m2 <- saveRec(m2,testcol)
@@ -39,16 +41,28 @@ m123 <- getManyRecs(buildJQuery(uid="Fred"),testcol,parseMessage)
 stopifnot(all.equal(m1,m123[[1]]),
           all.equal(m2,m123[[2]]),
           all.equal(m3,m123[[3]],tolerance=.001))
+
 m23 <- getManyRecs(buildJQuery(uid="Fred",sender=c("EI","EA")),
                    testcol,parseMessage)
 stopifnot(all.equal(m2,m23[[1]]),
           all.equal(m3,m23[[2]],tolerance=.001))
+
 m321 <- getManyRecs(buildJQuery(uid="Fred",timestamp=c(lte=Sys.time())),
             testcol,parseMessage,sort=c(timestamp=-1))
 stopifnot(all.equal(m3,m321[[1]],tolerance=.001),
           all.equal(m2,m321[[2]]),
           all.equal(m1,m321[[3]]))
+
 getManyRecs(buildJQuery(uid="Fred",
                         timestamp=c(gte=Sys.time()-as.difftime(1,units="hours"))),
                         testcol,parseMessage)
+
+m4 <- P4Message("Phred","Task1","PP","New Stats",
+                details=list("agents"=c("ramp","ramp","lever")))
+m4 <- saveRec(m4,testcol)
+#details(m4)
+
+m4a <- getOneRec(buildJQuery("uid"="Phred"),testcol,parseMessage)
+#details(m4a)
+stopifnot(all.equal(m4,m4a))
 

@@ -69,9 +69,9 @@ m2 <- P4Message("Fred","Task1","EI","New Obs",
 m3 <- P4Message("Fred","Task1","EA","New Stats",
                 details=list("score"=1,"theta"=0.12345,"noitems"=1))
 
-m1a <- parseMessage(as.jlist(m1,attributes(m1)))
-m2a <- parseMessage(as.jlist(m2,attributes(m2)))
-m3a <- parseMessage(as.jlist(m3,attributes(m3)))
+m1a <- parseMessage(ununboxer(as.jlist(m1,attributes(m1))))
+m2a <- parseMessage(ununboxer(as.jlist(m2,attributes(m2))))
+m3a <- parseMessage(ununboxer(as.jlist(m3,attributes(m3))))
 
 stopifnot(all.equal(m1,m1a),
           all.equal(m2,m2a),
