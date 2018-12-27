@@ -85,8 +85,9 @@ time1 <- as.POSIXct("2018-08-16 19:12:19 EDT")
 stopifnot(buildJQterm("time",time1)=='"time":{"$date":1534461139000}')
 time1l <- as.POSIXlt("2018-08-16 19:12:19 EDT")
 stopifnot(buildJQterm("time",time1l)=='"time":{"$date":1534461139000}')
+time2 <- as.POSIXct("2018-08-16 19:13:19 EDT")
 stopifnot(buildJQterm("time",c(time1,time2))==
-          '"time":{"$in":[{"$date":1534461139000},{"$date":1534461739000}]}')
+          '"time":{"$in":[{"$date":1534461139000},{"$date":1534461199000}]}')
 stopifnot(buildJQterm("time",c(gt=time1))==
           '"time":{ "$gt":{"$date":1534461139000} }')
 stopifnot(buildJQterm("time",c(lt=time1))==
@@ -100,7 +101,7 @@ stopifnot(buildJQterm("time",c(ne=time1))==
 stopifnot(buildJQterm("time",c(eq=time1))==
           '"time":{ "$eq":{"$date":1534461139000} }')
 stopifnot(buildJQterm("time",c(gt=time1,lt=time2))==
-          '"time":{ "$gt":{"$date":1534461139000}, "$lt":{"$date":1534461739000} }')
+          '"time":{ "$gt":{"$date":1534461139000}, "$lt":{"$date":1534461199000} }')
 stopifnot(buildJQterm("count",c(nin=1,2:4))==
           '"count":{"$nin":[1,2,3,4]}')
 stopifnot(buildJQterm("count",c("in"=1,2:4))==

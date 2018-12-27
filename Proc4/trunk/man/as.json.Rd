@@ -1,5 +1,6 @@
 \name{as.json}
 \alias{as.json}
+\alias{as.json,ANY-method}
 \alias{as.jlist}
 \title{Converts P4 messages to JSON representation}
 \description{
@@ -13,8 +14,8 @@
 }
 \usage{
 as.json(x)
+\S4method{as.json}{ANY}(x)
 as.jlist(obj,ml)
-unbox(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,15 +39,19 @@ unbox(x)
   can set the \code{"_id"} field used by the Mongo DB as a unique
   identifier (or other derived fields) to \code{NULL}.
 
-  Another important step is to call \code{unbox} on fields which should
+  Another important step is to call \code{unboxer} on fields which should
   not be stored as vectors.  The function \code{toJSON} by default wraps
   all R objects in \sQuote{[]} (after all, they are all vectors), but
   that is probably not useful if the field is to be used as an index.
-  Wrapping the field in \code{unbox()}, i.e., using \code{ml$field <-
-  unbox(ml$field)}, suppresses the brackets.  The function
-  \code{unbox()} in this package is an extension of the
+  Wrapping the field in \code{unboxer()}, i.e., using \code{ml$field <-
+  unboxer(ml$field)}, suppresses the brackets.  The function
+  \code{unboxer()} in this package is an extension of the
   \code{jsonlite::\link[jsonlite]{unbox}} function, which does not
   properly unbox POSIXt objects.
+
+  Finally, for a field that can contain arbitrary R objects, the
+  function \code{\link{unparseData}} coverts the data into a JSON string
+  which will completely recover the data.
 
 }
 \value{
@@ -58,9 +63,6 @@ unbox(x)
   object which need to be serialized (usually through a call to
   \code{\link[jsonlite]{toJSON}}.
 
-  The function \code{unbox} returns the object with an attribute set
-  which tells \code{\link[jsonlite]{toJSON}} to serialize the object as
-  a scalar and not a vector.
 }
 \author{Russell Almond}
 \seealso{
@@ -84,17 +86,17 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
   ml$"_id" <- NULL
   ml$class <-NULL
   ## Use manual unboxing for finer control.
-  ml$app <- unbox(ml$app)
-  ml$uid <- unbox(ml$uid)
+  ml$app <- unboxer(ml$app)
+  ml$uid <- unboxer(ml$uid)
   if (!is.null(ml$context) && length(ml$context)==1L)
-    ml$context <- unbox(ml$context)
+    ml$context <- unboxer(ml$context)
   if (!is.null(ml$sender) && length(ml$sender)==1L)
-    ml$sender <- unbox(ml$sender)
+    ml$sender <- unboxer(ml$sender)
   if (!is.null(ml$mess) && length(ml$mess)==1L)
-    ml$mess <- unbox(ml$mess)
-  ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
+    ml$mess <- unboxer(ml$mess)
+  ml$timestamp <- unboxer(ml$timestamp) # Auto_unboxer bug.
   ## Saves name data; need recursvie version.
-  ml$data <- unboxer(ml$data)
+  ml$data <- unparseData(ml$data)
   ml
   })
 }

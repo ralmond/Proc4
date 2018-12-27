@@ -39,6 +39,7 @@ details(x)
   \item{timestamp}{The time the message was sent.}
   \item{details}{A list giving the data to be sent with the message.}
   \item{app}{An identifier for the application using the message.}
+  \item{x}{A message object to be queried.}
 }
 \details{
 
