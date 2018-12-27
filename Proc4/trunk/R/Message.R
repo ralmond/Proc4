@@ -29,7 +29,8 @@ setMethod("details","P4Message", function(x) x@data)
 P4Message <- function(uid,context,sender,mess,timestamp=Sys.time(),
                         details=list(),app="default") {
   new("P4Message",app=app,uid=uid,context=context,sender=sender,
-      mess=mess, timestamp=timestamp,data=details,"_id"=NA_character_)
+      mess=mess, timestamp=timestamp,data=details,
+      "_id"=c(oid=NA_character_))
 }
 
 setMethod("toString","P4Message", function(x, ...) {
@@ -87,10 +88,10 @@ saveRec <- function (mess, col) {
       col$insert(jso)
       it <- col$iterate(jso,'{"_id":true}',limit=1)
       mess@"_id" <- it$one()$"_id"
+      names(mess@"_id") <- "oid" ## Aids in extraction
     }
   }
   mess
-  names(mess@"_id") <- "oid" ## Aids in extraction
 }
 
 ## as.vector suppresses the names which are harmless, but make writing
