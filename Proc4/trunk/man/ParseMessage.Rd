@@ -108,7 +108,7 @@ testcol <- mongo("Messages",
 ## Port = 27017 -- Mongo default
 ## db = test
 ## collection = Messages
-testcol$remove('{}')
+testcol$remove('{}')  ## Clear everything for test.                  
 
 m1 <- saveRec(m1,testcol)
 m2 <- saveRec(m2,testcol)
@@ -117,10 +117,10 @@ ev1 <- saveRec(ev1,testcol)
 
 m1 <- saveRec(m1,testcol)
 m1b <- getOneRec(buildJQuery("_id"=c("oid"=m1@"_id")),testcol,parseMessage)
-stopifnot(all.equal,m1,m1b)
+stopifnot(all.equal(m1,m1b))
 m23 <- getManyRecs(buildJQuery("uid"="Fred",sender=c("EI","EA")),
                   testcol,parseMessage)
-
+stopifnot(length(m23)==2L)
 ev1b <- getOneRec(buildJQuery("uid"="Phred"),
                   testcol,parseMessage)
 stopifnot(all.equal(ev1,ev1b))
