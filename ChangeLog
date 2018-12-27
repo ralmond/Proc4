@@ -1,3 +1,17 @@
+2018-12-27  Russell Almond  <ralmond@Limu>
+
+	* R/Message.R (saveRec): Added names of "oid" to "_id" field, so
+	it gets automagically processed by buildJQuery.
+	(parseData, unparseData): Changed the way this works so it now
+	uses (un)serializeJSON to do the work.
+
+2018-12-24  Russell Almond  <ralmond@Limu>
+
+	* R/Message.R (unboxer): Changed so that it would not "unbox"
+	vectors of length greater than 1.
+	(parseData): Changed so that it wouldn't do numeric/character
+	conversion if there were lists of length greater than 1.
+
 2018-11-22  Rusell Almond  <ralmond@Cherry>
 
 	* R/Message.R (unboxer): Changed from overriding unbox, to new

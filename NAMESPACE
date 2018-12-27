@@ -1,6 +1,7 @@
 import(methods)
 importFrom("mongolite","mongo")
-importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec")
+importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
+           "serializeJSON", "unserializeJSON")
 
 
 export(P4Message)
@@ -9,7 +10,8 @@ export(app,uid,context,timestamp,sender,mess,details)
 exportMethods(app,uid,context,timestamp,sender,mess,details)
 
 export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
-       parseMessage,parseData,unboxer,ununboxer,
+       parseMessage,parseData,unparseData,
+       unboxer,ununboxer,
        getOneRec,getManyRecs)
 exportMethods(as.json,as.jlist)
 

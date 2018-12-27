@@ -65,64 +65,84 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
     ml$mess <- unbox(ml$mess)
   ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
   ## Saves name data
-  ml$data <- unboxer(ml$data)
+  ml$data <- unparseData(ml$data)
   ml
   })
 
 saveRec <- function (mess, col) {
+  jso <- as.json(mess)
   if (is.na(mess@"_id")) {
     ## Insert
-    jso <- as.json(mess)
     col$insert(jso)
     it <- col$iterate(jso,'{"_id":true}',limit=1)
     mess@"_id" <- it$one()$"_id"
+    names(mess@"_id") <- "oid" ## Aids in extraction
   } else {
-    ## Replace
-    col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-               paste('{"$set":',as.json(mess),'}',sep=""))
+    if (col$count(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""))) {
+      ## Replace
+      col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+                 paste('{"$set":',jso,'}',sep=""))
+    } else {
+      ## ID is out of date, instert and get new ID.
+      col$insert(jso)
+      it <- col$iterate(jso,'{"_id":true}',limit=1)
+      mess@"_id" <- it$one()$"_id"
+    }
   }
   mess
+  names(mess@"_id") <- "oid" ## Aids in extraction
 }
 
-
+## as.vector suppresses the names which are harmless, but make writing
+## test suites harder.
 parseMessage<- function (rec) {
   if (is.null(rec$"_id")) rec$"_id" <- NA_character_
   new("P4Message","_id"=ununboxer(rec$"_id"),
-      app=ununboxer(rec$app), uid=ununboxer(rec$uid),
-      context=ununboxer(rec$context),sender=ununboxer(rec$sender),
-      mess=ununboxer(rec$mess),
-      timestamp=ununboxer(rec$timestamp),data=parseData(rec$data))
+      app=as.vector(ununboxer(rec$app)),
+      uid=as.vector(ununboxer(rec$uid)),
+      context=as.vector(ununboxer(rec$context)),
+      sender=as.vector(ununboxer(rec$sender)),
+      mess=as.vector(ununboxer(rec$mess)),
+      timestamp=ununboxer(rec$timestamp),
+      data=parseData(rec$data))
 }
 
 
 ## Maybe I can use the jsonlite::serializeJSON, unserializeJSON
 ## functions here to handle more cases than I'm currently handling.
-parseData <- function (messData) {
-  ##Need to convert back from list to numeric/character
-  for (i in 1:length(messData)) {
-    datum <- messData[[i]]
-    if (all(sapply(datum,is.character))) {
-      datum <- as.character(datum)
-      names(datum) <- names(messData[[i]])
-    }
-    if (all(sapply(datum,is.logical))) {
-      datum <- as.logical(datum)
-      names(datum) <- names(messData[[i]])
-    }
-    if (all(sapply(datum,is.numeric))) {
-      if (all(sapply(datum,is.integer))) {
-        datum <- as.integer(datum)
-      } else {
-        datum <- as.numeric(datum)
-      }
-      names(datum) <- names(messData[[i]])
-    }
-    ## May need an extra step here to decode data which
-    ## are not one of the primative vector types.
-    messData[[i]] <- datum
-  }
-  messData
-}
+## parseData <- function (messData) {
+##   ##Need to convert back from list to numeric/character
+##   for (i in 1:length(messData)) {
+##     datum <- messData[[i]]
+##     if (all(sapply(datum,is.character)) && all(sapply(datum,length)==1L)) {
+##       datum <- as.character(datum)
+##       names(datum) <- names(messData[[i]])
+##     }
+##     if (all(sapply(datum,is.logical)) && all(sapply(datum,length)==1L)) {
+##       datum <- as.logical(datum)
+##       names(datum) <- names(messData[[i]])
+##     }
+##     if (all(sapply(datum,is.numeric)) && all(sapply(datum,length)==1L)) {
+##       if (all(sapply(datum,is.integer))) {
+##         datum <- as.integer(datum)
+##       } else {
+##         datum <- as.numeric(datum)
+##       }
+##       names(datum) <- names(messData[[i]])
+##     }
+##     ## May need an extra step here to decode data which
+##     ## are not one of the primative vector types.
+##     messData[[i]] <- datum
+##   }
+##   messData
+## }
+
+parseData <- function (messData)
+  unserializeJSON(messData)
+
+unparseData <- function (data)
+  unbox(serializeJSON(data))
+
 
 mongoQueries <- c("eq","gt","gte","lt","lte","ne","nin","in","","oid")
 
@@ -133,7 +153,11 @@ unboxer <- function (x) {
   } else if (is(x,"list")) {
     lapply(x,function (s) lapply(s,unboxer)) #Saves name data.
   } else {
-    jsonlite::unbox(x)
+    if (length(x) == 1L) {
+      jsonlite::unbox(x)
+    } else {
+      x
+    }
   }
 }
 
@@ -141,7 +165,12 @@ unboxer <- function (x) {
 ununboxer <- function (x) {
   class(x) <- setdiff(class(x),"scalar")
   if (is.list(x))
-    x <- lapply(x, function(s) lapply(s,ununboxer))
+    x <- lapply(x, function(s) {
+      if (is(s,"POSIXt")) {
+        ununboxer(s)
+      } else {
+        sapply(s,ununboxer)
+      }})
   x
 }
 
