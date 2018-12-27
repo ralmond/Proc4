@@ -97,6 +97,7 @@ saveRec <- function (mess, col) {
 ## test suites harder.
 parseMessage<- function (rec) {
   if (is.null(rec$"_id")) rec$"_id" <- NA_character_
+  names(rec$"_id") <- "oid"
   new("P4Message","_id"=ununboxer(rec$"_id"),
       app=as.vector(ununboxer(rec$app)),
       uid=as.vector(ununboxer(rec$uid)),
