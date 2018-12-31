@@ -122,6 +122,12 @@ stopifnot(buildJQuery(name="George",count=c(gt=3,lt=5),
           '{ "name":"George", "count":{ "$gt":3, "$lt":5 }, "$limit":1, "$sort":{timestamp:-1} }')
 
 
+## Queries on IDs need special handling
+stopifnot(buildJQuery("_id"=c(oid="123456789abcdef"))==
+          '{ "_id":{ "$oid":"123456789abcdef" } }')
+
+
+
 }
 \keyword{ interface }
 \keyword{ database }

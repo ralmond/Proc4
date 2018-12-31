@@ -1,3 +1,9 @@
+2018-12-31  Russell Almond  <ralmond@Limu>
+
+	* R/Message.R (parseSimpleData, parseData, unparseData): Changed
+	to forked strategy, using both (un)serializeJSON and
+	parseSimpleData. 
+
 2018-12-27  Russell Almond  <ralmond@Limu>
 
 	* R/Message.R (saveRec): Added names of "oid" to "_id" field, so

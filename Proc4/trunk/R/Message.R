@@ -44,15 +44,16 @@ setMethod("show","P4Message",function(object) {
 
 
 
-setGeneric("as.json",function(x) standardGeneric("as.json"))
-setGeneric("as.jlist",function(obj,ml) standardGeneric("as.jlist"))
+setGeneric("as.json",function(x,serialize=TRUE) standardGeneric("as.json"))
+setGeneric("as.jlist",function(obj,ml,serialize=TRUE)
+  standardGeneric("as.jlist"))
 
-setMethod("as.json","ANY", function(x) {
-  jlist <- as.jlist(x,attributes(x))
+setMethod("as.json","ANY", function(x,serialize=TRUE) {
+  jlist <- as.jlist(x,attributes(x),serialize)
   toJSON(jlist,POSIXt="mongo")
 })
 
-setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
+setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   ml$"_id" <- NULL
   ml$class <-NULL
   ## Use manual unboxing for finer control.
@@ -66,12 +67,12 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
     ml$mess <- unbox(ml$mess)
   ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
   ## Saves name data
-  ml$data <- unparseData(ml$data)
+  ml$data <- unparseData(ml$data,serialize)
   ml
   })
 
-saveRec <- function (mess, col) {
-  jso <- as.json(mess)
+saveRec <- function (mess, col, serialize=TRUE) {
+  jso <- as.json(mess,serialize)
   if (is.na(mess@"_id")) {
     ## Insert
     col$insert(jso)
@@ -110,41 +111,49 @@ parseMessage<- function (rec) {
 }
 
 
-## Maybe I can use the jsonlite::serializeJSON, unserializeJSON
-## functions here to handle more cases than I'm currently handling.
-## parseData <- function (messData) {
-##   ##Need to convert back from list to numeric/character
-##   for (i in 1:length(messData)) {
-##     datum <- messData[[i]]
-##     if (all(sapply(datum,is.character)) && all(sapply(datum,length)==1L)) {
-##       datum <- as.character(datum)
-##       names(datum) <- names(messData[[i]])
-##     }
-##     if (all(sapply(datum,is.logical)) && all(sapply(datum,length)==1L)) {
-##       datum <- as.logical(datum)
-##       names(datum) <- names(messData[[i]])
-##     }
-##     if (all(sapply(datum,is.numeric)) && all(sapply(datum,length)==1L)) {
-##       if (all(sapply(datum,is.integer))) {
-##         datum <- as.integer(datum)
-##       } else {
-##         datum <- as.numeric(datum)
-##       }
-##       names(datum) <- names(messData[[i]])
-##     }
-##     ## May need an extra step here to decode data which
-##     ## are not one of the primative vector types.
-##     messData[[i]] <- datum
-##   }
-##   messData
-## }
+## Older and simpler parser, but this might work with non-serialized
+## content.
+parseSimpleData <- function (messData) {
+  ##Need to convert back from list to numeric/character
+  for (i in 1:length(messData)) {
+    datum <- messData[[i]]
+    if (all(sapply(datum,is.character)) && all(sapply(datum,length)==1L)) {
+      datum <- as.character(datum)
+      names(datum) <- names(messData[[i]])
+    }
+    if (all(sapply(datum,is.logical)) && all(sapply(datum,length)==1L)) {
+      datum <- as.logical(datum)
+      names(datum) <- names(messData[[i]])
+    }
+    if (all(sapply(datum,is.numeric)) && all(sapply(datum,length)==1L)) {
+      if (all(sapply(datum,is.integer))) {
+        datum <- as.integer(datum)
+      } else {
+        datum <- as.numeric(datum)
+      }
+      names(datum) <- names(messData[[i]])
+    }
+    ## May need an extra step here to decode data which
+    ## are not one of the primative vector types.
+    messData[[i]] <- datum
+  }
+  messData
+}
 
-parseData <- function (messData)
-  unserializeJSON(messData)
+parseData <- function (messData) {
+  if (is.character(messData)) {
+    unserializeJSON(messData)
+  } else {
+    parseSimpleData(messData)
+  }
+}
 
-unparseData <- function (data)
-  unbox(serializeJSON(data))
-
+unparseData <- function (data,serialize=TRUE) {
+  if (serialize)
+    unbox(serializeJSON(data))
+  else
+    unboxer(data)
+}
 
 mongoQueries <- c("eq","gt","gte","lt","lte","ne","nin","in","","oid")
 
