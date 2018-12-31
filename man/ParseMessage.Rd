@@ -1,6 +1,7 @@
 \name{parseMessage}
 \alias{parseMessage}
 \alias{parseData}
+\alias{parseSimpleData}
 \alias{unparseData}
 \title{Converts a JSON object into a P4 Message}
 \description{
@@ -17,12 +18,17 @@
 \usage{
 parseMessage(rec)
 parseData(messData)
-unparseData(data)
+parseSimpleData(messData)
+unparseData(data, serialize=TRUE)
 }
 \arguments{
   \item{rec}{A named list containing JSON data.}
   \item{messData}{A named list containing JSON data.}
   \item{data}{An R object to be serialized.}
+  \item{serialize}{A logical flag. If true,
+    \code{\link[jsonlite]{serializeJSON}} is used to protect the
+    \code{data} field (and other objects which might contain complex R
+    code.} 
 }
 \details{
 
@@ -33,11 +39,17 @@ unparseData(data)
   and uses them to populate a corresponding
   \code{\linkS4class{P4Message}} object.
 
-  The data field needs special care.  Because it could contain arbitrary
-  R objects, it is put through \code{\link[jsonlite]{serializeJSON}} and
-  \code{\link[jsonlite]{unserializeJSON}}.
-  The function \code{unparseData} is a synonym for \code{serializeJSON}
-  and \code{parseData} is a synonym for \code{unserializeJSON}. 
+  The \code{data} field needs extra care as it could contain arbitrary R
+  objects.  There are two strategies for handling the data field.
+  First, use \code{\link[jsonlite]{serializeJSON}} to turn the data field
+  into a slob (string large object), and
+  \code{\link[jsonlite]{unserializeJSON}} to decode it.  This strategy
+  should cover most special cases, but does not result in easily edited
+  JSON output.  Second, recursively apply \code{\link{unboxer}} 
+  and use the function \code{parseSimpleMessage} to undo the coding.
+  This results in output which should be more human readable, but does
+  not handle objects (either S3 or S4).  It also may fail on more
+  complex list structures.
 
 }
 \value{
@@ -48,7 +60,8 @@ unparseData(data)
 
   The function \code{unparseData} returns a JSON string representing the
   data. 
-  The function \code{parseData} returns a list containing the data.
+  The functions \code{parseData} and \code{parseSimpleData} return a
+  list containing the data. 
   
 }
 \author{Russell Almond}

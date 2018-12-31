@@ -7,12 +7,16 @@
   uses \code{\link{as.json}} to covert the object to a JSON string.
 }
 \usage{
-saveRec(mess, col)
+saveRec(mess, col, serialize=TRUE)
 }
 \arguments{
   \item{mess}{The message (object) to be saved.}
   \item{col}{A mongo collection object, produced with a call to
   \code{\link[mongolite]{mongo}()}.}
+  \item{serialize}{A logical flag. If true,
+    \code{\link[jsonlite]{serializeJSON}} is used to protect the
+    \code{data} field (and other objects which might contain complex R
+    code.} 
 }
 \value{
 

@@ -13,15 +13,19 @@
 
 }
 \usage{
-as.json(x)
-\S4method{as.json}{ANY}(x)
-as.jlist(obj,ml)
+as.json(x, serialize=TRUE)
+\S4method{as.json}{ANY}(x, serialize=TRUE)
+as.jlist(obj,ml, serialize=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An (S4) object to be serialized.}
   \item{obj}{The object being serialized}
   \item{ml}{A list of fields of the object.}
+  \item{serialize}{A logical flag. If true,
+    \code{\link[jsonlite]{serializeJSON}} is used to protect the
+    \code{data} field (and other objects which might contain complex R
+    code.} 
 }
 \details{
 
@@ -51,7 +55,13 @@ as.jlist(obj,ml)
 
   Finally, for a field that can contain arbitrary R objects, the
   function \code{\link{unparseData}} coverts the data into a JSON string
-  which will completely recover the data.
+  which will completely recover the data.  The \code{serialize} argument
+  is passed to this function.  If true, then
+  \code{\link[jsonlite]{serializeJSON}} is used which produces safe, but
+  not particularly human editable JSON.  If false, a simpler method is
+  employed which produes more human readable code.  This with should
+  work for simpler data types, but does not support objects, and may
+  fail with complex lists.
 
 }
 \value{
@@ -79,6 +89,7 @@ mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
          as.POSIXct("2018-11-04 21:15:25 EST"),
          list(correct=TRUE,seletion="D"))
 as.json(mess1)
+as.json(mess1,FALSE)
 
 \dontrun{
 ## This is the method for P4 Messages.
