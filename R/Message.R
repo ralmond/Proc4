@@ -115,6 +115,7 @@ parseMessage<- function (rec) {
 ## content.
 parseSimpleData <- function (messData) {
   ##Need to convert back from list to numeric/character
+  if (length(messData) == 0L) return(list())
   for (i in 1:length(messData)) {
     datum <- messData[[i]]
     if (all(sapply(datum,is.character)) && all(sapply(datum,length)==1L)) {
@@ -174,7 +175,8 @@ unboxer <- function (x) {
 
 ## Need this for testing.
 ununboxer <- function (x) {
-  class(x) <- setdiff(class(x),"scalar")
+  if (is(x,"scalar"))
+    class(x) <- setdiff(class(x),"scalar")
   if (is.list(x))
     x <- lapply(x, function(s) {
       if (is(s,"POSIXt")) {

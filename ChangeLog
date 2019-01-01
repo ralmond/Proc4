@@ -3,6 +3,7 @@
 	* R/Message.R (parseSimpleData, parseData, unparseData): Changed
 	to forked strategy, using both (un)serializeJSON and
 	parseSimpleData. 
+	(parseSimpleData, ununboxer): Handling for NULL feilds
 
 2018-12-27  Russell Almond  <ralmond@Limu>
 
