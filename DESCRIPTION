@@ -1,11 +1,11 @@
 Package: Proc4
-Version: 0.1-3
-Date: 2018/12/31
+Version: 0.2-1
+Date: 2019/01/16
 Title: Four Process Assessment Database and Dispatcher
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
 Depends: R (>= 3.0), methods, jsonlite, mongolite
 Description: Extracts observables from a sequence of events.
 License: Artistic-2.0 
-URL: http://pluto.coe.fsu.edu/RNetica
+URL: http://pluto.coe.fsu.edu/Proc4
 

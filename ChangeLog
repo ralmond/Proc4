@@ -1,3 +1,8 @@
+2019-01-13  Rusell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R: Added listener objects similar to Java listener
+	paradigm. 
+
 2018-12-31  Russell Almond  <ralmond@Limu>
 
 	* R/Message.R (parseSimpleData, parseData, unparseData): Changed
