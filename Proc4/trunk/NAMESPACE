@@ -1,4 +1,5 @@
 import(methods)
+import(futile.logger)
 importFrom("mongolite","mongo")
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
            "serializeJSON", "unserializeJSON")
@@ -7,7 +8,8 @@ importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
 export(P4Message)
 exportClasses(P4Message)
 export(app,uid,context,timestamp,sender,mess,details)
-exportMethods(app,uid,context,timestamp,sender,mess,details)
+exportMethods(app,uid,context,timestamp,sender,mess,details,
+              toString,show)
 
 export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
        parseMessage,parseData,unparseData,parseSimpleData,
@@ -15,8 +17,9 @@ export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
        getOneRec,getManyRecs)
 exportMethods(as.json,as.jlist)
 
-export(receiveMessage,isListener)
-exportMethods(isListener)
+export(receiveMessage,isListener,ListenerSet)
+exportClasses(ListenerSet)
+exportMethods(isListener,receiveMessage)
 
 
 

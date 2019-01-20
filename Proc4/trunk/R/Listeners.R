@@ -6,48 +6,59 @@ setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
 setMethod("isListener","ANY",function(x) FALSE)
 
-
+setOldClass("mongo")
 ListenerSet <-
   setRefClass("ListenerSet",
-              fields=c(app="character",
+              fields=c(sender="character",
+                       dbname="character",
                        dburi="character",
                        colname="character",
                        listeners="list",
-                       messdb="mongo",
-                       debug="logical"),
+                       messdb="mongo"),
               methods = list(
                   initialize =
-                    function(app="default",
-                             dburi="mongo://localhost:271017/EIRecords",
+                    function(sender="sender",
+                             dbname="test",
+                             dburi="mongo://localhost",
                              listeners=list(),colname="Messages",
-                             debug=FALSE,
-                             ,...) {
-                      messdb <- mongo(colname,dburi)
-                      callSuper(app=app,db=db,dburi=dburi,
+                             ...) {
+                      messdb <- mongo(colname,dbname,dburi)
+                      callSuper(sender=sender,messdb=messdb,
+                                dburi=dburi,dbname=dbname,
                                 colname=colname,listeners=listeners,
-                                debug=debug,...)
+                                ...)
                     }
               ))
 
 
 ## Listener/Message Methods
 ListenerSet$methods(
-                addListener <- function (name,listener) {
+                addListener = function (name,listener) {
                   if (!isListener(listener)) {
                     stop(listener,"is not a listener.")
                   }
-                  listners[name] <<- listener
+                  listeners[[name]] <<- listener
                 },
-                removeListener <- function (name) {
-                  listners[name] <<- NULL
+                removeListener = function (name) {
+                  listeners[[name]] <<- NULL
                 },
-                notifyListeners <- function (mess) {
+                notifyListeners = function (mess) {
                   mess <- saveRec(mess,messdb)
-                  if (debug)
-                    print("Sending Message ",mess)
+                  flog.info("Sending message %s",toString(mess))
+                  flog.info(".. from %s",sender)
+                  flog.debug("Message:",
+                             mess=as.jlist(mess,attributes(mess)),
+                             capture=TRUE)
                   for (name in names(listeners)) {
-                    if (debug) print("...to ",name)
+                    flog.info(".... to %s",name)
                     receiveMessage(listeners[[name]],mess)
                   }
                 }
             )
+setMethod(receiveMessage,"ListenerSet",
+          function(x,mess) x$notifyListeners(mess))
+setMethod(isListener,"ListenerSet",
+          function(x) TRUE)
+setMethod(isListener,"ANY",
+          function(x) hasMethod("receiveMessage",class(x)))
+

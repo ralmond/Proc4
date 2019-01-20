@@ -4,7 +4,7 @@ Date: 2019/01/16
 Title: Four Process Assessment Database and Dispatcher
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
-Depends: R (>= 3.0), methods, jsonlite, mongolite
+Depends: R (>= 3.0), methods, jsonlite, mongolite, futile.logger
 Description: Extracts observables from a sequence of events.
 License: Artistic-2.0 
 URL: http://pluto.coe.fsu.edu/Proc4
