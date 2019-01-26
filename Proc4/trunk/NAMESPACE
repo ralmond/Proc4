@@ -3,6 +3,7 @@ import(futile.logger)
 importFrom("mongolite","mongo")
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
            "serializeJSON", "unserializeJSON")
+importFrom("utils", "limitedLabels")
 
 
 export(P4Message)
@@ -21,6 +22,7 @@ export(receiveMessage,isListener,ListenerSet)
 exportClasses(ListenerSet)
 exportMethods(isListener,receiveMessage)
 
+export(withFlogging)
 
 
 

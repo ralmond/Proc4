@@ -23,9 +23,9 @@
   This class represents a semi-structured data object with certain
   header fields which can be indexed plus the free-form \code{details()}
   field which contains the body of the message.  It can be serielized in
-  JSON format (using \code{\link[jsonlite]{jsonline-package}}) or saved
-  in the Mongo database (using the
-  \code{\link[mongolite]{mongolite-package}}). 
+  JSON format (using \code{\link[jsonlite]{jsonlite-package}}) or saved
+  in the Mongo database (using the \code{\link[mongolite]{mongo}lite}
+  package).  
 
 }
 \section{Objects from the Class}{
