@@ -7,6 +7,8 @@
 \alias{sender}
 \alias{timestamp}
 \alias{details}
+\alias{toString,P4Message-method}
+\alias{show,P4Message-method}
 
 \title{Constructor and accessors for P4 Messages}
 \description{
@@ -25,6 +27,9 @@ context(x)
 sender(x)
 timestamp(x)
 details(x)
+\S4method{toString}{P4Message}(x,...)
+\S4method{show}{P4Message}(object)
+
 }
 \arguments{
   \item{uid}{A character object giving an identifier for the user or student.}
@@ -39,16 +44,18 @@ details(x)
   \item{timestamp}{The time the message was sent.}
   \item{details}{A list giving the data to be sent with the message.}
   \item{app}{An identifier for the application using the message.}
-  \item{x}{A message object to be queried.}
+  \item{x}{A message object to be queried, or converted to a string.}
+  \item{...}{Addtional arguments for \code{\link[methods]{show}}.}
+  \item{object}{A message object to be converted to a string.}
 }
 \details{
 
   This class represents a semi-structured data object with certain
   header fields which can be indexed plus the free-form \code{details()}
   field which contains the body of the message.  It can be serielized in
-  JSON format (using \code{\link[jsonlite]{jsonline-package}}) or saved
+  JSON format (using \code{\link[jsonlite]{jsonlite-package}}) or saved
   in the Mongo database (using the
-  \code{\link[mongolite]{mongolite-package}}). 
+  \code{\link[mongolite]{mongo}lite} package). 
 
   Using the public methods, the fields can be read but not set.  The
   generic functions are exported so that other object can extend the

@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{ListenerSet-class}
+\alias{ListenerSet}
 \alias{isListener,ListenerSet-method}
 \alias{receiveMessage,ListenerSet-method}
 
@@ -9,7 +10,7 @@
 \description{
 
   This is a \dQuote{mix-in} class that adds a speaker protocol to an
-  object, which is complementary to the \code{\link{Listener}}
+  object, which is complementary to the \code{\linkS4class{Listener}}
   protocol.  This object maintains a list of listeners.  When the
   \code{notifyListeners} method is called, it notifies each of the
   listeners by calling the \code{\link{receiveMessage}} method on the
@@ -32,7 +33,7 @@ All reference classes extend and inherit methods from
 \section{Protocol}{
 
   The key to this class is the \code{notifyListeners} method.  This
-  method should receive as its argument a \code{\link{P4Message}} object.
+  method should receive as its argument a \code{\linkS4class{P4Message}} object.
   (The protocol is fairly robust to the type of message and the
   type is not enforced. In fact, any object which has a
   \code{\link{as.jlist}} method should work.)
@@ -50,7 +51,7 @@ All reference classes extend and inherit methods from
   }
 
   In addition, the \code{ListenerSet} maintains a named list of
-  \code{\link{Listener}} objects (that is, objects that have a
+  \code{\linkS4class{Listener}} objects (that is, objects that have a
   \code{receiveMessage} method).  The methods \code{addListener} and
   \code{removeListener} maintain this list.
 }
@@ -78,9 +79,8 @@ All reference classes extend and inherit methods from
 }
 \seealso{
 
-  \code{\link{Listener}}, \code{\link[futile.logger]{flog.logger}},
-  \code{\link[mongo]{mongolite}}
-  
+  \code{\linkS4class{Listener}}, \code{\link[futile.logger]{flog.logger}},
+  \code{\link[mongolite]{mongo}}, \code{\linkS4class{P4Message}}
 }
 \examples{
 showClass("ListenerSet")
@@ -95,7 +95,7 @@ showClass("ListenerSet")
     \item{\code{colname}:}{Object of class \code{character}: the name of
       the column in which messages should be logged.}
     \item{\code{listeners}:}{A named \code{list} of
-      \code{\link{Listener}} objects, that is objects for which
+      \code{\linkS4class{Listener}} objects, that is objects for which
       \code{\link{isListener}} is true.}
     \item{\code{messdb}:}{Object of class \code{mongo} which is a handle
       to the collection where messages are logged.}

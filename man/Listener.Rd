@@ -1,4 +1,5 @@
 \name{Listener}
+\alias{Listener-class}
 \alias{receiveMessage}
 \alias{isListener}
 \alias{isListener,ANY-method}
@@ -19,13 +20,13 @@ isListener(x)
 }
 \arguments{
   \item{x}{A object of the virtual class \code{Listner}.}
-  \item{mess}{A \code{\link{P4Message}} which is being transmitted.}
+  \item{mess}{A \code{\linkS4class{P4Message}} which is being transmitted.}
 }
 \details{
 
   The \code{Listener} class is a virtual class.  Any object can become a
   listener by giving it a method for \code{receiveMessage}.  The message
-  is intended to be a subclass of \code{\link{P4Message}}, but in
+  is intended to be a subclass of \code{\linkS4class{P4Message}}, but in
   practice, no restriction is placed on the type of the message.
 
   As \code{Listener} is a virtual class, it does not have a formal
@@ -37,9 +38,9 @@ isListener(x)
   true.
 
   Typically, a lister will register itself with the speaker objects.
-  For example the \code{\link{ListenerSet}$addListener} method adds
+  For example the \code{\linkS4class{ListenerSet}$addListener} method adds
   itself to a list of listeners maintained by the object.  When the
-  \code{\link{ListenerSet}$notifyListeners} method is called, the
+  \code{\linkS4class{ListenerSet}$notifyListeners} method is called, the
   \code{receiveMessage} method is called on each listener in the list.
 
 }
@@ -59,7 +60,7 @@ isListener(x)
 }
 \author{Russell Almond}
 \seealso{
-  \code{\link{ListenerSet}}, \code{\link{P4Message}}
+  \code{\linkS4class{ListenerSet}}, \code{\linkS4class{P4Message}}
 }
 \examples{
 
