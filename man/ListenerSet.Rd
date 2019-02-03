@@ -5,6 +5,7 @@
 \alias{ListenerSet}
 \alias{isListener,ListenerSet-method}
 \alias{receiveMessage,ListenerSet-method}
+\alias{notifyListeners,ListenerSet-method}
 
 \title{Class \code{"ListenerSet"}}
 \description{
@@ -25,9 +26,11 @@ All reference classes extend and inherit methods from
 \section{Methods}{
   \describe{
     \item{isListener}{\code{signature(x = "ListenerSet")}: Returns true,
-    as the ListenerSet follows the listener protocol.}
+      as the ListenerSet follows the listener protocol.}
     \item{receiveMessage}{\code{signature(x = "ListenerSet")}: A synonym
-    for \code{notifyListeners}.}
+      for \code{notifyListeners}.}
+    \item{notifyListeners}{\code{signature(sender = "ListenerSet")}: A synonym
+      for the \code{notifyListeners} internal method.}
 }
 }
 \section{Protocol}{
@@ -41,7 +44,7 @@ All reference classes extend and inherit methods from
   When the notifier is called it performs the following functions:
   \enumerate{
     \item{It saves the message to the collection represented by
-      \code{messdb}.}
+      \code{messdb()}.}
     \item{It calls the \code{\link{receiveMessage}} method on each of
       the objects in the listener list.}
     \item{It logs the messages sent using the
@@ -73,7 +76,7 @@ All reference classes extend and inherit methods from
   It is often useful to redirect the Proc4 logger to a log file.  In
   addition, changing the logging format to JSON, will allow the message
   to be recovered.  Thus, try
-  \code{\link[futile.logger]{flog.layout}(\link[futile.logger]{layout.json},name="Proc4"}
+  \code{\link[futile.logger]{flog.layout}(\link[futile.logger]{layout.json},name="Proc4"} 
   to activate logging in JSON format.
   
 }
@@ -97,8 +100,13 @@ showClass("ListenerSet")
     \item{\code{listeners}:}{A named \code{list} of
       \code{\linkS4class{Listener}} objects, that is objects for which
       \code{\link{isListener}} is true.}
-    \item{\code{messdb}:}{Object of class \code{mongo} which is a handle
-      to the collection where messages are logged.}
+    \item{\code{db}:}{Object of class \code{\linkS4class{MongoDB}} which
+      is a handle 
+      to the collection where messages are logged, or \code{NULL} if the
+      log database has not been initialized.  As the database may have
+      not been initialized, programs should call the \code{messdb()}
+      method which will open the database connection if it is not yet
+      open. }
   }
 }
 \section{Class-Based Methods}{
@@ -109,10 +117,12 @@ showClass("ListenerSet")
     \item{\code{addListener(name, listener)}:}{ This method addes a
       lsitener to the list.}
     \item{\code{initialize(sender, dburi, listeners, colname, ...)}:}{This
-      creates the listener.  In particular, it call
-      \code{\link[mongolite]{mongo}(colnam,uri=dburi)} to open the
-      collection for logging.}
+      creates the listener.  Note, this does not initialize the database
+      collection.  Call \code{messdb()} to initialize the collection.}
     \item{\code{removeListener(name)}:}{ This removes a listener from
       the collection by its name.}
+    \item{messdb}{\code{signature()}:  Returns the
+      \code{\link[mongolite]{mongo}} database collection to which to log
+      messages. Creates the column if it has not been initialized.}
   }
 }

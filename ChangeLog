@@ -1,3 +1,9 @@
+2019-02-02  Rusell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (MongoDB, ListenerSet): Changed protocol on
+	ListenerSet, so that connection to the DB is established when
+	$messdb() method is called, rather than on initialize.
+
 2019-01-13  Rusell Almond  <ralmond@Cherry>
 
 	* R/Listeners.R: Added listener objects similar to Java listener

@@ -18,9 +18,9 @@ export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
        getOneRec,getManyRecs)
 exportMethods(as.json,as.jlist)
 
-export(receiveMessage,isListener,ListenerSet)
-exportClasses(ListenerSet)
-exportMethods(isListener,receiveMessage)
+export(receiveMessage,isListener,ListenerSet,notifyListeners)
+exportClasses(ListenerSet,MongoDB)
+exportMethods(isListener,receiveMessage,notifyListeners)
 
 export(withFlogging)
 
