@@ -5,8 +5,14 @@
 setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
 setMethod("isListener","ANY",function(x) FALSE)
+setGeneric("notifyListeners",function(sender,mess)
+  standardGeneric("notifyListeners"))
+
+
 
 setOldClass("mongo")
+setClassUnion("MongoDB",c("mongo","NULL"))
+
 ListenerSet <-
   setRefClass("ListenerSet",
               fields=c(sender="character",
@@ -14,7 +20,7 @@ ListenerSet <-
                        dburi="character",
                        colname="character",
                        listeners="list",
-                       messdb="mongo"),
+                       db="MongoDB"),
               methods = list(
                   initialize =
                     function(sender="sender",
@@ -22,8 +28,8 @@ ListenerSet <-
                              dburi="mongo://localhost",
                              listeners=list(),colname="Messages",
                              ...) {
-                      messdb <- mongo(colname,dbname,dburi)
-                      callSuper(sender=sender,messdb=messdb,
+                      db <- NULL #mongo(colname,dbname,dburi)
+                      callSuper(sender=sender,db=db,
                                 dburi=dburi,dbname=dbname,
                                 colname=colname,listeners=listeners,
                                 ...)
@@ -33,6 +39,12 @@ ListenerSet <-
 
 ## Listener/Message Methods
 ListenerSet$methods(
+                messdb = function () {
+                  if (is.null(db)) {
+                    db <<- mongo(colname,dbname,dburi)
+                  }
+                  db
+                },
                 addListener = function (name,listener) {
                   if (!isListener(listener)) {
                     stop(listener,"is not a listener.")
@@ -43,7 +55,7 @@ ListenerSet$methods(
                   listeners[[name]] <<- NULL
                 },
                 notifyListeners = function (mess) {
-                  mess <- saveRec(mess,messdb)
+                  mess <- saveRec(mess,messdb())
                   flog.info("Sending message %s",toString(mess))
                   flog.info(".. from %s",sender)
                   flog.debug("Message:",
@@ -57,6 +69,8 @@ ListenerSet$methods(
             )
 setMethod(receiveMessage,"ListenerSet",
           function(x,mess) x$notifyListeners(mess))
+setMethod(notifyListeners,"ListenerSet",
+          function(sender,mess) sender$notifyListeners(mess))
 setMethod(isListener,"ListenerSet",
           function(x) TRUE)
 setMethod(isListener,"ANY",

@@ -88,7 +88,7 @@ lset$notifyListeners(mess1)
 
 lset$removeListener("me")
 
-lset$notifyListeners(mess2)
+notifyListeners(lset,mess2)
 
 }
 }
