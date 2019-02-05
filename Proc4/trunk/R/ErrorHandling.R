@@ -91,7 +91,7 @@ withFlogging <- function(expr,...,context=deparse(substitute(expr)),
                      FATAL=flog.fatal,flog.error)
     logger(msg,name=loggername)
     for (detail in names(fargs))
-      logger(paste(detail,"="),fargs[[detail]],name=loggername,capture=TRUE)
+      flog.debug(paste(detail,"="),fargs[[detail]],name=loggername,capture=TRUE)
     if (level %in% tracelevel) {
         calls <- sys.calls()
         calls <- calls[1:length(calls)-1]
@@ -99,8 +99,8 @@ withFlogging <- function(expr,...,context=deparse(substitute(expr)),
         if (length(trace) > 0L) {
           trace <- trace[length(trace):1L]
         }
-        logger("Traceback:",trace,
-               name=loggername,capture=TRUE)
+        flog.debug("Traceback:",trace,
+                   name=loggername,capture=TRUE)
     }
 
     ## Muffle any redundant output of the same message
