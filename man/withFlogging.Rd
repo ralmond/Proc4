@@ -47,18 +47,18 @@ withFlogging(expr, ..., context = deparse(substitute(expr)), loggername = flog.n
   file.  Furthermore, \code{flog.layout(layout.json,name="EIEvent")}
   will cause the log to be in JSON format.
 
-  Second, additional context information is printed when an condition is
-  signaled.  The \code{context} string is printed along with the error
-  or warning message.  This can be used, for example, to provide
-  information about the user and task that was being processed when the
-  condition was signaled.  In addition, any of the \code{...} arguments
-  are printed.  This can be used to print information about the message
-  being processed and the initial state of the system, so that the error
-  condition can be reproduced.
+  Second, additional context information is logged at the \dQuote{DEBUG}
+  level when an condition is signaled.  The \code{context} string is
+  printed along with the error or warning message.  This can be used,
+  for example, to provide information about the user and task that was
+  being processed when the condition was signaled.  In addition, any of
+  the \code{...} arguments are printed.  This can be used to print
+  information about the message being processed and the initial state of
+  the system, so that the error condition can be reproduced.
 
   Third, if the class of the exception is in the \code{tracelevel} list,
-  then a stack trace will be logged along with the error.  This should
-  aid debugging.  
+  then a stack trace will be logged (at the \dQuote{DEBUG} level) along
+  with the error.  This should aid debugging.  
 
   Fourth, in the case of an error or fatal error, an object of class
   \code{try-error} (see \code{\link[base]{try}}).  Among other things,
@@ -71,7 +71,8 @@ withFlogging(expr, ..., context = deparse(substitute(expr)), loggername = flog.n
   If \code{expr} executes successfully (with no errors or fatal errors)
   then the value of \code{expr} will be returned.  If an error occurs
   during execution, then an object of class \code{try-error} will be
-  returned. 
+  returned.
+  
 }
 \references{
 
