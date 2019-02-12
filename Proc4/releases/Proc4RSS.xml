@@ -14,5 +14,19 @@
       <pubDate>Tue Oct 23 17:38:03 EDT 2018</pubDate>
       <description>[CDATA[ Basic Web site created. ]]</description>
     </item>
+    <item>
+      <title>Proc4 0.2-2</title>
+      <link>https://pluto.coe.fsu.edu/Proc4/index.html</link>
+      <guid>https://pluto.coe.fsu.edu/Proc4/Proc4_0.2-2</guid>
+      <pubDate>Tue Feb 12 11:58:00 EST 2019</pubDate>
+      <description>[CDATA[ First Code release]]</description>
+    </item>
+    <item>
+      <title>EIEvent 0.1-4</title>
+      <link>https://pluto.coe.fsu.edu/Proc4/index.html</link>
+      <guid>https://pluto.coe.fsu.edu/Proc4/EIEven_0.1-4</guid>
+      <pubDate>Tue Feb 12 11:59:00 EST 2019</pubDate>
+      <description>[CDATA[ Rules but no database connection yet.]]</description>
+    </item>
   </channel>
 </rss>

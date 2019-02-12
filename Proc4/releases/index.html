@@ -24,8 +24,32 @@
     architecture.  It also handles logging to databases and recovery
     of messages from databases.
   </p>
+  <h2>Dependent Technologies</h2>
+  Proc4 is currently using the following R packages:
+  <ul>
+    <li> <a href="">jsonlite</a> For JSON parsing tools.</li>
+    <li><a href="">mongolite</a> For connections to the mongo
+      database.</li>
+    <li><a href="">futile.logger</a> for logging error and debugging
+    messages.  Note that each packages (e.g., "Proc4", "EIEvent",
+      "EABN" and  "BNAS") has its own logger which can be directed separately.</li>
+  </ul>
+  <h2> Releases </h2>
+  <p> Note:  at the moment, the packages are pure R code, so only the
+    source release is provided.</p>
+  <table border="1">
+    <tr>
+      <th>Release</th><th>Source</th><th>Windows</th><th>MacOS</th><th>Manual</th><th>Notes</th>
+    </tr>
+    <tr>
+      <td>0.2-2</td><td><a href="Proc4_0.2-2.tar.gz">Proc4_0.2-2.tar.gz</a></td>
+      <td></td><td></td>
+      <td><a href="Proc4_0.2-2-manual.pdf">Proc4_0.2-2-manual.pdf</a></td>
+      <td>First reasonably functional version.</td></tr>
+  </table>
+
   <p>
-    Code is not yet released, but the subversion repository is at:
+    The development code is available at the subversion repository is at:
     <a href="https://pluto.coe.fsu.edu/svn/common/Proc4/">
       https://pluto.coe.fsu.edu/svn/common/Proc4/</a>
   </p>
@@ -36,15 +60,30 @@
     the rule format and logic is available.
   </p>
   <p>
-    Code is not yet released, but the subversion repository is at:
-    <a href="https://pluto.coe.fsu.edu/svn/common/EIEvent/">
-      https://pluto.coe.fsu.edu/svn/common/EIEvent/</a>
-  </p>
-  <p>
      I gave a talk about this at the Maryland Assessment Research
      Center (MARC) conference. You can download the <a
      href="https://education.umd.edu/file/11333/download?token=kmOIVIwi">slides</a>
      or view a <a href="Almond-Marc18.mp4">video</a> (warning 1.6 MB).
+  </p>
+  <h2> Releases </h2>
+  <p> Note:  at the moment, the packages are pure R code, so only the
+    source release is provided.</p>
+  <table border="1">
+    <tr>
+      <th>Release</th><th>Source</th><th>Windows</th><th>MacOS</th><th>Manual</th><th>Notes</th>
+    </tr>
+    <tr>
+      <td>0.1-4</td><td><a href="EIEvent_0.1-4.tar.gz">EIEvent_0.1-4.tar.gz</a></td>
+      <td></td><td></td>
+      <td><a href="EIEvent_0.1-4-manual.pdf">EIEvent_0.1-4-manual.pdf</a></td>
+      <td>Rules can be run and tested, but not yet integrated with database..</td></tr>
+  </table>
+  
+  <p>
+   The development version is in the subversion repository is at:
+    <a href="https://pluto.coe.fsu.edu/svn/common/EIEvent/">
+      https://pluto.coe.fsu.edu/svn/common/EIEvent/</a>
+  </p>
 
 
   <h1>EABN (Evidence Accumulation using Bayes Nets)</h1>
@@ -83,7 +122,7 @@ href="mailto:ralmond@fsu.edu">Russell Almond </a>.
   </p>
   
 <hr/>
-<p>Site last updated on 2018-10-23.</p>
+<p>Site last updated on 2019-02-12.</p>
 
 </body>
 </html>
