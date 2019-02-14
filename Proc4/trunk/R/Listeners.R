@@ -28,8 +28,7 @@ ListenerSet <-
                              dburi="mongo://localhost",
                              listeners=list(),colname="Messages",
                              ...) {
-                      db <- NULL #mongo(colname,dbname,dburi)
-                      callSuper(sender=sender,db=db,
+                      callSuper(sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,
                                 colname=colname,listeners=listeners,
                                 ...)
