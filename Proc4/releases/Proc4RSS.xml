@@ -28,5 +28,12 @@
       <pubDate>Tue Feb 12 11:59:00 EST 2019</pubDate>
       <description>[CDATA[ Rules but no database connection yet.]]</description>
     </item>
+    <item>
+      <title>EIEvent 0.1-6</title>
+      <link>https://pluto.coe.fsu.edu/Proc4/index.html</link>
+      <guid>https://pluto.coe.fsu.edu/Proc4/EIEven_0.1-6</guid>
+      <pubDate>Tue Mar 01 19:22:00 EST 2019</pubDate>
+      <description>[CDATA[ Bug fixes for rules testing.]]</description>
+    </item>
   </channel>
 </rss>
