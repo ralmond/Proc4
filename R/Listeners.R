@@ -8,10 +8,39 @@ setMethod("isListener","ANY",function(x) FALSE)
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
 
-
-
 setOldClass("mongo")
 setClassUnion("MongoDB",c("mongo","NULL"))
+
+#################################################
+## CaptureListener
+
+## This a simple listener whose goal is to simply hold the message to
+## it can be checked later.
+
+CaptureListener <-
+  setRefClass("CaptureListener",
+              fields=c(messages="list"),
+              methods=list(
+                  initialize = function(messages=list(),...)
+                    callSuper(messages=messages,...),
+                  receiveMessage = function (mess) {
+                    messages <<- c(mess,messages)
+                  },
+                  lastMessage = function() {
+                    messages[[1]]
+                  }))
+
+CaptureListener <- function (messages=list(),...) {
+  new("CaptureListener",messages=messages,...)
+}
+
+setMethod("isListener","CaptureListener",function(x) TRUE)
+setMethod("receiveMessage","CaptureListener",
+          function(x,mess) x$receiveMessage(mess))
+
+
+#############################################
+## Listener Set
 
 ListenerSet <-
   setRefClass("ListenerSet",
@@ -25,7 +54,7 @@ ListenerSet <-
                   initialize =
                     function(sender="sender",
                              dbname="test",
-                             dburi="mongo://localhost",
+                             dburi="mongodb://localhost",
                              listeners=list(),colname="Messages",
                              ...) {
                       callSuper(sender=sender,db=NULL,
