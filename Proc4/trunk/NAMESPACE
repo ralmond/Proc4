@@ -8,7 +8,7 @@ importFrom("utils", "limitedLabels")
 
 export(P4Message)
 exportClasses(P4Message)
-export(app,uid,context,timestamp,sender,mess,details)
+export(app,uid,context,timestamp,sender,mess,details,all.equal.P4Message)
 exportMethods(app,uid,context,timestamp,sender,mess,details,
               toString,show)
 
@@ -19,7 +19,7 @@ export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
 exportMethods(as.json,as.jlist)
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners)
-exportClasses(ListenerSet,MongoDB)
+exportClasses(ListenerSet,MongoDB,CaptureListener)
 exportMethods(isListener,receiveMessage,notifyListeners)
 
 export(withFlogging)

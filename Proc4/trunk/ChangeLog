@@ -1,3 +1,13 @@
+2019-03-06  Rusell Almond  <ralmond@Cherry>
+
+	* R/Message.R (all.equal.P4Message): Added all.equal method so we
+	can surpress id and timestamp checks when needed.
+
+2019-02-24  Rusell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (CaptureListener): Added class to be used for
+	testing. 
+
 2019-02-02  Rusell Almond  <ralmond@Cherry>
 
 	* R/Listeners.R (MongoDB, ListenerSet): Changed protocol on

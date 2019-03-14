@@ -257,3 +257,50 @@ getManyRecs <- function(jquery,col,parser,sort=c("timestamp"=1),
   result
 }
 
+all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check_ids=TRUE) {
+  if (!is(current,"P4Message"))
+    return(paste("Target is 'P4Message' and current is '",class(current),"'."))
+  msg <- character()
+  if (check_ids)
+    if ((is.na(target@"_id") && !is.na(current@"_id")) ||
+        (!is.na(target@"_id") && !isTRUE(target@"_id" ==  current@"_id")))
+      msg <- c(msg,"Database IDs do not match.")
+  if (app(target) != app(current))
+    msg <- c(msg,"Application IDs do not match.")
+  if (uid(target) != uid(current))
+    msg <- c(msg,"User IDs do not match.")
+  if (context(target) != context(current))
+    msg <- c(msg,"Contexts do not match.")
+  if (!(length(sender(target))==0L && length(sender(current))==0L) &&
+      any(sender(target) != sender(current)))
+    msg <- c(msg,"Senders do not match.")
+  if (!(length(mess(target))==0L && length(mess(current))==0L) &&
+      any(mess(target) != mess(current)))
+    msg <- c(msg,"Messages do not match.")
+  ## Check Data
+  namet <- names(target@data)
+  namec <- names(current@data)
+  if (length(target@data) != length(current@data) ||
+      !setequal(namet,namec)) {
+    msg <- c(msg,"Names or number of data differ.")
+    if (length(setdiff(namet,namec)) > 0L)
+      msg <- c(msg,paste("Data in target but not in current:",
+                         setdiff(namet,namec)))
+    if (length(setdiff(namec,namet)) > 0L)
+      msg <- c(msg,paste("Data in current but not in target:",
+                         setdiff(namec,namet)))
+  }
+  msgd <- all.equal(target@data,current@data,...,
+                    check.attributes=FALSE)
+  if (!isTRUE(msgd)) msg <- c(msg,msgd)
+  ## Timestamp
+  if (checkTimestamp) {
+    if (abs(timestamp(target)-timestamp(current)) >
+        asif.difftime(list(secs=.1)))
+      msg <- c(msg,"Timestamps differ by more than .1 secs")
+  }
+
+  ## Return true if message list is empty.
+  if (length(msg)==0L) TRUE
+  else msg
+}
