@@ -86,8 +86,7 @@ ListenerSet$methods(
                   mess <- saveRec(mess,messdb())
                   flog.info("Sending message %s",toString(mess))
                   flog.info(".. from %s",sender)
-                  flog.debug("Message:",
-                             mess=as.jlist(mess,attributes(mess)),
+                  flog.debug("Message:",x=as.jlist(mess,attributes(mess)),
                              capture=TRUE)
                   for (name in names(listeners)) {
                     flog.info(".... to %s",name)

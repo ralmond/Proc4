@@ -263,7 +263,8 @@ all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check
   msg <- character()
   if (check_ids)
     if ((is.na(target@"_id") && !is.na(current@"_id")) ||
-        (!is.na(target@"_id") && !isTRUE(target@"_id" ==  current@"_id")))
+        (!is.na(target@"_id") &&
+         !isTRUE(all.equal(target@"_id", current@"_id"))))
       msg <- c(msg,"Database IDs do not match.")
   if (app(target) != app(current))
     msg <- c(msg,"Application IDs do not match.")
