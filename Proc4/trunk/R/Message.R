@@ -290,8 +290,7 @@ all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check
       msg <- c(msg,paste("Data in current but not in target:",
                          setdiff(namec,namet)))
   }
-  msgd <- all.equal(target@data,current@data,...,
-                    check.attributes=FALSE)
+  msgd <- all.equal(target@data,current@data,...)
   if (!isTRUE(msgd)) msg <- c(msg,msgd)
   ## Timestamp
   if (checkTimestamp) {
