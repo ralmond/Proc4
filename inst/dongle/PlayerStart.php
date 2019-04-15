@@ -31,7 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         die("That application is not supported on this server.");
     }
     $timestamp = $_POST['timestamp'];
-   $P4mess = array(
+    if (strlen($timestamp)==0)
+        $timestamp = date('c');
+    $P4mess = array(
        'app'             => $app,
        'uid'               => $_POST['uid'],
        'context'      => $_POST['context'],
@@ -43,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     );
 
     $mong = new MongoClient(); // connect
-    $db=$m->selectDB("Proc4dongle");
+    $db=$m->selectDB("Proc4");
+    
     $col=$db->selectCollection("Players");
     $col->intert($P4mess);
     

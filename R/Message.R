@@ -57,14 +57,14 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   ml$"_id" <- NULL
   ml$class <-NULL
   ## Use manual unboxing for finer control.
-  ml$app <- unbox(ml$app)
-  ml$uid <- unbox(ml$uid)
+  ml$app <- unboxer(ml$app)
+  ml$uid <- unboxer(ml$uid)
   if (!is.null(ml$context) && length(ml$context)==1L)
-    ml$context <- unbox(ml$context)
+    ml$context <- unboxer(ml$context)
   if (!is.null(ml$sender) && length(ml$sender)==1L)
-    ml$sender <- unbox(ml$sender)
+    ml$sender <- unboxer(ml$sender)
   if (!is.null(ml$mess) && length(ml$mess)==1L)
-    ml$mess <- unbox(ml$mess)
+    ml$mess <- unboxer(ml$mess)
   ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
   ## Saves name data
   ml$data <- unparseData(ml$data,serialize)

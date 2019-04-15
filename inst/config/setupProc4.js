@@ -36,6 +36,7 @@ db.createCollection("AuthorizedApps", {
     validationAction: "warn"
 });
 db.AuthorizedApps.createIndex({app:1});
+db.AuthorizedApps.insert({app:"ecd://epls.coe.fsu.edu/P4test",documentation:"For system testing."});
 db.createCollection("Players", {
     validator: {
         $jsonSchema: {
@@ -104,16 +105,12 @@ db.createCollection("Statistics", {
     validationAction: "warn"
 });
 db.Statistics.createIndex( { app:1, uid: 1, timestamp: -1});
-db.createCollection("Statistics", {
+db.createCollection("Activities", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
             required: ["app","uid","timestamp"],
             properties: {
-                _id: {
-                    bsonType: "string",
-                    description: "app@uid@seqno",
-                },
                 app: {
                     bsonType: "string",
                     description: "Application ID (string)"
@@ -138,28 +135,16 @@ db.createCollection("Statistics", {
                     bsonType: "date",
                     description: "Timestamp"
                 },
-                topic: {
-                    bsonType: "string",
-                    description: "Who posted this message."
-                },
-                completed: {
-                    bsonType: "array",
-                    description: "Completed Levels and their coin."
-                },
-                sequence: {
-                    bsonType: "array",
-                    description:  "Recommended sequence of levels."
-                },
-                balance: {
-                    bsonType: "int",
-                    description: "Number of coins the player has left."
+                data: {
+                    bsonType: "object",
+                    description: "Named list of statistics."
                 }
             }
         }
     },
     validationAction: "warn"
 });
-db.Sequencing.createIndex( { app:1, uid: 1, timestamp: -1});
+db.Activity.createIndex( { app:1, uid: 1, timestamp: -1});
 
 
 
