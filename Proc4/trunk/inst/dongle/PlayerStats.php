@@ -1,10 +1,10 @@
-<html>
-<head><title>Player Stats Requested Message</title></head>
-<body>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 ?>
 
+<html>
+<head><title>Player Stats Requested Message</title></head>
+<body>
     <p> This is an interface to the Proc4 system.
     For more information about Proc4, go to
         <a href="https://pluto.coe.fsu.edu/Proc4/">Proc 4 home
@@ -20,16 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         data: <input type="text" name="data"/><br/>
         <input type="submit" name="Postit!"/>
     </form>
+</body>
+</html>
 
 <?php
 } elseif ($_SERVER['REQUEST_METHOD']) == 'POST')
 {
-    printf("Message Received: %s",$_POST['mess']);
+    if (strpos($_POST['app'],'ecd://epls.coe.fsu.edu/') != 0) {
+        die("That application is not supported on this server.");
+    }
+    header('Content-Type: application/json;charset=utf-8');
+    echo json_encode($_POST);
 } else {
     die("This script only works with GET and POST requests.");
 }
 ?>
 
 
-</body>
-</html>
