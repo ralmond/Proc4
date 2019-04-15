@@ -27,11 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <?php
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (strpos($_POST['app'],'ecd://epls.coe.fsu.edu/') != 0) {
+     $app = $_POST['app'];
+     $ecdapp = strpos($app,'ecd://epls.coe.fsu.edu');
+    if ($ecdapp === false ||  $ecdapp != 0) {
         die("That application is not supported on this server.");
     } else {
-        header('Content-Type: application/json;charset=utf-8');
-        echo json_encode($_POST);
+      header('Content-Type: application/json;charset=utf-8');
+       echo json_encode($_POST);
     }
 } else {
     die("This script only works with GET and POST requests.");

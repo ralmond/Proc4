@@ -28,8 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (strpos($_POST['app'],'ecd://epls.coe.fsu.edu/') != 0) {
         die("That application is not supported on this server.");
     }
+   // header('Content-Type: application/json;charset=utf-8');
+   // echo json_encode($_POST);
+   $P4mess = array(
+       'uid'               => $_POST['uid'],
+       'context'      => $_POST['context'],
+       'sender'        => $_POST['sender'],
+       'message'    => "Player Start",
+       'timestamp' => $_POST['timestamp'],
+       'data'            => $_POST['data']
+    );
+
+    $mong = new MongoClient(); // connect
+    $db=$m->selectDB("Proc4dongle");
+    $col=$db->selectCollection("login");
+    $col->intert($P4mess);
+    
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($_POST);
+    //printf("Player stoped: %s (%s)",$_POST['uid'],$_POST['app']);
 } else {
     die("This script only works with GET and POST requests.");
 }
