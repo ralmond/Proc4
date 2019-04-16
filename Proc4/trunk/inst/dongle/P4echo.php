@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 {
     $app = $_POST['app'];
     $ecdapp = strpos($app,'ecd://epls.coe.fsu.edu');
-    $INI = parse_ini_file("/usr/local/share/Proc4/Proc4.ini",true);
     if ($ecdapp === false ||  $ecdapp != 0) {
         die("That application is not supported on this server.");
     } else {
+        include 'config.php';
         if (in_array($app,$INI['apps'])) {
             header('Content-Type: application/json;charset=utf-8');
             echo json_encode($_POST);
