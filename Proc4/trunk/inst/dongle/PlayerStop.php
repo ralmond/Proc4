@@ -28,24 +28,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (strpos($_POST['app'],'ecd://epls.coe.fsu.edu/') != 0) {
         die("That application is not supported on this server.");
     }
-   // header('Content-Type: application/json;charset=utf-8');
-   // echo json_encode($_POST);
-   $P4mess = array(
-       'uid'               => $_POST['uid'],
-       'context'      => $_POST['context'],
-       'sender'        => $_POST['sender'],
-       'message'    => "Player Start",
-       'timestamp' => $_POST['timestamp'],
-       'data'            => $_POST['data']
+    include 'config.php';
+    if (!in_array($app,$INI['apps'])) {
+        die("App '$app' not registered.");
+    }
+    $timestamp = $_POST['timestamp'];
+    if (strlen($timestamp)==0)
+        $timestamp = date('c');
+    $uid = $_POST['uid'];
+    $data = $_POST['data'];
+    $P4mess = array(
+       'app'       => $app,
+       'uid'       => $uid,
+       'context'   => $_POST['context'],
+       'sender'    => $_POST['sender'],
+       'message'   => "Player Stop",
+       'active'    => FALSE,
+       'timestamp' => $timestamp,
+       'data'      => $data,
     );
 
     $mong = new MongoClient(); // connect
-    $db=$m->selectDB("Proc4dongle");
-    $col=$db->selectCollection("login");
-    $col->intert($P4mess);
-    
+    $db=$m->selectDB("Proc4");
+    $col=$db->selectCollection("Players");
+    $rec=$col->findOne(['app' => $app, 'uid' => $uid],
+                       ['limit' => 1,'sort' => ['timestamp' => -1]]);
+    if ($rec == null) {
+        $result = $col->insert($P4mess);
+    } else {
+        $result = $col->updateOne(['app' => $app, 'uid' => $uid],
+        ['$set' => ['active' => true, 'timestamp' => $timestamp,
+                    'data' => $data]]);
+    }    
+
+    $P4mess['message'] = "Player Stop Acknolwedge";
+    $P4mess['sender'] = "Proc 4 dongle";
     header('Content-Type: application/json;charset=utf-8');
-    echo json_encode($_POST);
+    echo json_encode($P4mess);
     //printf("Player stoped: %s (%s)",$_POST['uid'],$_POST['app']);
 } else {
     die("This script only works with GET and POST requests.");
