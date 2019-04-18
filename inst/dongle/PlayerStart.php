@@ -30,28 +30,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (strpos($app,'ecd://epls.coe.fsu.edu/') != 0) {
         die("That application is not supported on this server.");
     }
+    include 'config.php';
+    if (!in_array($app,$INI['apps'])) {
+        die("App '$app' not registered.");
+    }
     $timestamp = $_POST['timestamp'];
     if (strlen($timestamp)==0)
         $timestamp = date('c');
+    $uid = $_POST['uid'];
     $P4mess = array(
-       'app'             => $app,
-       'uid'               => $_POST['uid'],
-       'context'      => $_POST['context'],
-       'sender'        => $_POST['sender'],
+       'app'        => $app,
+       'uid'        => $uid
+       'context'    => $_POST['context'],
+       'sender'     => $_POST['sender'],
        'message'    => "Player Start",
-       'active'         => TRUE,
-       'timestamp' => $timestamp,
-       'data'            => $_POST['data']
+       'active'     => TRUE,
+       'timestamp'  => $timestamp,
+       'data'       => $_POST['data']
     );
 
     $mong = new MongoClient(); // connect
     $db=$m->selectDB("Proc4");
     
     $col=$db->selectCollection("Players");
-    $col->intert($P4mess);
+    $rec=$col->findOne(['app' => $app, 'uid' => $uid],
+                       ['limit' => 1,'sort' => ['timestamp' => -1]]);
+    if ($rec == null) {
+        $result = $col->insert($P4mess);
+    } else {
+        $result = $col->updateOne(['app' => $app, 'uid' => $uid],
+        ['$set' => ['active' => true, 'timestamp' => $timestamp]]);
+        $P4mess['data'] = $rec['data'];
+    }    
     
+    $P4mess['message'] = "Player Start Acknolwedge";
+    $P4mess['sender'] = "Proc 4 dongle";
     header('Content-Type: application/json;charset=utf-8');
-    echo json_encode($_POST);
+    echo json_encode($P4mess);
     //printf("Player started: %s (%s)",$_POST['uid'],$_POST['app']);
 } else {
     die("This script only works with GET and POST requests.");
