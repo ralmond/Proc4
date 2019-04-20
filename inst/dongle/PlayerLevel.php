@@ -25,11 +25,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <?php
 } elseif ($_SERVER['REQUEST_METHOD']) == 'POST')
 {
-    if (strpos($_POST['app'],'ecd://epls.coe.fsu.edu/') != 0) {
+    $app = $_POST['app'];
+    if (strpos($app,'ecd://epls.coe.fsu.edu/') != 0) {
         die("That application is not supported on this server.");
     }
+    include 'config.php';
+    if (!in_array($app,$INI['apps'])) {
+        die("App '$app' not registered.");
+    }
+    $timestamp = $_POST['timestamp'];
+    if (strlen($timestamp)==0)
+        $timestamp = date('c');
+    $uid = $_POST['uid'];
+    $mong = new MongoDB\Client("mongodb://localhost"); // connect
+    
+    $col=$mong->Proc4->Activities;
+    $rec=$col->findOne(['app' => $app, 'uid' => $uid],
+                       ['limit' => 1,'sort' => ['timestamp' => -1]]);
+    if ($rec == null) {
+        $rec=$col->findOne(['app' => $app, 'uid' => '*DEFAULT*']);
+        $rec['uid'] = $uid;
+        $rec['timestamp'] = $timestamp;
+        $result = $col->insertOne($rec);
+    } 
+    $rec['message'] = "Activities";
+    $rec['sender'] = "Proc 4 dongle";
     header('Content-Type: application/json;charset=utf-8');
-    echo json_encode($_POST);
+    echo json_encode($rec);
 } else {
     die("This script only works with GET and POST requests.");
 }

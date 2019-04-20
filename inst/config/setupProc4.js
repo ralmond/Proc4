@@ -20,22 +20,6 @@ c4User = pwds.filter(function(u) {return u.user == "C4";})[0];
 con = new Mongo();
 db=con.getDB("Proc4");                 
 db.auth(c4User.user,c4User.pwd);
-db.createCollection("AuthorizedApps", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["app"],
-            properties: {
-                app: {
-                    bsonType: "string",
-                    description: "Application ID (string)"
-                }
-            }
-        }
-    },
-    validationAction: "warn"
-});
-db.AuthorizedApps.createIndex({app:1});
 db.AuthorizedApps.insert({app:"ecd://epls.coe.fsu.edu/P4test",documentation:"For system testing."});
 db.createCollection("Players", {
     validator: {
@@ -89,7 +73,7 @@ db.createCollection("Statistics", {
                 },
                 mess: {
                     bsonType: "string",
-                    description: "Instructions to EAP"
+                    description: "Topic of message"
                 },
                 timestamp: {
                     bsonType: "date",
@@ -129,7 +113,7 @@ db.createCollection("Activities", {
                 },
                 mess: {
                     bsonType: "string",
-                    description: "Instructions to EAP"
+                    description: "Topic of Message"
                 },
                 timestamp: {
                     bsonType: "date",
