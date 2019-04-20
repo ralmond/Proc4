@@ -15,4 +15,7 @@ $PROC4_ETC ="/usr/local/share/Proc4/";
 // C4 = "secret"
 
 $INI = parse_ini_file("$PROC4_ETC/Proc4.ini",true);
+
+require_once __DIR__."mongodb/autoload.php";
+
 ?>
