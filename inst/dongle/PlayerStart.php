@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $uid = $_POST['uid'];
     $P4mess = array(
        'app'        => $app,
-       'uid'        => $uid
+       'uid'        => $uid,
        'context'    => $_POST['context'],
        'sender'     => $_POST['sender'],
        'message'    => "Player Start",
@@ -49,14 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
        'data'       => $_POST['data']
     );
 
-    $mong = new MongoClient(); // connect
-    $db=$m->selectDB("Proc4");
+    $mong = new MongoDB\Client("mongodb://localhost"); // connect
     
-    $col=$db->selectCollection("Players");
+    $col=$mong->Proc4->Players;
     $rec=$col->findOne(['app' => $app, 'uid' => $uid],
                        ['limit' => 1,'sort' => ['timestamp' => -1]]);
     if ($rec == null) {
-        $result = $col->insert($P4mess);
+        $result = $col->insertOne($P4mess);
     } else {
         $result = $col->updateOne(['app' => $app, 'uid' => $uid],
         ['$set' => ['active' => true, 'timestamp' => $timestamp]]);

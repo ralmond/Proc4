@@ -25,7 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <?php
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (strpos($_POST['app'],'ecd://epls.coe.fsu.edu/') != 0) {
+    $app = $_POST['app'];
+    if (strpos($app,'ecd://epls.coe.fsu.edu/') != 0) {
         die("That application is not supported on this server.");
     }
     include 'config.php';
@@ -48,16 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
        'data'      => $data,
     );
 
-    $mong = new MongoClient(); // connect
-    $db=$m->selectDB("Proc4");
-    $col=$db->selectCollection("Players");
+    $mong = new MongoDB\Client("mongodb://localhost"); // connect
+    
+    $col=$mong->Proc4->Players;
     $rec=$col->findOne(['app' => $app, 'uid' => $uid],
                        ['limit' => 1,'sort' => ['timestamp' => -1]]);
     if ($rec == null) {
-        $result = $col->insert($P4mess);
+        $result = $col->insertOne($P4mess);
     } else {
         $result = $col->updateOne(['app' => $app, 'uid' => $uid],
-        ['$set' => ['active' => true, 'timestamp' => $timestamp,
+        ['$set' => ['active' => false, 'timestamp' => $timestamp,
                     'data' => $data]]);
     }    
 
