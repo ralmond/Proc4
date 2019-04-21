@@ -1,0 +1,47 @@
+P4 messages (which appear as HTTP post fields) Have the following
+values:
+
+app:  One of
+test = "ecd://epls.coe.fsu.edu/P4test"
+userControl = "ecd://epls.coe.fsu.edu/PhysicsPlayground/userControl"
+linear = "ecd://epls.coe.fsu.edu/PhysicsPlayground/linear"
+adaptive = "ecd://epls.coe.fsu.edu/PhysicsPlayground/adaptive"
+
+uid:  User ID
+context:  *Logon*, *Logoff* or current level.
+sender:  "Physics Playground Client"
+message: "Player Start", "Player Stop", "Get Statistics", "Get Next
+Level" (redundant with URL).
+timestamp: current time in ISO960 format (GMT time)
+data:  Arbirary json object.
+
+Player Start:
+data sent <- empty list
+data returned ->
+   trophies:[ {level: coin},...],
+   balance:value,
+   spent:value,
+   newPlayer:logical
+   [this will be in LL messages, need ER to parse.]   
+
+Player Stop:
+data sent <- empty list
+data returned -> empty list
+  [Low priority, we will manually start/stop Dongle, EIP, EAP and
+  ASP for this version.]
+
+Get Statistics
+data sent <- empty list
+data returned ->
+   [{statName:value},...]  -- EAP stats will give value between -1 and +1.
+   [or possiblely]
+   {statName:{High:prob1, Medium:prob2, Low:prob3}, ...}
+
+Get Next Level:
+data sent <- level completed, current topic
+data returned <-
+   {topic:currentTopic,
+    levelsCompleted:[list of levels completed in topic],
+    levelsToGo:[list of uncompleted levels in order],
+    twitchMode:logical
+    }
