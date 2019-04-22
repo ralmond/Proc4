@@ -10,6 +10,7 @@ setClass("P4Message",
                  timestamp="POSIXt",      #When action took place.
                  data="list"              #More details.
                  ))
+setGeneric("m_id",function(x) standardGeneric("m_id"))
 setGeneric("app",function(x) standardGeneric("app"))
 setGeneric("uid",function(x) standardGeneric("uid"))
 setGeneric("mess",function(x) standardGeneric("mess"))
@@ -18,6 +19,7 @@ setGeneric("sender",function(x) standardGeneric("sender"))
 setGeneric("timestamp",function(x) standardGeneric("timestamp"))
 setGeneric("details",function(x) standardGeneric("details"))
 
+setMethod("m_id","ANY", function(x) x@"_id")
 setMethod("app","P4Message", function(x) x@app)
 setMethod("uid","P4Message", function(x) x@uid)
 setMethod("mess","P4Message", function(x) x@mess)

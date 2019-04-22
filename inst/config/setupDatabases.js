@@ -32,6 +32,7 @@ db.getSiblingDB("EIRecords").createUser(eiUser);
 eaUser = pwds.filter(function(u) {return u.user == "EAP";})[0];
 eaUser["roles"] = [{role:"readWrite", db:"EARecords"},
                    {role:"read", db:"EIRecords"},
+                   {role:"read", db:"ASRecords"},
                    {role:"dbAdmin", db:"EARecords"}];
 db.getSiblingDB("EARecords").createUser(eaUser);
 
