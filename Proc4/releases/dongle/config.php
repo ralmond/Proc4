@@ -16,6 +16,6 @@ $PROC4_ETC ="/usr/local/share/Proc4/";
 
 $INI = parse_ini_file("$PROC4_ETC/Proc4.ini",true);
 
-require "vendor/autoload.php";
+//require "vendor/autoload.php";
 
 ?>
