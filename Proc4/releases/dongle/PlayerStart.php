@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
        'data'       => $_POST['data']
     );
 
-    $mong = new MongoClient("mongodb://localhost"); // connect
+    $mong = new MongoDB\Client("mongodb://localhost"); // connect
     
     $col=$mong->Proc4->Players;
     $rec=$col->findOne(['app' => $app, 'uid' => $uid],
