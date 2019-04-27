@@ -37,7 +37,7 @@ setMethod("processed<-","P4Message",
             x})
 
 P4Message <- function(uid,context,sender,mess,timestamp=Sys.time(),
-                        details=list(),app="default", processed=false) {
+                        details=list(),app="default", processed=FALSE) {
   new("P4Message",app=app,uid=uid,context=context,sender=sender,
       mess=mess, timestamp=timestamp,data=details,processed=processed,
       "_id"=c(oid=NA_character_))
