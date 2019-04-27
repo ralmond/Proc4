@@ -8,9 +8,10 @@ importFrom("utils", "limitedLabels")
 
 export(P4Message)
 exportClasses(P4Message)
-export(m_id,app,uid,context,timestamp,sender,mess,details,all.equal.P4Message)
+export(m_id,app,uid,context,timestamp,sender,mess,details,all.equal.P4Message,
+       processed, "processed<-")
 exportMethods(m_id,app,uid,context,timestamp,sender,mess,details,
-              toString,show)
+              toString,show, processed, "processed<-")
 
 export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
        parseMessage,parseData,unparseData,parseSimpleData,
