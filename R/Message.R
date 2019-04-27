@@ -8,6 +8,7 @@ setClass("P4Message",
                  sender="character",      #Which process sent the message
                  mess="character",      #Action Identifier
                  timestamp="POSIXt",      #When action took place.
+                 processed="logical",     #Has this message been processed by the reciever.
                  data="list"              #More details.
                  ))
 setGeneric("m_id",function(x) standardGeneric("m_id"))
@@ -18,6 +19,8 @@ setGeneric("context",function(x) standardGeneric("context"))
 setGeneric("sender",function(x) standardGeneric("sender"))
 setGeneric("timestamp",function(x) standardGeneric("timestamp"))
 setGeneric("details",function(x) standardGeneric("details"))
+setGeneric("processed",function(x) standardGeneric("processed"))
+setGeneric("processed<-",function(x, value) standardGeneric("processed<-"))
 
 setMethod("m_id","ANY", function(x) x@"_id")
 setMethod("app","P4Message", function(x) x@app)
@@ -27,11 +30,16 @@ setMethod("context","P4Message", function(x) x@context)
 setMethod("sender","P4Message", function(x) x@sender)
 setMethod("timestamp","P4Message", function(x) x@timestamp)
 setMethod("details","P4Message", function(x) x@data)
+setMethod("processed","P4Message", function(x) x@processed)
+setMethod("processed<-","P4Message",
+          function(x,value) {
+            x@processed <- as.logical(value)
+            x})
 
 P4Message <- function(uid,context,sender,mess,timestamp=Sys.time(),
-                        details=list(),app="default") {
+                        details=list(),app="default", processed=false) {
   new("P4Message",app=app,uid=uid,context=context,sender=sender,
-      mess=mess, timestamp=timestamp,data=details,
+      mess=mess, timestamp=timestamp,data=details,processed=processed,
       "_id"=c(oid=NA_character_))
 }
 
@@ -61,6 +69,7 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   ## Use manual unboxing for finer control.
   ml$app <- unboxer(ml$app)
   ml$uid <- unboxer(ml$uid)
+  ml$processed <- unboxer(ml$processed)
   if (!is.null(ml$context) && length(ml$context)==1L)
     ml$context <- unboxer(ml$context)
   if (!is.null(ml$sender) && length(ml$sender)==1L)
@@ -102,6 +111,8 @@ saveRec <- function (mess, col, serialize=TRUE) {
 parseMessage<- function (rec) {
   if (is.null(rec$"_id")) rec$"_id" <- NA_character_
   names(rec$"_id") <- "oid"
+  if (is.null(rec$context)) rec$context <-""
+  if (is.null(rec$processed)) rec$processed <- FALSE
   new("P4Message","_id"=ununboxer(rec$"_id"),
       app=as.vector(ununboxer(rec$app)),
       uid=as.vector(ununboxer(rec$uid)),
@@ -109,6 +120,7 @@ parseMessage<- function (rec) {
       sender=as.vector(ununboxer(rec$sender)),
       mess=as.vector(ununboxer(rec$mess)),
       timestamp=ununboxer(rec$timestamp),
+      processed=ununboxer(rec$processed),
       data=parseData(rec$data))
 }
 
