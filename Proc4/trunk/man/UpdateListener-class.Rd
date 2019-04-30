@@ -1,0 +1,105 @@
+\name{UpdateListener-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{UpdateListener-class}
+\alias{isListener,UpdateListener-method}
+\alias{receiveMessage,UpdateListener-method}
+
+\title{Class \code{"UpdateListener"}}
+\description{
+
+  This \code{\link{Listener}} updates an existing record (in a Mongo
+  collection) for the student
+  (\code{uid}), with the contents of the data (details) field of the
+  message. 
+  
+}
+\section{Extends}{
+
+  This class implements the \code{\link{Listener}} interface.
+
+ All reference classes extend and inherit methods from
+ \code{"\linkS4class{envRefClass}"}. 
+
+}
+\section{Methods}{
+  \describe{
+    \item{isListener}{\code{signature(x = "UpdateListener")}: TRUE }
+    \item{receiveMessage}{\code{signature(x = "UpdateListener")}: If
+      the message is in the \code{messSet}, it updates the record
+      corresponding to \code{app(mess)} and \code{uid(mess)} in the
+      database with the contents of \code{details(mess)}.  (See details.) }
+	 }
+}
+\details{
+
+  The database is a \code{\link[mongolite]{mongo}} collection identified
+  by \code{dburi}, \code{dbname} and \code{colname} (collection within
+  the database).  The \code{mess} field of the \code{\link{P4Message}}
+  is checked against the applicable messages in \code{messSet}.  If it
+  is there, then the record in the database corresponding to
+  \code{app(mess)} and \code{uid(mess)} is updated.  Specifically, the
+  field \code{targetField} is set to \code{details(mess)}.  The function
+  \code{jsonEncoder} is called to encode the target field as a JSON
+  object for injection into the database.
+
+}
+\references{
+%%  ~~put references to the literature/web site here~~
+}
+\author{Russell Almond}
+\seealso{
+  \code{\link{Listner}}, \code{\link{P4Message}},
+  \code{\linkS4class{InjectionListner}}, \code{\link[mongolite]{mongo}}
+
+  The function \code{\link{unparseData}} is the default encoder.
+}
+\examples{
+mess2 <- P4Message(app="default",uid="Phred",context="Down Hill",
+                   sender="EIEvent",mess="Money Earned",
+                   details=list(trophyHall=list(list("Down Hill"="gold"),
+                                                list("Stairs"="silver")),
+                                bankBalance=10))
+data2json <- function(dat) {
+  toJSON(sapply(dat,unboxer))
+}
+upwind <- UpdateListener(messSet=c("Money Earned","Money Spent"),
+                         targetField="data",colname="Players",
+                         jsonEncoder="data2json")
+
+receiveMessage(upwind,mess2)
+
+}
+\keyword{classes}
+\section{Fields}{
+  \describe{
+    \item{\code{dbname}:}{Object of class \code{character} giving the
+      name of the Mongo database }
+    \item{\code{dburi}:}{Object of class \code{character} giving the url
+      of the Mongo database.}
+    \item{\code{colname}:}{Object of class \code{character} giving the
+      column of the Mongo database. }
+    \item{\code{messSet}:}{A vector of class \code{character} giving the
+      name of messages which are sent to the database.  Only messages
+      for which \code{mess(mess)} is an element of \code{messSet} will
+      be inserted.}
+    \item{\code{db}:}{Object of class \code{MongoDB} giving the
+      database.  Use \code{messdb()} to access this field to makes sure
+      it has been set up.}
+    \item{\code{targetField}:}{Object of class \code{character} naming
+      the field which is to be set. }
+    \item{\code{jsonEncoder}:}{Object of class \code{character} naming a
+      function which will be used to encode \code{details(mess)} as a
+      JSON object.  The default is \code{\link{unparseData}}.}
+  }
+}
+\section{Class-Based Methods}{
+  \describe{
+    \item{\code{messdb()}:}{Accessor for the database collection.
+      Initializes the connection if it has not been set up.}
+    \item{\code{receiveMessage(mess)}:}{ Does the work of updating the
+      database.  See Details. }
+    \item{\code{initialize(sender, dbname, dburi, colname, messSet,
+        ...)}:}{Sets default values for fields.}
+  }
+}
