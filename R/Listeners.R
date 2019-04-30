@@ -39,6 +39,142 @@ setMethod("receiveMessage","CaptureListener",
           function(x,mess) x$receiveMessage(mess))
 
 
+#################################################
+## InjectionListener
+
+## This a simple listener whose goal is to simply to inject the
+## message into a mongo collection where it can be used as a queue.
+
+InjectionListener <-
+  setRefClass("InjectionListener",
+              fields=c(sender="character",
+                       dbname="character",
+                       dburi="character",
+                       colname="character",
+                       messSet = "character",
+                       db="MongoDB"),
+              methods=list(
+                  initialize=
+                    function(sender="sender",
+                             dbname="test",
+                             dburi="mongodb://localhost",
+                             colname="Messages",
+                             messSet=character(),
+                             ...) {
+                      callSuper(sender=sender,db=NULL,
+                                dburi=dburi,dbname=dbname,
+                                colname=colname,messSet=messSet,
+                                ...)
+                    },
+                  messdb = function () {
+                    if (is.null(db)) {
+                      db <<- mongo(colname,dbname,dburi)
+                    }
+                    db
+                  },
+                  receiveMessage = function (mess) {
+                    if (mess(mess) %in% messSet) {
+                      flog.info("Sending message %s",toString(mess))
+                      flog.info(".. from %s",sender)
+                      flog.debug("Message:",x=as.jlist(mess,attributes(mess)),
+                                 capture=TRUE)
+                      mess@sender <- sender
+                      mess <- saveRec(mess,messdb())
+                    } else {
+                      flog.debug("%s ignoring message %s",sender,toString(mess))
+                    }
+                  }
+              ))
+
+InjectionListener <- function (sender="sender",
+                               dbname="test",
+                               dburi="mongodb://localhost",
+                               messSet=character(),
+                               colname="Messages",...) {
+  new("InjectionListener",sender=sender,dbname=dbname,dburi=dburi,
+      colname=colname,messSet=messSet,...)
+}
+
+setMethod("isListener","InjectionListener",function(x) TRUE)
+setMethod("receiveMessage","InjectionListener",
+          function(x,mess) x$receiveMessage(mess))
+
+
+#################################################
+## UpdateListener
+
+## This listener updates fields in a reference database for a given
+## listener.  It can be used, for example, to keep track of trophies
+## earned or balance of money/earned or spent in the game.
+
+UpdateListener <-
+  setRefClass("UpdateListener",
+              fields=c(dbname="character",
+                       dburi="character",
+                       colname="character",
+                       messSet = "character",
+                       targetField="character",
+                       jsonEncoder="character",
+                       db="MongoDB"),
+              methods=list(
+                  initialize=
+                    function(dbname="test",
+                             dburi="mongodb://localhost",
+                             colname="Messages",
+                             messSet=character(),
+                             targetField="data",
+                             jsonEncoder="unparseData",
+                             ...) {
+                      callSuper(db=NULL,
+                                dburi=dburi,dbname=dbname,
+                                colname=colname,messSet=messSet,
+                                targetField=targetField,
+                                jsonEncoder=jsonEncoder,
+                                ...)
+                    },
+                  messdb = function () {
+                    if (is.null(db)) {
+                      db <<- mongo(colname,dbname,dburi)
+                    }
+                    db
+                  },
+                  receiveMessage = function (mess) {
+                    if (mess(mess) %in% messSet) {
+                      flog.info("Updating record for %s: %s",uid(mess),toString(mess))
+                      flog.debug("Message:",x=as.jlist(mess,attributes(mess)),
+                                 capture=TRUE)
+                      if (nchar(targetField) > 0L) {
+                        update <- sprintf('{"$set":{"%s":%s}}', targetField,
+                                          do.call(jsonEncoder,
+                                                  list(details(mess))))
+                      } else {
+                        update <- sprintf('{"$set":%s}',
+                                          do.call(jsonEncoder,
+                                                  list(details(mess))))
+                      }
+                      messdb()$update(buildJQuery(app=app(mess),uid=uid(mess)),
+                                      update)
+                    } else {
+                      flog.debug("%s ignoring message %s",sender,toString(mess))
+                    }
+                  }
+              ))
+
+UpdateListener <- function (dbname="test",
+                            dburi="mongodb://localhost",
+                            colname="Messages",
+                            targetField="data",
+                            jsonEncoder="unparseData",
+                            ...) {
+  new("UpdateListener",dbname=dbname,dburi=dburi,
+      colname=colname,targetField=targetField,jsonEncoder=jsonEncoder,...)
+}
+
+setMethod("isListener","UpdateListener",function(x) TRUE)
+setMethod("receiveMessage","UpdateListener",
+          function(x,mess) x$receiveMessage(mess))
+
+
 #############################################
 ## Listener Set
 

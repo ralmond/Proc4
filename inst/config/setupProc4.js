@@ -20,7 +20,9 @@ c4User = pwds.filter(function(u) {return u.user == "C4";})[0];
 con = new Mongo();
 db=con.getDB("Proc4");                 
 db.auth(c4User.user,c4User.pwd);
-db.AuthorizedApps.insert({app:"ecd://epls.coe.fsu.edu/P4test",documentation:"For system testing."});
+apps.forEach(function (row) {
+    db.AuthorizedApps.replaceOne({"app":row.app},row,{"upsert":true});
+});
 db.createCollection("Players", {
     validator: {
         $jsonSchema: {
@@ -42,6 +44,10 @@ db.createCollection("Players", {
                 timestamp: {
                     bsonType: "date",
                     description: "Timestamp"
+                },
+                data: {
+                    bsonType: "object",
+                    description: "Player State information passed to game engine at login."
                 }
             }
         }

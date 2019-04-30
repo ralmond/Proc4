@@ -29,6 +29,7 @@ db.getSiblingDB("Proc4").createUser(c4User);
 eiUser = pwds.filter(function(u) {return u.user == "EIP";})[0];
 eiUser["roles"] = [{role:"readWrite", db:"EIRecords"},
                    {role:"read", db:"gameLRS"},
+                   {role:"read", db:"Proc4"},
                    {role:"dbAdmin", db:"EIRecords"}];
 db.getSiblingDB("admin").dropUser("EIP");
 db.getSiblingDB("admin").createUser(eiUser);
@@ -37,6 +38,7 @@ db.getSiblingDB("EIRecords").createUser(eiUser);
 
 eaUser = pwds.filter(function(u) {return u.user == "EAP";})[0];
 eaUser["roles"] = [{role:"readWrite", db:"EARecords"},
+                   {role:"read", db:"Proc4"},
                    {role:"read", db:"EIRecords"},
                    {role:"read", db:"ASRecords"},
                    {role:"dbAdmin", db:"EARecords"}];
@@ -48,6 +50,7 @@ db.getSiblingDB("EARecords").createUser(eaUser);
 asUser = pwds.filter(function(u) {return u.user == "ASP";})[0];
 asUser["roles"] = [{role:"readWrite", db:"ASRecords"},
                    {role:"read", db:"EARecords"},
+                   {role:"read", db:"Proc4"},
                    {role:"dbAdmin", db:"ASRecords"}];
 db.getSiblingDB("admin").dropUser("ASP");
 db.getSiblingDB("admin").createUser(asUser);

@@ -9,6 +9,7 @@ setClass("P4Message",
                  mess="character",      #Action Identifier
                  timestamp="POSIXt",      #When action took place.
                  processed="logical",     #Has this message been processed by the reciever.
+                 pError="ANY",     #Error occured while processing.
                  data="list"              #More details.
                  ))
 setGeneric("m_id",function(x) standardGeneric("m_id"))
@@ -21,6 +22,9 @@ setGeneric("timestamp",function(x) standardGeneric("timestamp"))
 setGeneric("details",function(x) standardGeneric("details"))
 setGeneric("processed",function(x) standardGeneric("processed"))
 setGeneric("processed<-",function(x, value) standardGeneric("processed<-"))
+setGeneric("processingError",function(x) standardGeneric("processingError"))
+setGeneric("processingError<-",function(x, value)
+  standardGeneric("processingError<-"))
 
 setMethod("m_id","ANY", function(x) x@"_id")
 setMethod("app","P4Message", function(x) x@app)
@@ -35,11 +39,17 @@ setMethod("processed<-","P4Message",
           function(x,value) {
             x@processed <- as.logical(value)
             x})
+setMethod("processingError","P4Message", function(x) x@pError)
+setMethod("processingError<-","P4Message",
+          function(x,value) {
+            x@pError <- value
+            x})
 
 P4Message <- function(uid,context,sender,mess,timestamp=Sys.time(),
                         details=list(),app="default", processed=FALSE) {
   new("P4Message",app=app,uid=uid,context=context,sender=sender,
       mess=mess, timestamp=timestamp,data=details,processed=processed,
+      pError=NULL,
       "_id"=c(oid=NA_character_))
 }
 
@@ -79,6 +89,13 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
   ## Saves name data
   ml$data <- unparseData(ml$data,serialize)
+  ## explicit null value creates problem, so drop pError if null.
+  ## note attributes maps NULL to a symbol '\001NULL\001'
+  if (is.null(ml$pError) || ml$pError == '\001NULL\001') {
+    ml["pError"] <- NULL
+  } else {
+    ml$pError <- serializeJSON(ml$pError)
+  }
   ml
   })
 
@@ -106,21 +123,54 @@ saveRec <- function (mess, col, serialize=TRUE) {
   mess
 }
 
+markAsProcessed <- function (mess,col) {
+  processed(mess) <- TRUE
+  col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+             '{"$set": {"processed":true}}')
+  mess
+}
+
+markAsError <- function (mess,col, e) {
+  processingError(mess) <- e
+  col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+             sprintf('{"$set": {"pError":%s}}',
+                     serializeJSON(processingError(mess))))
+  mess
+}
+
+
+
 ## as.vector suppresses the names which are harmless, but make writing
 ## test suites harder.
-parseMessage<- function (rec) {
+
+## The cleanning code gets reused by other classes which inherit from
+## P4Message.
+## toJSON | fromJSON on an empty list will change the type, so need to
+## check for empty lists.
+cleanMessageJlist <- function (rec) {
   if (is.null(rec$"_id")) rec$"_id" <- NA_character_
   names(rec$"_id") <- "oid"
-  if (is.null(rec$context)) rec$context <-""
+  if (is.null(rec$app) || length(rec$app) == 0L) rec$app <- "default"
+  if (is.null(rec$context) || length(rec$context) == 0L) rec$context <-""
+  if (is.null(rec$mess) || length(rec$mess) == 0L) rec$mess <-""
+  if (is.null(rec$sender)|| length(rec$sender) == 0L) rec$sender <-""
   if (is.null(rec$processed)) rec$processed <- FALSE
+  if (is.null(rec$timestamp)) rec$timestamp <- Sys.time()
+  if (!is.null(rec$pError)) rec$pError <- unserializeJSON(rec$pError)
+  rec
+}
+
+parseMessage<- function (rec) {
+  rec <- cleanMessageJlist(rec)
   new("P4Message","_id"=ununboxer(rec$"_id"),
       app=as.vector(ununboxer(rec$app)),
       uid=as.vector(ununboxer(rec$uid)),
       context=as.vector(ununboxer(rec$context)),
       sender=as.vector(ununboxer(rec$sender)),
       mess=as.vector(ununboxer(rec$mess)),
-      timestamp=ununboxer(rec$timestamp),
+      timestamp=as.POSIXlt(ununboxer(rec$timestamp)),
       processed=ununboxer(rec$processed),
+      pError=rec$pError,
       data=parseData(rec$data))
 }
 
