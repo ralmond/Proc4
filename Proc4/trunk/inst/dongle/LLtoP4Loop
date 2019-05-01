@@ -1,0 +1,19 @@
+#!/bin/bash
+IP=127.0.0.1
+name=$1
+starttime=$2
+echo "Learning Locker to P4 extraction loop, $1, starting."
+## Create a running file, when this file is deleted, the process will
+## stop.
+cd /usr/local/share/Proc4/
+touch logs/$name.running
+
+cache=$(mktemp ${name}.XXXXXXXXXX)
+
+while [ -f logs/$name.running ]
+do
+ssh IP -e"extractEvidence.sh $starttime" | ./LLtoP4 >$cache
+./importEvidence.sh <$cache
+starttime=$(jq '[.[]|.timestamp]|max' $cache)
+sleep 10s
+done
