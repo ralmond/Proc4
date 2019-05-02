@@ -266,8 +266,8 @@ buildJQterm <- function (name,value) {
     }
   } else {
     if(!all(compOps %in% mongoQueries)) {
-      stop("Unspported operator",compOps[!(compOps%in%mongoQueries)],
-           "in query for field",name)
+      stop("Unspported operator ",compOps[!(compOps%in%mongoQueries)],
+           " in query for field ",name)
     }
     if(compOps[1]=="nin" || compOps[1]=="in" || compOps[1]=="") {
       ## Special Handling for (n)in query)
@@ -291,7 +291,9 @@ buildJQuery <- function (...,rawfields=character()) {
   fields <- names(terms)
   jstrings <- sapply(fields,function(f) buildJQterm(f,terms[[f]]))
   jstrings <- c(jstrings,rawfields)
-  paste('{',paste(jstrings,collapse=", "),'}')
+  query <- paste('{',paste(jstrings,collapse=", "),'}')
+  flog.trace("Query = ",query)
+  query
 }
 
 
