@@ -156,7 +156,7 @@ UpdateListener <-
                                                   list(details(mess))))
                       }
                       qq <- buildJQuery(app=app(mess),uid=uid(mess))
-                      if (messdb$count(qq) == 0L) {
+                      if (messdb()$count(qq) == 0L) {
                         ## Initializize by saving message.
                         messdb()$insert(as.json(mess))
                       }
