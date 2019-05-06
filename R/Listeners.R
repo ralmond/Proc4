@@ -144,16 +144,23 @@ UpdateListener <-
                       flog.debug("Message:",x=as.jlist(mess,attributes(mess)),
                                  capture=TRUE)
                       if (nchar(targetField) > 0L) {
-                        update <- sprintf('{"$set":{"%s":%s}}', targetField,
+                        update <- sprintf('{"$set":{"%s":%s, "timestamp":%s}}',
+                                          targetField,
                                           do.call(jsonEncoder,
-                                                  list(details(mess))))
+                                                  list(details(mess))),
+                                          toJSON(unboxer(timestamp(mess)),
+                                                 POSIXt="mongo"))
                       } else {
                         update <- sprintf('{"$set":%s}',
                                           do.call(jsonEncoder,
                                                   list(details(mess))))
                       }
-                      messdb()$update(buildJQuery(app=app(mess),uid=uid(mess)),
-                                      update)
+                      qq <- buildJQuery(app=app(mess),uid=uid(mess))
+                      if (messdb$count(qq) == 0L) {
+                        ## Initializize by saving message.
+                        messdb()$insert(as.json(mess))
+                      }
+                      messdb()$update(qq,update)
                     } else {
                       flog.debug("%s ignoring message %s",sender,toString(mess))
                     }
