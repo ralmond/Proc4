@@ -74,14 +74,15 @@ InjectionListener <-
                   },
                   receiveMessage = function (mess) {
                     if (mess(mess) %in% messSet) {
-                      flog.info("Sending message %s",toString(mess))
-                      flog.info(".. from %s",sender)
-                      flog.debug("Message:",x=as.jlist(mess,attributes(mess)),
+                      flog.debug("Sending message %s",toString(mess))
+                      flog.debug(".. from %s",sender)
+                      flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
                                  capture=TRUE)
                       mess@sender <- sender
                       mess <- saveRec(mess,messdb())
                     } else {
-                      flog.debug("%s ignoring message %s",sender,toString(mess))
+                      flog.debug("%s ignoring message %s",toString(sender),
+                                 toString(mess))
                     }
                   }
               ))
@@ -140,8 +141,8 @@ UpdateListener <-
                   },
                   receiveMessage = function (mess) {
                     if (mess(mess) %in% messSet) {
-                      flog.info("Updating record for %s: %s",uid(mess),toString(mess))
-                      flog.debug("Message:",x=as.jlist(mess,attributes(mess)),
+                      flog.debug("Updating record for %s: %s",uid(mess),toString(mess))
+                      flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
                                  capture=TRUE)
                       if (nchar(targetField) > 0L) {
                         update <- sprintf('{"$set":{"%s":%s, "timestamp":%s}}',
@@ -162,7 +163,7 @@ UpdateListener <-
                       }
                       messdb()$update(qq,update)
                     } else {
-                      flog.debug("%s ignoring message %s",sender,toString(mess))
+                      flog.debug("%s ignoring message %s",dbname,toString(mess))
                     }
                   }
               ))
