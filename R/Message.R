@@ -292,7 +292,7 @@ buildJQuery <- function (...,rawfields=character()) {
   jstrings <- sapply(fields,function(f) buildJQterm(f,terms[[f]]))
   jstrings <- c(jstrings,rawfields)
   query <- paste('{',paste(jstrings,collapse=", "),'}')
-  flog.trace("Query = ",query)
+  flog.trace("Query = ",query,capture=TRUE)
   query
 }
 
