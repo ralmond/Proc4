@@ -64,16 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     
     $P4mess['message'] = "Player Start Acknolwedge";
     $P4mess['sender'] = "Proc 4 dongle";
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Allow-Origin, X-Application-Name, X-Request-Time');
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($P4mess);
     //printf("Player started: %s (%s)",$_POST['uid'],$_POST['app']);
 } elseif($_SERVER['REQUEST_METHOD']=="OPTIONS") {
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Allow-Origin, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, X-Application-Name, X-Request-Time');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Max-Age: 1728000');
