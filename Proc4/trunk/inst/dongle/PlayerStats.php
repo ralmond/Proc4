@@ -52,14 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $rec['message'] = "Statistics";
     $rec['sender'] = "Proc 4 dongle";
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Accept, X-Access-Token, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Headers: Accept, X-Access-Token, Access-Control-Allow-Credentials, X-Application-Name, X-Request-Time');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($rec);
 } elseif($_SERVER['REQUEST_METHOD']=="OPTIONS") {
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Accept, X-Access-Token, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Headers: Accept, X-Access-Token, Access-Control-Allow-Credentials, X-Application-Name, X-Request-Time');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Origin: *');
     header('Content-Length: 0');
