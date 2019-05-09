@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 </body>
 </html>
 <?php
-} elseif ($_SERVER['REQUEST_METHOD']) == 'POST')
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     $app = $_POST['app'];
     if (strpos($app,'ecd://epls.coe.fsu.edu/') != 0) {
@@ -50,8 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } 
     $rec['message'] = "Activities";
     $rec['sender'] = "Proc 4 dongle";
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: Accept, X-Access-Token, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json;charset=utf-8');
     echo json_encode($rec);
+} elseif($_SERVER['REQUEST_METHOD']=="OPTIONS") {
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: Accept, X-Access-Token, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Length: 0');
+    header('Content-Type: text/plain');
 } else {
     die("This script only works with GET and POST requests.");
 }
