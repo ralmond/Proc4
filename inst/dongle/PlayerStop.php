@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $P4mess['message'] = "Player Stop Acknolwedge";
     $P4mess['sender'] = "Proc 4 dongle";
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Accept, X-Access-Token, Access-Control-Allow-Credentials, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, Access-Control-Allow-Credentials, Access-Control-Allow-Headers, Access-Control-Allow-Methods, Access-Control-Allow-Origin, X-Application-Name, X-Request-Time');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json;charset=utf-8');
@@ -73,9 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //printf("Player stoped: %s (%s)",$_POST['uid'],$_POST['app']);
 } elseif($_SERVER['REQUEST_METHOD']=="OPTIONS") {
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Accept, X-Access-Token, Access-Control-Allow-Credentials, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, Access-Control-Allow-Credentials, Access-Control-Allow-Methods, Access-Control-Allow-Origin, X-Application-Name, X-Request-Time');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Max-Age: 1728000');
     header('Content-Length: 0');
     header('Content-Type: text/plain');
 } else {
