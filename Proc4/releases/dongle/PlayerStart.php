@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //printf("Player started: %s (%s)",$_POST['uid'],$_POST['app']);
 } elseif($_SERVER['REQUEST_METHOD']=="OPTIONS") {
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, X-Application-Name, X-Request-Time');
+    header('Access-Control-Allow-Headers: Content-Type, Accept, X-Access-Token, X-Application-Name, X-Request-Time, X-Powered-by');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Max-Age: 1728000');
