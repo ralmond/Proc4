@@ -41,6 +41,10 @@ db.createCollection("Players", {
                     bsonType: "bool",
                     description: "Is the player currently active?"
                 },
+                context: {
+                    bsonType: "string",
+                    description: "Context (task) ID (string)"
+                },
                 timestamp: {
                     bsonType: "date",
                     description: "Timestamp"

@@ -1,3 +1,9 @@
+2019-05-12  Rusell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (UpsertListener): Added context to the list of
+	fields it updates, as this is particularly useful for the
+	Statistics collection, but not bad for the Players collection.
+
 2019-04-27  Rusell Almond  <ralmond@Cherry>
 
 	* R/Message.R (P4Message-class):  Added boolean "processed"

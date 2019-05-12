@@ -79,7 +79,8 @@ InjectionListener <-
                       flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
                                  capture=TRUE)
                       mess@sender <- sender
-                      mess <- saveRec(mess,messdb())
+                      mess@"_id" <- NA_character_
+                      messdb()$insert(as.json(mess,serialize=TRUE))
                     } else {
                       flog.debug("%s ignoring message %s",toString(sender),
                                  toString(mess))
@@ -98,6 +99,75 @@ InjectionListener <- function (sender="sender",
 
 setMethod("isListener","InjectionListener",function(x) TRUE)
 setMethod("receiveMessage","InjectionListener",
+          function(x,mess) x$receiveMessage(mess))
+
+#################################################
+## InjectionListener
+
+## This a simple listener whose goal is to simply to inject the
+## message into a mongo collection where it can be used as a queue.
+
+UpsertListener <-
+  setRefClass("UpsertListener",
+              fields=c(sender="character",
+                       dbname="character",
+                       dburi="character",
+                       colname="character",
+                       qfields="character",
+                       messSet = "character",
+                       db="MongoDB"),
+              methods=list(
+                  initialize=
+                    function(sender="sender",
+                             dbname="test",
+                             dburi="mongodb://localhost",
+                             colname="Messages",
+                             messSet=character(),
+                             qfields=c("app","uid"),
+                             ...) {
+                      callSuper(sender=sender,db=NULL,
+                                dburi=dburi,dbname=dbname,
+                                colname=colname,messSet=messSet,
+                                qfields=qfields,
+                                ...)
+                    },
+                  messdb = function () {
+                    if (is.null(db)) {
+                      db <<- mongo(colname,dbname,dburi)
+                    }
+                    db
+                  },
+                  receiveMessage = function (mess) {
+                    if (mess(mess) %in% messSet) {
+                      flog.debug("Updating record for %s: %s",uid(mess),toString(mess))
+                      flog.debug(".. from %s",sender)
+                      flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
+                                 capture=TRUE)
+                      mess@sender <- sender
+                      mess@"_id" <- NA_character_
+                      query < lapply(qfields,function(f) do.call(f,list(mess)))
+                      names(query) <- qfields
+                      messdb()$replace(do.call(buildJQuery,query),
+                                       as.json(mess,serialize=TRUE),upsert=TRUE)
+                    } else {
+                      flog.debug("%s ignoring message %s",toString(sender),
+                                 toString(mess))
+                    }
+                  }
+              ))
+
+UpsertListener <- function (sender="sender",
+                            dbname="test",
+                            dburi="mongodb://localhost",
+                            messSet=character(),
+                            colname="Messages",
+                            qfields=c("app","uid"),...) {
+  new("UpsertListener",sender=sender,dbname=dbname,dburi=dburi,
+      colname=colname,messSet=messSet,qfields=qfields,...)
+}
+
+setMethod("isListener","UpsertListener",function(x) TRUE)
+setMethod("receiveMessage","UpsertListener",
           function(x,mess) x$receiveMessage(mess))
 
 
@@ -145,10 +215,11 @@ UpdateListener <-
                       flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
                                  capture=TRUE)
                       if (nchar(targetField) > 0L) {
-                        update <- sprintf('{"$set":{"%s":%s, "timestamp":%s}}',
+                        update <- sprintf('{"$set":{"%s":%s, "context":"%s", "timestamp":%s}}',
                                           targetField,
                                           do.call(jsonEncoder,
                                                   list(details(mess))),
+                                          context(mess),
                                           toJSON(unboxer(timestamp(mess)),
                                                  POSIXt="mongo"))
                       } else {
@@ -159,9 +230,14 @@ UpdateListener <-
                       qq <- buildJQuery(app=app(mess),uid=uid(mess))
                       if (messdb()$count(qq) == 0L) {
                         ## Initializize by saving message.
+                        flog.trace("Record not found, inserting.")
+                        mess@"_id" <- NA_character_
                         messdb()$insert(as.json(mess))
+                      } else {
+                        flog.trace("Record found, updating.")
+                        flog.trace("Update: %s",update)
+                        messdb()$update(qq,update)
                       }
-                      messdb()$update(qq,update)
                     } else {
                       flog.debug("%s ignoring message %s",dbname,toString(mess))
                     }
