@@ -211,9 +211,8 @@ UpdateListener <-
                   },
                   receiveMessage = function (mess) {
                     if (mess(mess) %in% messSet) {
-                      flog.debug("Updating record for %s: %s",uid(mess),toString(mess))
-                      flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
-                                 capture=TRUE)
+                      flog.debug("Updating record for %s (%s): %s",uid(mess),
+                                 context(mess), toString(mess))
                       if (nchar(targetField) > 0L) {
                         update <- sprintf('{"$set":{"%s":%s, "context":"%s", "timestamp":%s}}',
                                           targetField,
@@ -235,9 +234,11 @@ UpdateListener <-
                         messdb()$insert(as.json(mess))
                       } else {
                         flog.trace("Record found, updating.")
-                        flog.trace("Update: %s",update)
-                        messdb()$update(qq,update)
                       }
+                      ## Insert does not format details, correctly.
+                      ## Overwrite with update.
+                      flog.trace("Update: %s",update)
+                      messdb()$update(qq,update)
                     } else {
                       flog.debug("%s ignoring message %s",dbname,toString(mess))
                     }
