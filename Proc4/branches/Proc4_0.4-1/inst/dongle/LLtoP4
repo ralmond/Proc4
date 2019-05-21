@@ -1,0 +1,2 @@
+#!/bin/bash
+jq -f filter1.jq | sed -f filter2.sed | jq -f filter3.jq

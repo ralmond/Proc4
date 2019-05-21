@@ -1,0 +1,36 @@
+import(methods)
+import(futile.logger)
+importFrom("mongolite","mongo")
+importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
+           "serializeJSON", "unserializeJSON")
+importFrom("utils", "limitedLabels")
+
+
+export(P4Message)
+exportClasses(P4Message)
+export(m_id,app,uid,context,timestamp,sender,mess,details,all.equal.P4Message,
+       processed, markAsProcessed, processingError, markAsError)
+exportMethods(m_id,app,uid,context,timestamp,sender,mess,details,
+              toString,show, processed, processingError)
+
+export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
+       parseMessage,parseData,unparseData,parseSimpleData,
+       unboxer,ununboxer, cleanMessageJlist,
+       getOneRec,getManyRecs)
+exportMethods(as.json,as.jlist)
+
+export(receiveMessage,isListener,ListenerSet,notifyListeners,
+       InjectionListener,UpdateListener,UpsertListener)
+exportClasses(ListenerSet,MongoDB,CaptureListener, InjectionListener,
+              UpdateListener)
+exportMethods(isListener,receiveMessage,notifyListeners)
+
+export(withFlogging)
+
+
+
+
+
+
+
+

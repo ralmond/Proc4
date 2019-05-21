@@ -1,0 +1,1 @@
+s|http://.*/games/||g
