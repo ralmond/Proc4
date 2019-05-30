@@ -27,13 +27,23 @@
   <h2>Dependent Technologies</h2>
   Proc4 is currently using the following R packages:
   <ul>
-    <li> <a href="">jsonlite</a> For JSON parsing tools.</li>
-    <li><a href="">mongolite</a> For connections to the mongo
+    <li> <a href="https://cloud.r-project.org/web/packages/jsonlite/index.html">jsonlite</a> For JSON parsing tools.</li>
+    <li><a href="https://cloud.r-project.org/web/packages/mongolite/index.html">mongolite</a> For connections to the mongo
       database.</li>
-    <li><a href="">futile.logger</a> for logging error and debugging
+    <li><a href="https://cloud.r-project.org/web/packages/futile.logger/index.html">futile.logger</a> for logging error and debugging
+    messages.  Note that each packages (e.g., "Proc4", "EIEvent",
+      "EABN" and  "BNAS") has its own logger which can be directed separately.</li>
+    <li><a href="https://cloud.r-project.org/web/packages/R.utils/index.html">R.utils</a> for logging error and debugging
     messages.  Note that each packages (e.g., "Proc4", "EIEvent",
       "EABN" and  "BNAS") has its own logger which can be directed separately.</li>
   </ul>
+  <p> It also assumes that a Mongo database is installed locally (or
+  that you have remote access).  Instructions for downloading and
+  installing Mongo can be found at
+  the <a href="https://www.mongodb.com/download-center/">Mongo
+  download center</a>.  This includes the <code>mongoimport</code>
+  and <code>mongoexport</code> tools, which are a separate install on
+  some distributions.</p>
   <h2> Releases </h2>
   <p> Note:  at the moment, the packages are pure R code, so only the
     source release is provided.</p>
@@ -46,6 +56,11 @@
       <td></td><td></td>
       <td><a href="Proc4_0.2-2-manual.pdf">Proc4_0.2-2-manual.pdf</a></td>
       <td>First reasonably functional version.</td></tr>
+      <td>0.4-1</td><td><a href="Proc4_0.4-1.tar.gz">Proc4_0.4-1.tar.gz</a></td>
+      <td></td><td></td>
+      <td><a href="Proc4_0.4-1-manual.pdf">Proc4_0.4-1-manual.pdf
+      (not yet available)</a></td>
+      <td>Used in May 2019 FSUS study..</td></tr>
   </table>
 
   <p>
@@ -82,6 +97,11 @@
       <td></td><td></td>
       <td><a href="EIEvent_0.1-6-manual.pdf">EIEvent_0.1-6-manual.pdf</a></td>
       <td>Bug fix for rule tests.</td></tr>
+      <td>0.4-1</td><td><a href="EIEvent_0.4-1.tar.gz">EIEvent_0.4-1.tar.gz</a></td>
+      <td></td><td></td>
+      <td><a href="EIEvent_0.4-1-manual.pdf">EIEvent_0.4-1-manual.pdf
+      (not yet available)</a></td>
+      <td>Used in May 2019 FSUS study..</td></tr>
   </table>
   
   <p>
@@ -95,10 +115,22 @@
   <p>
     This handles evidence accumulation using Bayesian networks.
     It uses <a href="https://pluto.coe.fsu.edu/RNetica">RNetica</a>
-    for its Bayes net engine.
+   and  <a href="https://pluto.coe.fsu.edu/RNetica/Peanut.html">Peanut</a>
+    for its Bayes net Engine.
   </p>
+  <table border="1">
+    <tr>
+      <th>Release</th><th>Source</th><th>Windows</th><th>MacOS</th><th>Manual</th><th>Notes</th>
+    </tr>
+    <tr>
+      <td>0.4-1</td><td><a href="EABN_0.4-1.tar.gz">EABN_0.4-1.tar.gz</a></td>
+      <td></td><td></td>
+      <td><a href="EABN_0.4-1-manual.pdf">EABN_0.4-1-manual.pdf
+      (not yet available)</a></td>
+      <td>Used in May 2019 FSUS study..</td></tr>
+  </table>
   <p>
-    Code is not yet released, but the subversion repository is at:
+   The subversion repository is at:
     <a href="https://pluto.coe.fsu.edu/svn/common/EABN/">
       https://pluto.coe.fsu.edu/svn/common/EABN/</a>
   </p>
