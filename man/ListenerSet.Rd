@@ -82,8 +82,16 @@ All reference classes extend and inherit methods from
 }
 \seealso{
 
-  \code{\linkS4class{Listener}}, \code{\link[futile.logger]{flog.logger}},
+  \code{\link{Listener}}, \code{\link{receiveMessage}},
+  \code{\link{notifyListeners}},
+  \code{\link[futile.logger]{flog.logger}},
   \code{\link[mongolite]{mongo}}, \code{\linkS4class{P4Message}}
+
+  Listener Classes.
+  \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
+  \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
+
+
 }
 \examples{
 showClass("ListenerSet")

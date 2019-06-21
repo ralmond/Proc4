@@ -14,8 +14,8 @@ cache2=$(mktemp --tmpdir ${name}.XXXXXXXXXX)
 while [ -f ../logs/$name.running ]
 do
     ssh $IP ./extractEvidence.sh $starttime >$cache1
-    if [ $(tail -n +2 $cache1 | wc -c) -gt 4 ]; then
-        tail -n +2 <$cache1 | ./LLtoP4 >$cache2
+    if [ $(tail -n +2 $cache1 | jq 'length') -gt 0 ]; then
+        tail -n +2 <$cache1 | ./LLtoP4 | jq -f coreEvents.jq >$cache2
         ./importEvidence.sh <$cache2
         starttime=$(jq '[.[]|.timestamp."$date"]|max' $cache2)
     fi

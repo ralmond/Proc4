@@ -3,6 +3,7 @@
 \alias{parseData}
 \alias{parseSimpleData}
 \alias{unparseData}
+\alias{cleanMessageJlist}
 \title{Converts a JSON object into a P4 Message}
 \description{
 
@@ -17,6 +18,7 @@
 }
 \usage{
 parseMessage(rec)
+cleanMessageJlist(rec)
 parseData(messData)
 parseSimpleData(messData)
 unparseData(data, serialize=TRUE)
@@ -37,7 +39,13 @@ unparseData(data, serialize=TRUE)
   \emph{name}=\emph{value} format.  This is the \code{rec} argument.
   The \code{parseMessage} function takes the fields of the JSON object
   and uses them to populate a corresponding
-  \code{\linkS4class{P4Message}} object.
+  \code{\linkS4class{P4Message}} object.  Usually, some cleaning is done
+  first (e.g., to check the argument types and insert default values).
+  The function \code{cleanMessageJlist} does that cleaning for the
+  common fields of the \code{P4Message} object, so
+  subclasses \code{P4Message} can inheret the parsing for the commond
+  message fields.
+
 
   The \code{data} field needs extra care as it could contain arbitrary R
   objects.  There are two strategies for handling the data field.
@@ -56,11 +64,11 @@ unparseData(data, serialize=TRUE)
 
   The function \code{parseMessage} returns a
   \code{\linkS4class{P4Message}} object populated with fields from the
-  \code{rec} argument.
+  \code{rec} argument.  The function \code{cleanMessageJlist} returns
+  the cleaned \code{rec} argument.
 
   The function \code{unparseData} returns a JSON string representing the
-  data. 
-  The functions \code{parseData} and \code{parseSimpleData} return a
+  data.  The functions \code{parseData} and \code{parseSimpleData} return a
   list containing the data. 
   
 }

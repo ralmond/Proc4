@@ -1,5 +1,6 @@
 \name{P4Message}
 \alias{P4Message}
+\alias{m_id}
 \alias{app}
 \alias{uid}
 \alias{mess}
@@ -9,7 +10,7 @@
 \alias{details}
 \alias{toString,P4Message-method}
 \alias{show,P4Message-method}
-
+\alias{all.equal.P4Message}
 \title{Constructor and accessors for P4 Messages}
 \description{
 
@@ -19,7 +20,8 @@
 
 }
 \usage{
-P4Message(uid, context, sender, mess, timestamp = Sys.time(), details = list(), app = "default")
+P4Message(uid, context, sender, mess, timestamp = Sys.time(), details = list(), app = "default", processed=FALSE)
+m_id(x)
 app(x)
 uid(x)
 mess(x)
@@ -29,7 +31,8 @@ timestamp(x)
 details(x)
 \S4method{toString}{P4Message}(x,...)
 \S4method{show}{P4Message}(object)
-
+\S3method{all.equal}{P4Message}(target, current, ..., checkTimestamp = FALSE,
+                                check_ids = TRUE)
 }
 \arguments{
   \item{uid}{A character object giving an identifier for the user or student.}
@@ -44,9 +47,20 @@ details(x)
   \item{timestamp}{The time the message was sent.}
   \item{details}{A list giving the data to be sent with the message.}
   \item{app}{An identifier for the application using the message.}
+  \item{processed}{A logical flag:  true if the message has been
+    processed and false otherwise.}
   \item{x}{A message object to be queried, or converted to a string.}
-  \item{...}{Addtional arguments for \code{\link[methods]{show}}.}
+  \item{...}{Addtional arguments for \code{\link[methods]{show}} or
+    \code{\link[base]{all.equal}}.}
   \item{object}{A message object to be converted to a string.}
+  \item{target}{A P4Message to compare.}
+  \item{current}{A P4Message to compare.}
+  \item{checkTimestamp}{Logical flag.  If true, the timestamps are
+    compared as part of the equality test.}
+  \item{check_ids}{Logical flag.  If true, the database ids are
+    compared as part of the equality test.}
+  
+  
 }
 \details{
 
@@ -59,7 +73,14 @@ details(x)
 
   Using the public methods, the fields can be read but not set.  The
   generic functions are exported so that other object can extend the
-  \code{P4Message} class.
+  \code{P4Message} class.  The \code{m_id} function accesses the mongo
+  ID of the object (the \code{_id} field).
+
+  The function \code{all.equal.P4Message} checks two messages for
+  identical contents.  The flags \code{checkTimestamp} and
+  \code{check_ids} can be used to suppress the checking of those
+  fields.  If timestamps are checked, they must be within .1 seconds to
+  be considered equal.
 
 }
 \value{
@@ -69,6 +90,11 @@ details(x)
   \code{mess()} functions all return a character scalar.  The
   \code{timestamp()}, function returns an object of type \code{POSIXt}
   and the \code{details()} function returns a list.
+
+  The function \code{all.equal.P4Message} returns either ‘TRUE’  or a
+  vector of mode "character" describing the differences between
+  \code{target} and \code{current}.
+
 }
 \references{
 
@@ -91,7 +117,7 @@ details(x)
 
 mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
          as.POSIXct("2018-11-04 21:15:25 EST"),
-         list(correct=TRUE,seletion="D"))
+         list(correct=TRUE,selection="D"))
 stopifnot(
   app(mess1) == "default",
   uid(mess1) == "Fred",
@@ -102,6 +128,12 @@ stopifnot(
   details(mess1)$correct==TRUE,
   details(mess1)$selection=="D"
 )
+
+mess2 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
+         as.POSIXct("2018-11-04 21:15:25 EST"),
+         list(correct=FALSE,selection="E"))
+all.equal(mess1,mess2)
+stopifnot(!isTRUE(all.equal(mess1,mess2)))
 
 }
 

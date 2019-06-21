@@ -1,16 +1,17 @@
-\name{InjectionListener-class}
+\name{UpsertListener-class}
 \Rdversion{1.1}
 \docType{class}
-\alias{InjectionListener-class}
-\alias{isListener,InjectionListener-method}
-\alias{receiveMessage,InjectionListener-method}
+\alias{UpsertListener-class}
+\alias{isListener,UpsertListener-method}
+\alias{receiveMessage,UpsertListener-method}
 
-\title{Class \code{"InjectionListener"}}
+\title{Class \code{"UpsertListener"}}
 \description{
 
-This listener takes messages that match its incomming set and inject
-them into another Mongo database (presumably a queue
-for another service).
+  This listener takes messages that match its incomming set and inject
+  them into another Mongo database (presumably a queue
+  for another service).  If a matching message exists, it is replaced
+  instead. 
 
 }
 \section{Extends}{
@@ -22,11 +23,11 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
 }
 \section{Methods}{
   \describe{
-    \item{isListener}{\code{signature(x = "InjectionListener")}: returns
+    \item{isListener}{\code{signature(x = "UpsertListener")}: returns
     true.}
-    \item{receiveMessage}{\code{signature(x = "InjectionListener")}: If
-      the message is in the \code{messSet}, it saves the message to the
-      database.  (See details) }
+    \item{receiveMessage}{\code{signature(x = "UpsertListener")}: If
+      the message is in the \code{messSet}, it saves or replaces the
+      message inthe database.  (See details) }
   }
 }
 \details{
@@ -35,7 +36,12 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   by \code{dburi}, \code{dbname} and \code{colname} (collection within
   the database).  The \code{mess} field of the \code{\link{P4Message}}
   is checked against the applicable messages in \code{messSet}.  If it
-  is there, then the message is inserted into the collection.
+  is there, then the message is saved in the collection.
+
+  Before the message is saved, the collection is checked to see if
+  another message exits which matches on the fields listed in
+  \code{qfields}.  If this is true, the message in the database is
+  replaced.  If not, the message is inserted.  
 
 }
 \references{
@@ -43,26 +49,24 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   This is an example of the observer design pattern.
   \url{https://en.wikipedia.org/wiki/Observer_pattern}. 
 
-
 }
 \author{Russell Almond}
 \seealso{
   \code{\link{Listener}}, \code{\linkS4class{P4Message}},
-  \code{\link{InjectionListener}},
+  \code{\link{UpsertListener}},
   \code{\linkS4class{UpdateListener}},
-  \code{\linkS4class{UpsertListener}},
   \code{\linkS4class{CaptureListener}},
+  \code{\linkS4class{InjectionListener}},
   \code{\link[mongolite]{mongo}}
 }
 \examples{
 \dontrun{
-
 mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
-                   sender="EIEvent",mess="New Observables",
-                   details=list(trophy="gold",solvedtime=10))
-ilwind <- InjectionListener(sender="EIEvent",messSet="New Observables")
-receiveMessage(ilwind,mess1)
-
+                   sender="EABN",mess="Statistics",
+                   details=list("Physics_EAP"=0.5237,"Physics_Mode"="High"))
+ul <- UpsertListener(colname="Statistics",qfields=c("app","uid"),
+         messSet=c("Statistics"))
+receiveMessage(ul,mess1)
 }
 }
 \keyword{classes}
@@ -76,6 +80,9 @@ receiveMessage(ilwind,mess1)
       of the Mongo database.}
     \item{\code{colname}:}{Object of class \code{character} giving the
       column of the Mongo database. }
+    \item{\code{qfields}:}{Object of class \code{character} giving the
+      names of the fields which should be considered a key for the
+      messages.}
     \item{\code{messSet}:}{A vector of class \code{character} giving the
       name of messages which are sent to the database.  Only messages
       for which \code{mess(mess)} is an element of \code{messSet} will
@@ -92,6 +99,6 @@ receiveMessage(ilwind,mess1)
     \item{\code{receiveMessage(mess)}:}{ Does the work of inserting the
       message.  See Details. }
     \item{\code{initialize(sender, dbname, dburi, colname, messSet,
-        ...)}:}{Sets default values for fields.}
+        qfields, ...)}:}{ Sets the default values for the fields. }
   }
 }
