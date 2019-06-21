@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{P4Message-class}
+\alias{m_id,ANY-method}
 \alias{app,P4Message-method}
 \alias{as.jlist,P4Message,list-method}
 \alias{as.json,P4Message-method}
@@ -11,6 +12,8 @@
 \alias{sender,P4Message-method}
 \alias{timestamp,P4Message-method}
 \alias{uid,P4Message-method}
+\alias{processed,P4Message-method}
+\alias{processingError,P4Message-method}
 
 \title{Class \code{"P4Message"}}
 \description{
@@ -23,7 +26,7 @@
   This class represents a semi-structured data object with certain
   header fields which can be indexed plus the free-form \code{details()}
   field which contains the body of the message.  It can be serielized in
-  JSON format (using \code{\link[jsonlite]{jsonlite-package}}) or saved
+  JSON format (using \code{\link{as.json}}) or saved
   in the Mongo database (using the \code{\link[mongolite]{mongo}lite}
   package).  
 
@@ -33,6 +36,19 @@
 Objects can be created by calls to the \code{\link{P4Message}()}
 function. 
 
+}
+\section{Message Queues}{
+
+  Because all messages have a processed flag and a timestamp, a message
+  collection becomes a queue.  Simply search for the message with the
+  earliest timestamp with \code{\link{processed}(mess)==FALSE} and
+  excute that.  Then sets processed equal to true using
+  \code{\link{markAsProcessed}}.  
+
+  If an error occurs during processing, the error can be associated with
+  the message by setting the pError field using
+  \code{\link{markAsError}}.  
+  
 }
 \section{Slots}{
   \describe{
@@ -53,10 +69,20 @@ function.
       the time at which the message was generated.}
     \item{\code{data}:}{Object of class \code{"list"} which contains the
       data to be transmitted with the message.}
+    \item{\code{processed}:}{A logical value:  true if the message has
+      been processed, and false if the message is still in queue to be
+      processed.  This field is set with \code{\link{markAsProcessed}}.}
+    \item{\code{pError}:}{If a error occurs while processing this event,
+      information about the error can be stored here, either as an R
+      object, or as an R object of class error (or any class).  This
+      field is accessed with \code{\link{processingError}} and set with
+      \code{\link{markAsError}}. }
   }
 }
 \section{Methods}{
   \describe{
+    \item{m_id}{\code{signature(x = "ANY")}: returns the \code{_id}
+      field, the database ID. }
     \item{app}{\code{signature(x = "P4Message")}: returns the app field. }
     \item{as.jlist}{\code{signature(obj = "P4Message", ml = "list")}:
       coerces the object into a list to be processed by
@@ -72,6 +98,12 @@ function.
       field.}
     \item{timestamp}{\code{signature(x = "P4Message")}: returns the timestamp. }
     \item{uid}{\code{signature(x = "P4Message")}: returns the user ID. }
+    \item{processing}{\code{signature(x = "P4Message")}: returns a
+      logical value indicated whether or not the message has been marked
+      as processed.}
+    \item{processingError}{\code{signature(x = "P4Message")}: if an
+      error occurred while processing this message, returns a value
+      describing the error.  Otherwise, returns NULL.}
   }
 }
 \references{

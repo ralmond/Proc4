@@ -1,5 +1,6 @@
 \name{Listener}
 \alias{Listener-class}
+\alias{Listener}
 \alias{receiveMessage}
 \alias{isListener}
 \alias{isListener,ANY-method}
@@ -60,6 +61,12 @@ isListener(x)
 }
 \author{Russell Almond}
 \seealso{
+  Implementing Classes:
+  \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
+  \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
+
+
+  Related Classes:
   \code{\linkS4class{ListenerSet}}, \code{\linkS4class{P4Message}}
 }
 \examples{

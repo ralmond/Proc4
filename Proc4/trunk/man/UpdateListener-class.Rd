@@ -37,20 +37,28 @@
   by \code{dburi}, \code{dbname} and \code{colname} (collection within
   the database).  The \code{mess} field of the \code{\link{P4Message}}
   is checked against the applicable messages in \code{messSet}.  If it
-  is there, then the record in the database corresponding to
-  \code{app(mess)} and \code{uid(mess)} is updated.  Specifically, the
-  field \code{targetField} is set to \code{details(mess)}.  The function
-  \code{jsonEncoder} is called to encode the target field as a JSON
-  object for injection into the database.
+  is there, then the record in the database corresponding to the
+  \code{qfields} (by default \code{app(mess)} and \code{uid(mess)}) is
+  updated.  Specifically, the field \code{targetField} is set to
+  \code{details(mess)}.  The function \code{jsonEncoder} is called to
+  encode the target field as a JSON object for injection into the
+  database.
 
 }
 \references{
-%%  ~~put references to the literature/web site here~~
+
+  This is an example of the observer design pattern.
+  \url{https://en.wikipedia.org/wiki/Observer_pattern}. 
+
 }
 \author{Russell Almond}
 \seealso{
-  \code{\link{Listner}}, \code{\link{P4Message}},
-  \code{\linkS4class{InjectionListner}}, \code{\link[mongolite]{mongo}}
+  \code{\link{Listener}}, \code{\linkS4class{P4Message}},
+  \code{\link{UpdateListener}}, 
+  \code{\linkS4class{InjectionListener}}, 
+  \code{\linkS4class{CaptureListener}},
+  \code{\linkS4class{UpsertListener}},
+  \code{\link[mongolite]{mongo}}
 
   The function \code{\link{unparseData}} is the default encoder.
 }
@@ -86,6 +94,9 @@ receiveMessage(upwind,mess2)
     \item{\code{db}:}{Object of class \code{MongoDB} giving the
       database.  Use \code{messdb()} to access this field to makes sure
       it has been set up.}
+    \item{\code{qfields}:}{Object of class \code{character} giving the
+      names of the fields which should be considered a key for the
+      messages.}
     \item{\code{targetField}:}{Object of class \code{character} naming
       the field which is to be set. }
     \item{\code{jsonEncoder}:}{Object of class \code{character} naming a

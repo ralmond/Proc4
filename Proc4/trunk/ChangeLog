@@ -1,3 +1,10 @@
+2019-06-19  Rusell Almond  <ralmond@Cherry>
+
+	* R/Message.R (cleanMessageJlist): Added a trim to the context.
+	Hopefully, this will get rid of stray whitespace issues.
+	(as.jlist(P4Message)): Changed to make pError always a string, as
+	we can't seem to get error when we try to save the object.
+
 2019-05-12  Rusell Almond  <ralmond@Cherry>
 
 	* R/Listeners.R (UpsertListener): Added context to the list of

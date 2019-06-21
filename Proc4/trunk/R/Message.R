@@ -94,7 +94,7 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   if (is.null(ml$pError) || ml$pError == '\001NULL\001') {
     ml["pError"] <- NULL
   } else {
-    ml$pError <- serializeJSON(ml$pError)
+    ml$pError <- unboxer(toString(ml$pError))
   }
   ml
   })
@@ -133,8 +133,7 @@ markAsProcessed <- function (mess,col) {
 markAsError <- function (mess,col, e) {
   processingError(mess) <- e
   col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-             sprintf('{"$set": {"pError":%s}}',
-                     serializeJSON(processingError(mess))))
+             paste('{"$set": {"pError":"',encodeString(toString(e)),'"}}',sep=""))
   mess
 }
 
@@ -152,11 +151,16 @@ cleanMessageJlist <- function (rec) {
   names(rec$"_id") <- "oid"
   if (is.null(rec$app) || length(rec$app) == 0L) rec$app <- "default"
   if (is.null(rec$context) || length(rec$context) == 0L) rec$context <-""
+  rec$context <- trimws(as.character(rec$context))
   if (is.null(rec$mess) || length(rec$mess) == 0L) rec$mess <-""
+  rec$mess <- trimws(as.character(rec$mess))
   if (is.null(rec$sender)|| length(rec$sender) == 0L) rec$sender <-""
   if (is.null(rec$processed)) rec$processed <- FALSE
   if (is.null(rec$timestamp)) rec$timestamp <- Sys.time()
-  if (!is.null(rec$pError)) rec$pError <- unserializeJSON(rec$pError)
+  if (!is.null(rec$pError) && !is.character(rec$pError)) {
+    ## Fix old data which did not have unbox around it.
+    rec$pError <- as.character(rec$pError)
+  }
   rec
 }
 
@@ -362,7 +366,7 @@ all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check
   ## Timestamp
   if (checkTimestamp) {
     if (abs(timestamp(target)-timestamp(current)) >
-        asif.difftime(list(secs=.1)))
+        as.difftime(.1,units="secs"))
       msg <- c(msg,"Timestamps differ by more than .1 secs")
   }
 

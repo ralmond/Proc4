@@ -7,6 +7,9 @@ setGeneric("isListener",function(x) standardGeneric("isListener"))
 setMethod("isListener","ANY",function(x) FALSE)
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
+#setClass("Listener",contains="VIRTUAL")
+#setMethod("isListener","Listener",function(x) TRUE)
+
 
 setOldClass("mongo")
 setClassUnion("MongoDB",c("mongo","NULL"))
@@ -145,7 +148,7 @@ UpsertListener <-
                                  capture=TRUE)
                       mess@sender <- sender
                       mess@"_id" <- NA_character_
-                      query < lapply(qfields,function(f) do.call(f,list(mess)))
+                      query <- lapply(qfields,function(f) do.call(f,list(mess)))
                       names(query) <- qfields
                       messdb()$replace(do.call(buildJQuery,query),
                                        as.json(mess,serialize=TRUE),upsert=TRUE)
@@ -184,6 +187,7 @@ UpdateListener <-
                        dburi="character",
                        colname="character",
                        messSet = "character",
+                       qfields="character",
                        targetField="character",
                        jsonEncoder="character",
                        db="MongoDB"),
@@ -195,12 +199,14 @@ UpdateListener <-
                              messSet=character(),
                              targetField="data",
                              jsonEncoder="unparseData",
+                             qfields=c("app","uid"),
                              ...) {
                       callSuper(db=NULL,
                                 dburi=dburi,dbname=dbname,
                                 colname=colname,messSet=messSet,
                                 targetField=targetField,
                                 jsonEncoder=jsonEncoder,
+                                qfields=qfields,
                                 ...)
                     },
                   messdb = function () {
@@ -226,7 +232,9 @@ UpdateListener <-
                                           do.call(jsonEncoder,
                                                   list(details(mess))))
                       }
-                      qq <- buildJQuery(app=app(mess),uid=uid(mess))
+                      query <- lapply(qfields,function(f) do.call(f,list(mess)))
+                      names(query) <- qfields
+                      qq <- do.call(buildJQuery,query)
                       if (messdb()$count(qq) == 0L) {
                         ## Initializize by saving message.
                         flog.trace("Record not found, inserting.")
@@ -247,12 +255,15 @@ UpdateListener <-
 
 UpdateListener <- function (dbname="test",
                             dburi="mongodb://localhost",
+                            messSet=character(),
                             colname="Messages",
                             targetField="data",
+                            qfields=c("app","uid"),
                             jsonEncoder="unparseData",
                             ...) {
-  new("UpdateListener",dbname=dbname,dburi=dburi,
-      colname=colname,targetField=targetField,jsonEncoder=jsonEncoder,...)
+  new("UpdateListener",dbname=dbname,dburi=dburi,messSet=messSet,
+      colname=colname,targetField=targetField,jsonEncoder=jsonEncoder,
+      qfields=qfields,...)
 }
 
 setMethod("isListener","UpdateListener",function(x) TRUE)
