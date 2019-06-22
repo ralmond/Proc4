@@ -198,7 +198,12 @@ There are five major features of this package documented below:
   javascript file designed to be run directly in mongo, i.e.,
   \code{mongo setupDatabases.js}.  Note that it must be run by a user
   which has the appropriate priveleges to create databases and modify
-  their security (a \dQuote{root} user).  
+  their security (a \dQuote{root} user).
+
+  The file \code{setupProc4.js} in the \code{config} directory sets up
+  schemas and indexes for collections in the \code{Proc4} database which
+  are used by the dongle process.  Schemas are optional in mongo, but
+  the indexes should speed up operations.
 
 }
 \section{Dongle Files}{
