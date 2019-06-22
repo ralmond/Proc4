@@ -56,5 +56,12 @@
       <pubDate>Thu May 30 14:00:31 EDT 2019</pubDate>
       <description>[CDATA[ May 2019 FSUS Study version.]]</description>
     </item>
+    <item>
+      <title>Proc4 0.4-2</title>
+      <link>https://pluto.coe.fsu.edu/Proc4/index.html</link>
+      <guid>https://pluto.coe.fsu.edu/Proc4/Proc4_0.4-2</guid>
+      <pubDate>Thu May 30 14:00:31 EDT 2019</pubDate>
+      <description>[CDATA[Documetnation Cleanup and error handling.]]</description>
+    </item>
   </channel>
 </rss>
