@@ -63,5 +63,12 @@
       <pubDate>Thu May 30 14:00:31 EDT 2019</pubDate>
       <description>[CDATA[Documetnation Cleanup and error handling.]]</description>
     </item>
+    <item>
+      <title>EIEvent 0.4-2</title>
+      <link>https://pluto.coe.fsu.edu/Proc4/index.html</link>
+      <guid>https://pluto.coe.fsu.edu/Proc4/EIEvent_0.4-2</guid>
+      <pubDate>Thu Jul 01 14:00:31 EDT 2019</pubDate>
+      <description>[CDATA[Documetnation Cleanup, efficiency improvements.]]</description>
+    </item>
   </channel>
 </rss>
