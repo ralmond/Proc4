@@ -1,3 +1,9 @@
+2019-07-02  Russell Almond  <ralmond@macox.com>
+
+	* R/Message.R (cleanMessageJlist): Added check for cases {$oid:
+	xxx} and {$data:YYYY-MM-DD...} (mongo export rather than using
+	as.json). 
+
 2019-06-19  Rusell Almond  <ralmond@Cherry>
 
 	* R/Message.R (cleanMessageJlist): Added a trim to the context.

@@ -148,6 +148,7 @@ markAsError <- function (mess,col, e) {
 ## check for empty lists.
 cleanMessageJlist <- function (rec) {
   if (is.null(rec$"_id")) rec$"_id" <- NA_character_
+  if (is.list(rec$"_id")) rec$"_id" <- rec$"_id"$`$oid`
   names(rec$"_id") <- "oid"
   if (is.null(rec$app) || length(rec$app) == 0L) rec$app <- "default"
   if (is.null(rec$context) || length(rec$context) == 0L) rec$context <-""
@@ -157,6 +158,7 @@ cleanMessageJlist <- function (rec) {
   if (is.null(rec$sender)|| length(rec$sender) == 0L) rec$sender <-""
   if (is.null(rec$processed)) rec$processed <- FALSE
   if (is.null(rec$timestamp)) rec$timestamp <- Sys.time()
+  if (is.list(rec$timestamp)) rec$timestamp <- rec$timestamp$`$date`
   if (!is.null(rec$pError) && !is.character(rec$pError)) {
     ## Fix old data which did not have unbox around it.
     rec$pError <- as.character(rec$pError)
