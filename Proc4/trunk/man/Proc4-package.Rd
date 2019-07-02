@@ -269,4 +269,13 @@ Maintainer: \packageMaintainer{Proc4}
   \code{\link[EIEvent:EIEvent-package]{EIEvent}},
   \code{\link[EABN:EABN-package]{EABN}} 
 }
+\section{Acknowledgements}{
 
+  Work on the Proc4, EIEvent and EABN packages has been supported by the
+  National Science foundation grants \emph{DIP: Game-based Assessment and
+  Support of STEM-related Competencies} (#1628937, Val Shute, PI) and
+  \emph{Mathematical Learning via Architectual Design and Modeling Using
+  E-Rebuild.} (#1720533, Fengfeng Ke, PI).
+
+  The Proc4 package developement was led by Russell Almond (Co-PI).
+}
