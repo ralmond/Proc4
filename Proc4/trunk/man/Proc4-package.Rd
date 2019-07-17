@@ -155,6 +155,9 @@ There are five major features of this package documented below:
     \item{\code{UpsertListener}}{Creates an object of class
       \code{\linkS4class{UpsertListener}} which insert or replaces the
       message in the designated collection.} 
+    \item{\code{TableListener}}{Creates an object of class
+      \code{\linkS4class{TableListener}} which adds details from message
+      to rows of a data frame.}
   }
 
   The \code{\link{ListenerSet}} class is a mixin to associate a

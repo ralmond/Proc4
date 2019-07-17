@@ -20,9 +20,10 @@ export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
 exportMethods(as.json,as.jlist)
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
-       InjectionListener,UpdateListener,UpsertListener,CaptureListener)
+       InjectionListener,UpdateListener,UpsertListener,CaptureListener,
+       TableListener)
 exportClasses(ListenerSet,MongoDB,CaptureListener, InjectionListener,
-              UpdateListener,UpsertListener)
+              UpdateListener,UpsertListener,TableListener)
 exportMethods(isListener,receiveMessage,notifyListeners)
 
 export(withFlogging)

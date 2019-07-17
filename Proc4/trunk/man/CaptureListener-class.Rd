@@ -49,7 +49,7 @@ All reference classes extend and inherit methods from
   \code{\linkS4class{UpdateListener}},
   \code{\linkS4class{UpsertListener}},
   \code{\linkS4class{InjectionListener}},
-  \code{\link[mongolite]{mongo}}
+  \code{\linkS4class{TableListener}},
 }
 \examples{
 

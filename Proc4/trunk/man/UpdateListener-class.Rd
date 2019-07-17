@@ -29,7 +29,7 @@
       the message is in the \code{messSet}, it updates the record
       corresponding to \code{app(mess)} and \code{uid(mess)} in the
       database with the contents of \code{details(mess)}.  (See details.) }
-	 }
+  }
 }
 \details{
 
@@ -58,6 +58,7 @@
   \code{\linkS4class{InjectionListener}}, 
   \code{\linkS4class{CaptureListener}},
   \code{\linkS4class{UpsertListener}},
+  \code{\linkS4class{TableListener}},
   \code{\link[mongolite]{mongo}}
 
   The function \code{\link{unparseData}} is the default encoder.
