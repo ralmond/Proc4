@@ -1,3 +1,7 @@
+2019-07-17  Rusell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (TableListener): Added TableListener.  
+
 2019-07-02  Russell Almond  <ralmond@macox.com>
 
 	* R/Message.R (cleanMessageJlist): Added check for cases {$oid:

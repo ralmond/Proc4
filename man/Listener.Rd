@@ -63,7 +63,10 @@ isListener(x)
 \seealso{
   Implementing Classes:
   \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
-  \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
+  \code{\linkS4class{UpsertListener}},
+  \code{\linkS4class{InjectionListener}},
+  \code{\linkS4class{TableListener}}
+  
 
 
   Related Classes:

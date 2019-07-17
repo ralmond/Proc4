@@ -57,6 +57,7 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   \code{\linkS4class{UpdateListener}},
   \code{\linkS4class{CaptureListener}},
   \code{\linkS4class{InjectionListener}},
+  \code{\linkS4class{TableListener}},
   \code{\link[mongolite]{mongo}}
 }
 \examples{

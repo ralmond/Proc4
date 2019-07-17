@@ -90,7 +90,8 @@ All reference classes extend and inherit methods from
   Listener Classes.
   \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
   \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
-
+  \code{\linkS4class{TableListener}}
+  
 
 }
 \examples{

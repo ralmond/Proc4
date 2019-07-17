@@ -3,13 +3,15 @@
 \alias{InjectionListener}
 \alias{UpdateListener}
 \alias{UpsertListener}
+\alias{TableListener}
 \title{Constructors for Listener Classes}
 \description{
 
   These functions create objects of class
   \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
-  \code{\linkS4class{UpsertListener}}, and
-  \code{\linkS4class{InjectionListener}}. 
+  \code{\linkS4class{UpsertListener}}, 
+  \code{\linkS4class{InjectionListener}}, and
+  \code{\linkS4class{TableListener}}.
 
   
 }
@@ -25,6 +27,9 @@ UpsertListener(sender = "sender", dbname = "test",
     dburi = "mongodb://localhost", 
     messSet = character(), colname = "Messages",
     qfields = c("app", "uid"), ...)
+TableListener(name = "ppData",
+    fieldlist = c(uid = "character", context = "character"), 
+    messSet = character(), ...)
 }
 \arguments{
   \item{messages}{ A list into which to add the messages.}
@@ -46,6 +51,11 @@ UpsertListener(sender = "sender", dbname = "test",
   \item{qfields}{The fields that will be used as a key when trying to
     find matching messages in the database for the
     \code{\linkS4class{UpsertListener}}. } 
+  \item{name}{An object of class \code{character} naming the listener. }
+  \item{fieldlist}{A named \code{character} vector giving the
+      names and types of the columns of the output matrix.  See
+      \code{\linkS4class{TableListener}}. }
+
   \item{\dots}{Other arguments passed to the constructor. }
 }
 \details{
@@ -64,6 +74,9 @@ UpsertListener(sender = "sender", dbname = "test",
     \item{\code{UpsertListener}}{Creates an object of class
       \code{\linkS4class{UpsertListener}} which insert or replaces the
       message in the designated collection.} 
+    \item{\code{TableListener}}{Creates an object of class
+      \code{\linkS4class{TableListener}} which adds details from message
+      to rows of a data frame.}
   }
   See the class descriptions for more information.
 
@@ -86,6 +99,7 @@ UpsertListener(sender = "sender", dbname = "test",
   \code{\linkS4class{UpdateListener}},
   \code{\linkS4class{CaptureListener}},
   \code{\linkS4class{InjectionListener}},
+  \code{\linkS4class{TableListener}},
   \code{\linkS4class{ListenerSet}},
   \code{\link[mongolite]{mongo}}
 }
@@ -114,6 +128,12 @@ ul <- UpdateListener(dbname="Proc4",dburi="mongodb://localhost",
             messSet=c("Money Earned","Money Spent"),
             jsonEncoder="trophy2json")
 
+tabMaker <- TableListener(name="Trophy Table",
+                   messSet="New Observables",
+                   fieldlist=c(uid="character", context="character",
+                               timestamp="character",
+                               solvedtime="numeric",
+                               trophy="ordered(none,silver,gold)"))
 
 }
 \keyword{ interface }
