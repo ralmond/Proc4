@@ -307,6 +307,8 @@ TableListener <-
                       levels <- strsplit(sub("factor\\((.*)\\)","\\1",
                                              fieldlist[f]),",")[[1]]
                       fields[[f]] <- factor(NA,levels)
+                    } else if (fieldlist[f]=="difftime") {
+                      fields[[f]] <- as.difftime(NA_real_,units="secs")
                     } else {
                       fields[[f]] <- vector(fieldlist[f],1)
                       fields[[f]][1] <-NA
