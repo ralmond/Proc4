@@ -113,7 +113,7 @@ saveRec <- function (mess, col, serialize=TRUE) {
       col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
                  paste('{"$set":',jso,'}',sep=""))
     } else {
-      ## ID is out of date, instert and get new ID.
+      ## ID is out of date, insert and get new ID.
       col$insert(jso)
       it <- col$iterate(jso,'{"_id":true}',limit=1)
       mess@"_id" <- it$one()$"_id"
