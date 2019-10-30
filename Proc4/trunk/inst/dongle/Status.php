@@ -5,37 +5,25 @@
 
     $mong = new MongoDB\Client("mongodb://localhost"); // connect
 
-    function isRunning($name) {
-             exec("pgrep -c $name",$found);
-              return $found > 0;
-    }
 ?>
 </head>
 <body>
 
 <h1>Processes Currently Running</h1>
 
-<p>Need to work around certain security indexes before doing this.</p>
-
-<h2> Learning Locker to Proc 4 Daemons </h2>
-
-<p>Download loop from NSF  <?php echo "may be " ?>running.</p>
-
-<h2> EIEvent <h2>
-
-<h2> EAEvent <h2>
+<?php include("P4Status.html"); ?>
 
 <h1>Processed and unprocessed data </h1>
 
 <table border="1">
 <tr><th>Application</th><th>Active</th><th>Players</th>
-        <th colspan=2>Evidence Identification</th><th colspan=2>Evidence Accumulation</th></tr>
+        <th colspan="2">Evidence Identification</th><th colspan="2">Evidence Accumulation</th></tr>
 <tr><th></th><th></th><th></th>
         <th>Done</th><th>Left</th><th>Done</th><th>Left</th></tr>
 <?php
-        foreach ($apps as $short => $id) {
+        foreach ($INI['apps'] as $short => $id) {
                 $appQuery = array ('app' => $id);
-                $appRec =$mong->Proc4->AuthorizedApps->findOne(appQuery);
+                $appRec =$mong->Proc4->AuthorizedApps->findOne($appQuery);
                 $playerCount = $mong->Proc4->Players->count($appQuery);
                 $EIdone = $mong->EIRecords->Events->count(['app'=>$id,'processed' => true]);
                 $EIleft = $mong->EIRecords->Events->count(['app'=>$id,'processed' => false]);
