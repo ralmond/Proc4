@@ -23,8 +23,8 @@ export(receiveMessage,isListener,ListenerSet,notifyListeners,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
        TableListener)
 exportClasses(ListenerSet,MongoDB,CaptureListener, InjectionListener,
-              UpdateListener,UpsertListener,TableListener)
-exportMethods(isListener,receiveMessage,notifyListeners)
+              UpdateListener,UpsertListener,TableListener,name)
+exportMethods(isListener,receiveMessage,notifyListeners,name)
 
 export(withFlogging)
 
