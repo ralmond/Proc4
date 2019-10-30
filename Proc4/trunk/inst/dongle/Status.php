@@ -11,7 +11,16 @@
 
 <h1>Processes Currently Running</h1>
 
-<?php include("P4Status.html"); ?>
+
+<?php
+
+/* I'm currently having difficulty figuring out how to run shell
+ * commands to check if the various proceses are running.  My current
+ * strategy is to run the script p4Status as a cron job sending it's
+ * output to P4Status.html in the current directory. */ 
+include("P4Status.html");
+
+?>
 
 <h1>Processed and unprocessed data </h1>
 
