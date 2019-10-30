@@ -1,0 +1,2 @@
+#!/bin/sh
+pgrep -a $1 | grep -Po 'app=\K\S*' |grep -Po '\K[^/]*$'

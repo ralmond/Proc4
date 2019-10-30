@@ -1,0 +1,38 @@
+#!/bin/bash
+#echo "<html>"
+#echo "<head>Status of the Physics Playground Proc 4 System</head>"
+#echo "<body>"
+echo "<p> Status last checked at `date`.</p>"
+
+echo "<h2> Learning Locker to P4 Daemons </h2>"
+if [ `/usr/bin/pgrep -c NSFtoP4` != "0" ]
+then
+  echo "<p> NSF to Pluto Daemon is running.</p>"
+fi
+if [ `/usr/bin/pgrep -c IEStoP4` != "0" ]
+then
+  echo "<p> IES to Pluto Daemon is running.</p>"
+fi
+
+echo "<h2> Evidence Identification Processes </h2>"
+
+echo "<p> The following processes are running in server mode:<i>"
+echo `/home/ralmond/bin/whichApps EIEvent`
+echo "</i></p>"
+
+echo "<p> The following processes are running in reproccessing mode:<i>"
+echo `/home/ralmond/bin/whichRerun EIEventRerun`
+echo "</i></p>"
+
+echo "<h2> Evidence Accumulation Processes </h2>"
+
+echo "<p> The following processes are running in server mode:<i>"
+echo `/home/ralmond/bin/whichApps EAEvent`
+echo "</i></p>"
+
+echo "<p> The following processes are running in reproccessing mode:<i>"
+echo `/home/ralmond/bin/whichRerun EAEventRerun`
+echo "</i></p>"
+
+#echo "</body></html>"
+exit 0
