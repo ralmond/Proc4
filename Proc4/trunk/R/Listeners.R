@@ -359,6 +359,8 @@ TableListener <- function (name="ppData",
 setMethod("isListener","TableListener",function(x) TRUE)
 setMethod("receiveMessage","TableListener",
           function(x,mess) x$receiveMessage(mess))
+setGeneric("name", function (x) standardGeneric("name"))
+setMethod("name","TableListener",function(x) x$name)
 
 
 #############################################
