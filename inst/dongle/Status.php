@@ -56,12 +56,22 @@ include("P4Status.html");
 
 <h1>Links to results files</h1>
 
+<h3>Observables</h3>
 <ul>
   <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.linear.csv">
           linear </a></li>
   <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.adaptive.csv">
           adaptive </a></li>
   <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.userControl.csv">
+          userControl </a></li>
+
+<h3>Learning Support Observables</h3>
+<ul>
+  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.linear.csv">
+          linear </a></li>
+  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.adaptive.csv">
+          adaptive </a></li>
+  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.userControl.csv">
           userControl </a></li>
 
 </body>
