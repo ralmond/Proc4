@@ -64,6 +64,7 @@ include("P4Status.html");
           adaptive </a></li>
   <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.userControl.csv">
           userControl </a></li>
+</ul>
 
 <h3>Learning Support Observables</h3>
 <ul>
@@ -73,6 +74,17 @@ include("P4Status.html");
           adaptive </a></li>
   <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.userControl.csv">
           userControl </a></li>
+</ul>
 
+<h3>Bayes net scores</h3>
+<ul>
+  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/stats.linear.csv">
+          linear </a></li>
+  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/stats.adaptive.csv">
+          adaptive </a></li>
+  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/stats.userControl.csv">
+          userControl </a></li>
+</ul>
+        
 </body>
 </html>
