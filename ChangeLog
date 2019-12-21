@@ -1,3 +1,8 @@
+2019-12-20  Rusell Almond  <ralmond@Cherry>
+
+	* R/Message.R (markAsError): Added " to ' conversion to error
+	messages to avoid quoting issues in Mongo.
+
 2019-07-17  Rusell Almond  <ralmond@Cherry>
 
 	* R/Listeners.R (TableListener): Added TableListener.  
