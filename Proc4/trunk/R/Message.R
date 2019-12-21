@@ -133,7 +133,9 @@ markAsProcessed <- function (mess,col) {
 markAsError <- function (mess,col, e) {
   processingError(mess) <- e
   col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-             paste('{"$set": {"pError":"',encodeString(toString(e)),'"}}',sep=""))
+             paste('{"$set": {"pError":"',
+                   chartr("\"","'",     #Problem with interior quotes.
+                          encodeString(toString(e))),'"}}',sep=""))
   mess
 }
 
