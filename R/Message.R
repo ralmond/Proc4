@@ -100,42 +100,54 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   })
 
 saveRec <- function (mess, col, serialize=TRUE) {
-  jso <- as.json(mess,serialize)
-  if (is.na(mess@"_id")) {
-    ## Insert
-    col$insert(jso)
-    it <- col$iterate(jso,'{"_id":true}',limit=1)
-    mess@"_id" <- it$one()$"_id"
-    names(mess@"_id") <- "oid" ## Aids in extraction
-  } else {
-    if (col$count(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""))) {
-      ## Replace
-      col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-                 paste('{"$set":',jso,'}',sep=""))
-    } else {
-      ## ID is out of date, insert and get new ID.
+  if (!is.null(col)) {
+    jso <- as.json(mess,serialize)
+    if (is.na(mess@"_id")) {
+      ## Insert
       col$insert(jso)
       it <- col$iterate(jso,'{"_id":true}',limit=1)
       mess@"_id" <- it$one()$"_id"
       names(mess@"_id") <- "oid" ## Aids in extraction
+    } else {
+      if (col$count(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""))) {
+        ## Replace
+        col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+                   paste('{"$set":',jso,'}',sep=""))
+      } else {
+        ## ID is out of date, insert and get new ID.
+        col$insert(jso)
+        it <- col$iterate(jso,'{"_id":true}',limit=1)
+        mess@"_id" <- it$one()$"_id"
+        names(mess@"_id") <- "oid" ## Aids in extraction
+      }
     }
+  } else {
+    flog.trace("DB is null, not saving message.")
   }
   mess
 }
 
 markAsProcessed <- function (mess,col) {
   processed(mess) <- TRUE
-  col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-             '{"$set": {"processed":true}}')
+  if (is.null(col)) {
+    col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+               '{"$set": {"processed":true}}')
+  } else {
+    flog.trace("DB is null, not saving message.")
+  }
   mess
 }
 
 markAsError <- function (mess,col, e) {
   processingError(mess) <- e
-  col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-             paste('{"$set": {"pError":"',
-                   chartr("\"","'",     #Problem with interior quotes.
-                          encodeString(toString(e))),'"}}',sep=""))
+  if (!is.null(col)) {
+    col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+               paste('{"$set": {"pError":"',
+                     chartr("\"","'",     #Problem with interior quotes.
+                            encodeString(toString(e))),'"}}',sep=""))
+  } else {
+    flog.trace("DB is null, not saving message.")
+  }
   mess
 }
 
@@ -170,14 +182,14 @@ cleanMessageJlist <- function (rec) {
 
 parseMessage<- function (rec) {
   rec <- cleanMessageJlist(rec)
-  new("P4Message","_id"=ununboxer(rec$"_id"),
-      app=as.vector(ununboxer(rec$app)),
-      uid=as.vector(ununboxer(rec$uid)),
+  new("P4Message","_id"=as.character(ununboxer(rec$"_id")),
+      app=as.character(ununboxer(rec$app)),
+      uid=as.character(ununboxer(rec$uid)),
       context=as.vector(ununboxer(rec$context)),
-      sender=as.vector(ununboxer(rec$sender)),
-      mess=as.vector(ununboxer(rec$mess)),
+      sender=as.character(ununboxer(rec$sender)),
+      mess=as.character(ununboxer(rec$mess)),
       timestamp=as.POSIXlt(ununboxer(rec$timestamp)),
-      processed=ununboxer(rec$processed),
+      processed=as.logical(ununboxer(rec$processed)),
       pError=rec$pError,
       data=parseData(rec$data))
 }
@@ -377,4 +389,27 @@ all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check
   ## Return true if message list is empty.
   if (length(msg)==0L) TRUE
   else msg
+}
+
+###
+## This is a construction I find myself using in a lot of places to
+## build up the "mongodb://" URI for the database.
+
+makeDBuri <- function(username="",password="", host="localhost",
+                      port="") {
+  ## Setup DB URI
+  security <- ""
+  if (nchar(username) > 0L) {
+    if (nchar(password) > 0L)
+      security <- paste(username,password,sep=":")
+    else
+      security <- username
+  }
+  if (nchar(port) > 0L)
+    host <- paste(host,port,sep=":")
+  else
+    host <- host
+  if (nchar(security) > 0L)
+    host <- paste(security,host,sep="@")
+  paste("mongodb:/",host,sep="/")
 }

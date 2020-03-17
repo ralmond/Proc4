@@ -9,7 +9,8 @@ importFrom("utils", "limitedLabels")
 export(P4Message)
 exportClasses(P4Message)
 export(m_id,app,uid,context,timestamp,sender,mess,details,all.equal.P4Message,
-       processed, markAsProcessed, processingError, markAsError)
+       processed, markAsProcessed, processingError, markAsError,
+       makeDBuri)
 exportMethods(m_id,app,uid,context,timestamp,sender,mess,details,
               toString,show, processed, processingError)
 
@@ -22,8 +23,9 @@ exportMethods(as.json,as.jlist)
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
        TableListener)
-exportClasses(ListenerSet,MongoDB,CaptureListener, InjectionListener,
-              UpdateListener,UpsertListener,TableListener,name)
+exportClasses(ListenerSet,MongoDB,CaptureListener,
+       InjectionListener,
+       UpdateListener,UpsertListener,TableListener,name)
 exportMethods(isListener,receiveMessage,notifyListeners,name)
 
 export(withFlogging)

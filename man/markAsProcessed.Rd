@@ -27,7 +27,8 @@ processingError(x)
   \item{mess}{An object of class \code{\linkS4class{P4Message}} to be
     modified. }
   \item{col}{A \code{\link[mongolite]{mongo}} collection where the
-    message queue is stored.
+    message queue is stored.  This can also be \code{NULL} in which case
+    the message will not be saved to the database.
   }
   \item{e}{An object indicating the error occurred.  Note this could be
     either a string giving the error message of an object of an error

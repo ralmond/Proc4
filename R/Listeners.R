@@ -392,7 +392,7 @@ ListenerSet <-
 ## Listener/Message Methods
 ListenerSet$methods(
                 messdb = function () {
-                  if (is.null(db)) {
+                  if (is.null(db) && nchar(dburi) > 0L) {
                     db <<- mongo(colname,dbname,dburi)
                   }
                   db
