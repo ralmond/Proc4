@@ -9,7 +9,8 @@
   
 }
 \usage{
-makeDBuri(username = "", password = "", host = "localhost", port = "")
+makeDBuri(username = "", password = "", host = "localhost", port = "",
+protocol="mongodb")
 }
 \arguments{
   \item{username}{The name of the database user (login credential), or
@@ -20,6 +21,8 @@ makeDBuri(username = "", password = "", host = "localhost", port = "")
   \item{port}{The port to be used for connections.  Note that the
     port for a default configuration of mongo is 27018.  This can be
     left blank to use the default port.}
+  \item{protocol}{A character scalar giving the protocol to use when
+    connecting, e.g., \dQuote{mongodb}.}
 }
 \value{
 

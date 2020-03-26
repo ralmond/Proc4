@@ -21,7 +21,7 @@ as.jlist(obj,ml, serialize=TRUE)
 \arguments{
   \item{x}{An (S4) object to be serialized.}
   \item{obj}{The object being serialized}
-  \item{ml}{A list of fields of the object.}
+  \item{ml}{A list of fields of the object; usually \code{attributes(obj)}.}
   \item{serialize}{A logical flag. If true,
     \code{\link[jsonlite]{serializeJSON}} is used to protect the
     \code{data} field (and other objects which might contain complex R

@@ -379,7 +379,8 @@ ListenerSet <-
                     function(sender="sender",
                              dbname="test",
                              dburi="mongodb://localhost",
-                             listeners=list(),colname="Messages",
+                             listeners=list(),
+                             colname="Messages",
                              ...) {
                       callSuper(sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,

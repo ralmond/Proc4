@@ -2,6 +2,7 @@
 
 	* R/Message.R (makeDBuri): Moved this code here as it seems to be
 	used just about every time we make a mongo connetion.
+	(makeDBuri): Added protocol arguement
 
 	* R/Listeners.R (ListenerSet): Added trap for blank URI to make
 	no-Mongo version.

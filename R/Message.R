@@ -396,7 +396,7 @@ all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check
 ## build up the "mongodb://" URI for the database.
 
 makeDBuri <- function(username="",password="", host="localhost",
-                      port="") {
+                      port="",protocol="mongodb") {
   ## Setup DB URI
   security <- ""
   if (nchar(username) > 0L) {
@@ -411,5 +411,5 @@ makeDBuri <- function(username="",password="", host="localhost",
     host <- host
   if (nchar(security) > 0L)
     host <- paste(security,host,sep="@")
-  paste("mongodb:/",host,sep="/")
+  paste(paste(protocol,":/",sep=""),host,sep="/")
 }
