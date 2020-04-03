@@ -2,6 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{MongoDB-class}
+\alias{MongoDB}
 
 \title{Class \code{"MongoDB"}}
 \description{

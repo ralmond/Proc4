@@ -107,8 +107,10 @@ showClass("ListenerSet")
       the \code{\link[mongolite]{mongo}} database.  If null, then no
       recording of messages to a database is done (except possibly in
       the listeners).}
+    \item{\code{dbname}:}{Object of class \code{character}: the name of
+      the database in which messages should be logged.}
     \item{\code{colname}:}{Object of class \code{character}: the name of
-      the column in which messages should be logged.}
+      the collection in which messages should be logged.}
     \item{\code{listeners}:}{A named \code{list} of
       \code{\linkS4class{Listener}} objects, that is objects for which
       \code{\link{isListener}} is true.}

@@ -4,6 +4,7 @@
 \alias{TableListener-class}
 \alias{isListener,TableListener-method}
 \alias{receiveMessage,TableListener-method}
+\alias{name,TableListener-method}
 
 \title{Class \code{"TableListener"}}
 \description{
@@ -26,6 +27,9 @@
       the message is in the \code{messSet}, it adds a row to its
       internal table using the fields specified in \code{fieldlist}. 
       (See details.) }
+    \item{name}{\code{signature(x = "TableListener")}: returns the name
+      of the table.  This is usually also the filename where the table
+      will be stored. }
   }
 }
 \references{
