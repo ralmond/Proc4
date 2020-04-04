@@ -1,3 +1,8 @@
+2020-04-04  Russell Almond  <ralmond@Cherry>
+
+	* R/Message.R (markAsProcessed): stupid missing ! causing infinite
+	loop.  Fixed test to die on excessive loops.
+
 2020-03-17  Russell Almond  <ralmond@Cherry>
 
 	* R/Message.R (makeDBuri): Moved this code here as it seems to be

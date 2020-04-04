@@ -129,7 +129,7 @@ saveRec <- function (mess, col, serialize=TRUE) {
 
 markAsProcessed <- function (mess,col) {
   processed(mess) <- TRUE
-  if (is.null(col)) {
+  if (!is.null(col)) {
     col$update(paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
                '{"$set": {"processed":true}}')
   } else {

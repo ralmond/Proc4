@@ -3,7 +3,7 @@
 \title{Returns the name of an object.}
 \description{
 
-  This returns a character string identifying the object.}
+  This returns a character string identifying the object.
 
 }
 \usage{

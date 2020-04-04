@@ -111,7 +111,12 @@ mess2 <- saveRec(mess2,col,FALSE)
 
 mess <- getOneRec(buildJQuery(app="adder", processed=FALSE),
     col, parseMessage, sort = c(timestamp = 1))
+iterations <- 0
 while (!is.null(mess)) {
+  if (iterations > 4L)
+    stop ("Test not terminating, flag not being set?")
+  iterations <- iterations + 1
+  print(mess)
   print(details(mess))
   out <- try(print(details(mess)$x+details(mess)$y))
   if (is(out,'try-error'))
@@ -119,6 +124,7 @@ while (!is.null(mess)) {
   mess <- markAsProcessed(mess,col)
   mess <- getOneRec(buildJQuery(app="adder", processed=FALSE),
     col, parseMessage, sort = c(timestamp = 1))
+
 }
 
 mess1a <- getOneRec(buildJQuery(app="adder",uid="One"),col,parseMessage)
