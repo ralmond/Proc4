@@ -27,7 +27,8 @@ processingError(x)
   \item{mess}{An object of class \code{\linkS4class{P4Message}} to be
     modified. }
   \item{col}{A \code{\link[mongolite]{mongo}} collection where the
-    message queue is stored.
+    message queue is stored.  This can also be \code{NULL} in which case
+    the message will not be saved to the database.
   }
   \item{e}{An object indicating the error occurred.  Note this could be
     either a string giving the error message of an object of an error
@@ -110,7 +111,12 @@ mess2 <- saveRec(mess2,col,FALSE)
 
 mess <- getOneRec(buildJQuery(app="adder", processed=FALSE),
     col, parseMessage, sort = c(timestamp = 1))
+iterations <- 0
 while (!is.null(mess)) {
+  if (iterations > 4L)
+    stop ("Test not terminating, flag not being set?")
+  iterations <- iterations + 1
+  print(mess)
   print(details(mess))
   out <- try(print(details(mess)$x+details(mess)$y))
   if (is(out,'try-error'))
@@ -118,6 +124,7 @@ while (!is.null(mess)) {
   mess <- markAsProcessed(mess,col)
   mess <- getOneRec(buildJQuery(app="adder", processed=FALSE),
     col, parseMessage, sort = c(timestamp = 1))
+
 }
 
 mess1a <- getOneRec(buildJQuery(app="adder",uid="One"),col,parseMessage)

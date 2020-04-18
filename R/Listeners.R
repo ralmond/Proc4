@@ -379,7 +379,8 @@ ListenerSet <-
                     function(sender="sender",
                              dbname="test",
                              dburi="mongodb://localhost",
-                             listeners=list(),colname="Messages",
+                             listeners=list(),
+                             colname="Messages",
                              ...) {
                       callSuper(sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,
@@ -392,7 +393,7 @@ ListenerSet <-
 ## Listener/Message Methods
 ListenerSet$methods(
                 messdb = function () {
-                  if (is.null(db)) {
+                  if (is.null(db) && nchar(dburi) > 0L) {
                     db <<- mongo(colname,dbname,dburi)
                   }
                   db

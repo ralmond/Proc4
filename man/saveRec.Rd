@@ -12,7 +12,8 @@ saveRec(mess, col, serialize=TRUE)
 \arguments{
   \item{mess}{The message (object) to be saved.}
   \item{col}{A mongo collection object, produced with a call to
-  \code{\link[mongolite]{mongo}()}.}
+  \code{\link[mongolite]{mongo}()}. This can also be \code{NULL}, in
+  which case the message will not be saved.}
   \item{serialize}{A logical flag. If true,
     \code{\link[jsonlite]{serializeJSON}} is used to protect the
     \code{data} field (and other objects which might contain complex R

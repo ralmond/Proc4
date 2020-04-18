@@ -1,3 +1,29 @@
+2020-04-04  Russell Almond  <ralmond@Cherry>
+
+	* R/Message.R (markAsProcessed): stupid missing ! causing infinite
+	loop.  Fixed test to die on excessive loops.
+
+2020-03-17  Russell Almond  <ralmond@Cherry>
+
+	* R/Message.R (makeDBuri): Moved this code here as it seems to be
+	used just about every time we make a mongo connetion.
+	(makeDBuri): Added protocol arguement
+
+	* R/Listeners.R (ListenerSet): Added trap for blank URI to make
+	no-Mongo version.
+
+2020-02-19  Russell Almond  <ralmond@Cherry>
+
+	* R/Message.R (ununboxer): using sapply instead of lapply in
+	ununboxer causes it to simplify lists of length one in strange
+	ways.  Can I change sapply to lapply here?  NO.  This breaks lots
+	of other things.
+
+2020-02-12  Rusell Almond  <ralmond@Cherry>
+
+	* R/Message.R (saveRec, markAsProcessed, markAsError): Changed so
+	that these would not save if the col argument is NULL.
+
 2019-12-20  Rusell Almond  <ralmond@Cherry>
 
 	* R/Message.R (markAsError): Added " to ' conversion to error
