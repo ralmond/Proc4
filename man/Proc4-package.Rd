@@ -141,7 +141,7 @@ There are five major features of this package documented below:
   it is a listener.
 
   Four listeners are currently implemented (see
-  \code{\link{ListenerConstructors}} or the individal listener classes):
+  \code{\link{Listener}} or the individal listener classes):
     \describe{
     \item{\code{CaptureListener}}{Creates an object of class
       \code{\linkS4class{CaptureListener}} which stores the messages in
@@ -162,7 +162,7 @@ There are five major features of this package documented below:
 
   The \code{\link{ListenerSet}} class is a mixin to associate a
   collection of listeners with an object (the
-  \code{\link[EIEvent]{EIEngine}} and \code{\link[EABN]{EAEngine}}
+  \code{\link[EIEvent]{EIEngine}} and \code{\link[EABN]{BNEngine}}
   classes use this).  The generic function \code{\link{notifyListeners}}
   can be called.  This logs information about the message (see logging
   system above), save a copy of the message in a \dQuote{Messages}
