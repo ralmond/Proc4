@@ -22,7 +22,7 @@ exportMethods(as.json,as.jlist)
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
-       TableListener)
+       TableListener, buildListener)
 exportClasses(ListenerSet,MongoDB,CaptureListener,
        InjectionListener,
        UpdateListener,UpsertListener,TableListener,name)

@@ -1,3 +1,9 @@
+2020-04-20  Russell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (buildListener): Added this function to build a
+	listener from JSON specifications.
+	(XXXListener):  Added name field to all listeners.
+
 2020-04-04  Russell Almond  <ralmond@Cherry>
 
 	* R/Message.R (markAsProcessed): stupid missing ! causing infinite
