@@ -135,6 +135,8 @@ showClass("ListenerSet")
       collection.  Call \code{messdb()} to initialize the collection.}
     \item{\code{removeListener(name)}:}{ This removes a listener from
       the collection by its name.}
+    \item{\code{reset(app)}:}{ Empties the database collection of
+      messages with this app id.}
     \item{messdb}{\code{signature()}:  Returns the
       \code{\link[mongolite]{mongo}} database collection to which to log
       messages. Creates the column if it has not been initialized.}

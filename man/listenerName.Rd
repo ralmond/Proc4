@@ -1,5 +1,5 @@
-\name{name}
-\alias{name}
+\name{listenerName}
+\alias{listenerName}
 \title{Returns the name of an object.}
 \description{
 
@@ -7,7 +7,7 @@
 
 }
 \usage{
-name(x)
+listenerName(x)
 }
 \arguments{
   \item{x}{An object whose name is of interest.}
@@ -34,7 +34,7 @@ tabMaker <- TableListener(name="Trophy Table",
                                solvedtime="numeric",
                                trophy="ordered(none,silver,gold)"))
 
-name(tabMaker)
+listenerName(tabMaker)
 
 }
 \keyword{ manip }

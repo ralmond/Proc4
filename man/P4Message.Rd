@@ -1,12 +1,15 @@
 \name{P4Message}
 \alias{P4Message}
 \alias{m_id}
+\alias{m_id<-}
 \alias{app}
 \alias{uid}
 \alias{mess}
 \alias{context}
+\alias{context<-}
 \alias{sender}
 \alias{timestamp}
+\alias{timestamp<-}
 \alias{details}
 \alias{toString,P4Message-method}
 \alias{show,P4Message-method}
@@ -22,12 +25,15 @@
 \usage{
 P4Message(uid, context, sender, mess, timestamp = Sys.time(), details = list(), app = "default", processed=FALSE)
 m_id(x)
+m_id(x) <- value
 app(x)
 uid(x)
 mess(x)
 context(x)
+context(x) <- value
 sender(x)
 timestamp(x)
+timestamp(x) <- value
 details(x)
 \S4method{toString}{P4Message}(x,...)
 \S4method{show}{P4Message}(object)
@@ -59,7 +65,8 @@ details(x)
     compared as part of the equality test.}
   \item{check_ids}{Logical flag.  If true, the database ids are
     compared as part of the equality test.}
-  
+  \item{value}{A new value for the field, type varies, but usually
+    character.} 
   
 }
 \details{

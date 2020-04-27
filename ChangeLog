@@ -1,3 +1,14 @@
+2020-04-26  Russell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (listenerName):  Changed funciton name and name is
+	too likely to cause conflicts.
+
+	* R/Listeners.R (resetListeners):  Added reset method.
+
+	* R/Message.R (m_id<-,context<-,timestamp<-):  Added setter
+	methods.
+	
+
 2020-04-20  Russell Almond  <ralmond@Cherry>
 
 	* R/Listeners.R (buildListener): Added this function to build a

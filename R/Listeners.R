@@ -4,12 +4,13 @@
 
 setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
+setGeneric("resetListeners",function(x,which,app) standardGeneric("resetListeners"))
 setMethod("isListener","ANY",function(x) FALSE)
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
 #setClass("Listener",contains="VIRTUAL")
 #setMethod("isListener","Listener",function(x) TRUE)
-setGeneric("name", function (x) standardGeneric("name"))
+setGeneric("listenerName", function (x) standardGeneric("listenerName"))
 
 
 setOldClass("mongo")
@@ -32,6 +33,9 @@ CaptureListener <-
                   },
                   lastMessage = function() {
                     messages[[1]]
+                  },
+                  reset = function(app) {
+                    messages <<- list()
                   }))
 
 CaptureListener <- function (name="Capture",messages=list(),...) {
@@ -41,7 +45,8 @@ CaptureListener <- function (name="Capture",messages=list(),...) {
 setMethod("isListener","CaptureListener",function(x) TRUE)
 setMethod("receiveMessage","CaptureListener",
           function(x,mess) x$receiveMessage(mess))
-setMethod("name","CaptureListener",function(x) x$name)
+setMethod("listenerName","CaptureListener",function(x) x$name)
+
 
 
 #################################################
@@ -92,6 +97,10 @@ InjectionListener <-
                       flog.debug("%s ignoring message %s",toString(sender),
                                  toString(mess))
                     }
+                  },
+                  reset = function(app) {
+                    if (!is.null(messdb()))
+                      messdb()$remove(buildJQuery(app=app))
                   }
               ))
 
@@ -108,10 +117,10 @@ InjectionListener <- function (name="Injection",
 setMethod("isListener","InjectionListener",function(x) TRUE)
 setMethod("receiveMessage","InjectionListener",
           function(x,mess) x$receiveMessage(mess))
-setMethod("name","InjectionListener",function(x) x$name)
+setMethod("listenerName","InjectionListener",function(x) x$name)
 
 #################################################
-## InjectionListener
+## UpsertListener
 
 ## This a simple listener whose goal is to simply to inject the
 ## message into a mongo collection where it can be used as a queue.
@@ -164,10 +173,14 @@ UpsertListener <-
                       flog.debug("%s ignoring message %s",toString(sender),
                                  toString(mess))
                     }
+                  },
+                  reset = function(app) {
+                    if (!is.null(messdb()))
+                      messdb()$remove(buildJQuery(app=app))
                   }
               ))
 
-UpsertListener <- function (name=name,
+UpsertListener <- function (name="Upsert",
                             sender="sender",
                             dbname="test",
                             dburi="mongodb://localhost",
@@ -181,7 +194,7 @@ UpsertListener <- function (name=name,
 setMethod("isListener","UpsertListener",function(x) TRUE)
 setMethod("receiveMessage","UpsertListener",
           function(x,mess) x$receiveMessage(mess))
-setMethod("name","UpsertListener",function(x) x$name)
+setMethod("listenerName","UpsertListener",function(x) x$name)
 
 
 #################################################
@@ -261,7 +274,12 @@ UpdateListener <-
                     } else {
                       flog.debug("%s ignoring message %s",dbname,toString(mess))
                     }
+                  },
+                  reset = function(app) {
+                    if (!is.null(messdb()))
+                      messdb()$remove(buildJQuery(app=app))
                   }
+
               ))
 
 UpdateListener <- function (name="Update",dbname="test",
@@ -280,8 +298,7 @@ UpdateListener <- function (name="Update",dbname="test",
 setMethod("isListener","UpdateListener",function(x) TRUE)
 setMethod("receiveMessage","UpdateListener",
           function(x,mess) x$receiveMessage(mess))
-setMethod("name","UpdateListener",function(x) x$name)
-
+setMethod("listenerName","UpdateListener",function(x) x$name)
 
 ##############################################
 ## Table Listener -- Based on work by Lukas Liu and Nan Wang
@@ -353,6 +370,9 @@ TableListener <-
                     df <<- rbind(df, new.line)
                   }
                 },
+                reset = function(app) {
+                    initDF()
+                },
                 returnDF = function() {
                   ## deletes the first row of DF because initDF()
                   ## creates an empty row
@@ -371,7 +391,7 @@ TableListener <- function (name="ppData",
 setMethod("isListener","TableListener",function(x) TRUE)
 setMethod("receiveMessage","TableListener",
           function(x,mess) x$receiveMessage(mess))
-setMethod("name","TableListener",function(x) x$name)
+setMethod("listenerName","TableListener",function(x) x$name)
 
 
 #############################################
@@ -428,6 +448,10 @@ ListenerSet$methods(
                     flog.info(".... to %s",name)
                     receiveMessage(listeners[[name]],mess)
                   }
+                },
+                reset = function(app) {
+                  if (!is.null(messdb()))
+                    messdb()$remove(buildJQuery(app=app))
                 }
             )
 setMethod(receiveMessage,"ListenerSet",
@@ -438,7 +462,14 @@ setMethod(isListener,"ListenerSet",
           function(x) TRUE)
 setMethod(isListener,"ANY",
           function(x) hasMethod("receiveMessage",class(x)))
-
+setMethod("resetListeners","ListenerSet", function(x,which,app) {
+  if (which=="ALL" || "Self" %in% which)
+    x$reset(app)
+  for (name in names(x$listeners))
+    if (which=="ALL" || name %in% which)
+      x$listeners[[name]]$reset(app)
+  x
+})
 
 
 ## Fields we may need to deal with:

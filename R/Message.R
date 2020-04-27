@@ -13,12 +13,15 @@ setClass("P4Message",
                  data="list"              #More details.
                  ))
 setGeneric("m_id",function(x) standardGeneric("m_id"))
+setGeneric("m_id<-",function(x, value) standardGeneric("m_id<-"))
 setGeneric("app",function(x) standardGeneric("app"))
 setGeneric("uid",function(x) standardGeneric("uid"))
 setGeneric("mess",function(x) standardGeneric("mess"))
 setGeneric("context",function(x) standardGeneric("context"))
+setGeneric("context<-",function(x, value) standardGeneric("context<-"))
 setGeneric("sender",function(x) standardGeneric("sender"))
 setGeneric("timestamp",function(x) standardGeneric("timestamp"))
+setGeneric("timestamp<-",function(x, value) standardGeneric("timestamp<-"))
 setGeneric("details",function(x) standardGeneric("details"))
 setGeneric("processed",function(x) standardGeneric("processed"))
 setGeneric("processed<-",function(x, value) standardGeneric("processed<-"))
@@ -27,12 +30,21 @@ setGeneric("processingError<-",function(x, value)
   standardGeneric("processingError<-"))
 
 setMethod("m_id","ANY", function(x) x@"_id")
+setMethod("m_id<-","ANY", function(x,value) {
+  x@"_id" <- value
+  x})
 setMethod("app","P4Message", function(x) x@app)
 setMethod("uid","P4Message", function(x) x@uid)
 setMethod("mess","P4Message", function(x) x@mess)
 setMethod("context","P4Message", function(x) x@context)
+setMethod("context<-","P4Message", function(x) {
+  x@context <- value
+  x})
 setMethod("sender","P4Message", function(x) x@sender)
 setMethod("timestamp","P4Message", function(x) x@timestamp)
+setMethod("timestamp<-","P4Message", function(x,value) {
+  x@timestamp <- as.POSIXtc(value)
+  x})
 setMethod("details","P4Message", function(x) x@data)
 setMethod("processed","P4Message", function(x) x@processed)
 setMethod("processed<-","P4Message",

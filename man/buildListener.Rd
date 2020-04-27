@@ -49,8 +49,8 @@ buildListener(specs, app, dburi)
     \item{messages}{A character vector giving the names of the messages
       the listener will pay attention to.  Note that this maps to the
       field \dQuote{messSet} in the listener object.}
-    \item{targetField}{Used in the \code{\linkS4class{UpdateListner}}
-      and \code{\linkS4class{UpsertListner}} to indicate the field to be
+    \item{targetField}{Used in the \code{\linkS4class{UpdateListener}}
+      and \code{\linkS4class{UpsertListener}} to indicate the field to be
       modified.}
     \item{jsonEncoder}{The name of a function used to encode the field
       value to be modified as JSON. See \code{\link[EABN]{stats2json}}.}
@@ -129,12 +129,12 @@ jspecs <- '[
 speclist <- fromJSON(jspecs,FALSE)
 
 l1 <- buildListener(speclist[[1]],"test","mongodb://localhost")
-stopifnot (isListener(l1),name(l1)=="ppLStest",
+stopifnot (isListener(l1),listenerName(l1)=="ppLStest",
            is(l1,"TableListener"),
            match("Coins Spent",l1$messSet,nomatch=0)>0)
 
 l2 <- buildListener(speclist[[2]],"test","mongodb://localhost")
-stopifnot (isListener(l2),name(l2)=="ToEA",
+stopifnot (isListener(l2),listenerName(l2)=="ToEA",
            is(l2,"InjectionListener"),
            l2$sender=="EI_test",
            l2$dburi=="mongodb://localhost",
@@ -142,10 +142,10 @@ stopifnot (isListener(l2),name(l2)=="ToEA",
 
 
 l3 <- buildListener(speclist[[3]],"test","mongodb://localhost")
-stopifnot (isListener(l3),name(l3)=="PPPersistantData",
+stopifnot (isListener(l3),listenerName(l3)=="PPPersistantData",
            is(l3,"UpdateListener"),
            l3$dburi=="mongodb://localhost",
-           match("Money Earned",l2$messSet,nomatch=0)>0)
+           match("Money Earned",l3$messSet,nomatch=0)>0)
 
 
 }
