@@ -20,9 +20,58 @@ c4User = pwds.filter(function(u) {return u.user == "C4";})[0];
 con = new Mongo();
 db=con.getDB("Proc4");                 
 db.auth(c4User.user,c4User.pwd);
-apps.forEach(function (row) {
-    db.AuthorizedApps.replaceOne({"app":row.app},row,{"upsert":true});
+db.createCollection("AuthorizedApps", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["app","appStem"],
+            properties: {
+                app: {
+                    bsonType: "string",
+                    description: "Application ID (guid; string)"
+                },
+                appStem: {
+                    bsonType: "string",
+                    description: "Short display name for application ID (string)"
+                },
+                EIactive: {
+                    bsonType: "bool",
+                    description: "Is EI process currently active?"
+                },
+                EIsignal: {
+                    bsonType: "string",
+                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the EI process to stop."
+                },
+                EAactive: {
+                    bsonType: "bool",
+                    description: "Is EA process currently active?"
+                },
+                EAsignal: {
+                    bsonType: "string",
+                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the EA process to stop."
+                },
+                ASactive: {
+                    bsonType: "bool",
+                    description: "Is AS process currently active?"
+                },
+                ASsignal: {
+                    bsonType: "string",
+                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the AS process to stop."
+                },
+                doc: {
+                    bsonType: "string",
+                    description: "Descrition of the application."
+                }
+            }
+        }
+    },
+    validationAction: "warn"
 });
+
+
+// apps.forEach(function (row) {
+//     db.AuthorizedApps.replaceOne({"app":row.app},row,{"upsert":true});
+// });
 db.createCollection("Players", {
     validator: {
         $jsonSchema: {

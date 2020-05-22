@@ -346,7 +346,7 @@ getManyRecs <- function(jquery,col,parser,sort=c("timestamp"=1),
   n <- col$count(jquery)
   if (limit>0) n <- min(n,limit)
   result <- vector("list",n)
-  it <- col$iterate(jquery,'{}',sort=sorts,limit=limit)
+  it <- col$iterate(jquery,'{}',sort=sort,limit=limit)
   nn <- 1
   while (!is.null(rec <- it$one())) {
     result[[nn]] <- do.call(parser,list(rec))
@@ -412,7 +412,7 @@ makeDBuri <- function(username="",password="", host="localhost",
   ## Setup DB URI
   security <- ""
   if (nchar(username) > 0L) {
-    if (nchar(password) > 0L)
+    if (!is.null(password) && nchar(password) > 0L)
       security <- paste(username,password,sep=":")
     else
       security <- username
