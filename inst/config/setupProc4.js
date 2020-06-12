@@ -40,7 +40,8 @@ db.createCollection("AuthorizedApps", {
                 },
                 EIsignal: {
                     bsonType: "string",
-                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the EI process to stop."
+                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the EI process to stop.",
+                    enum: ["running","finish","halt"]
                 },
                 EAactive: {
                     bsonType: "bool",
@@ -48,7 +49,8 @@ db.createCollection("AuthorizedApps", {
                 },
                 EAsignal: {
                     bsonType: "string",
-                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the EA process to stop."
+                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the EA process to stop.",
+                    enum: ["running","finish","halt"]
                 },
                 ASactive: {
                     bsonType: "bool",
@@ -56,7 +58,8 @@ db.createCollection("AuthorizedApps", {
                 },
                 ASsignal: {
                     bsonType: "string",
-                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the AS process to stop."
+                    description: "One of 'running', 'finish' or 'halt'.  Used to signal the AS process to stop.",
+                    enum: ["running","finish","halt"]
                 },
                 doc: {
                     bsonType: "string",

@@ -346,7 +346,7 @@ getManyRecs <- function(jquery,col,parser,sort=c("timestamp"=1),
   n <- col$count(jquery)
   if (limit>0) n <- min(n,limit)
   result <- vector("list",n)
-  it <- col$iterate(jquery,'{}',sort=sort,limit=limit)
+  it <- col$iterate(jquery,'{}',sort=sorts,limit=limit)
   nn <- 1
   while (!is.null(rec <- it$one())) {
     result[[nn]] <- do.call(parser,list(rec))
