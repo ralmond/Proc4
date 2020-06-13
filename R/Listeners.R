@@ -531,3 +531,6 @@ buildListener <- function (specs,app,dburi) {
   do.call(type,args)
 
 }
+
+## Used in both EA and EI.
+setClassUnion("NullListenerSet",c("ListenerSet","NULL"))
