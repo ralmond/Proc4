@@ -11,14 +11,41 @@
 
 <h1>Processes Currently Running</h1>
 
+<table border="1">
+  <tr><th>Application</th><th colspan="2">Evidence Identification</th>
+    <th colspan="2">Evidence Accumulation</th>
+    <th colspan="2">Activity Selection</th></tr>
+  <tr><th></th><th>Active</th><th>Signal</th><th>Active</th><th>Signal</th>
+    <th>Active</th><th>Signal</th></tr>
+<?php
+        foreach ($INI['apps'] as $short => $id) {
+                $appQuery = array ('app' => $id);
+                $appRec =$mong->Proc4->AuthorizedApps->findOne($appQuery);
+?>
+<tr>
+   <td><?php echo $short; ?></td>
+   <td><?php echo $appRec['EIactive']; ?></td>
+   <td><?php echo $appRec['EIsignal']; ?></td>
+   <td><?php echo $appRec['EAactive']; ?></td>
+   <td><?php echo $appRec['EAsignal']; ?></td>
+   <td><?php echo $appRec['ASactive']; ?></td>
+   <td><?php echo $appRec['ASsignal']; ?></td>
+
+
+</tr>
+<?php 
+}
+?>
+</table>
 
 <?php
-
+/* Old Method */
 /* I'm currently having difficulty figuring out how to run shell
  * commands to check if the various proceses are running.  My current
  * strategy is to run the script p4Status as a cron job sending it's
- * output to P4Status.html in the current directory. */ 
-include("P4Status.html");
+ * output to P4Status.html in the current directory.  */
+//include("P4Status.html"); 
+
 
 ?>
 
