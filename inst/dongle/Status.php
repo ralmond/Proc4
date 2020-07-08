@@ -52,9 +52,9 @@
 <h1>Processed and unprocessed data </h1>
 
 <table border="1">
-<tr><th>Application</th><th>Active</th><th>Players</th>
+<tr><th>Application</th><th>Players</th>
         <th colspan="2">Evidence Identification</th><th colspan="2">Evidence Accumulation</th></tr>
-<tr><th></th><th></th><th></th>
+<tr><th></th><th></th>
         <th>Done</th><th>Left</th><th>Done</th><th>Left</th></tr>
 <?php
         foreach ($INI['apps'] as $short => $id) {
@@ -69,7 +69,6 @@
 ?>
 <tr>
    <td><?php echo $short; ?></td>
-   <td><?php echo $appRec['active']; ?></td>
    <td><?php echo $playerCount; ?></td>
    <td><?php echo $EIdone; ?></td>
    <td><?php echo $EIleft; ?></td>
@@ -83,35 +82,95 @@
 
 <h1>Links to results files</h1>
 
-<h3>Observables</h3>
-<ul>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.linear.csv">
-          linear </a></li>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.adaptive.csv">
-          adaptive </a></li>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppObs.userControl.csv">
-          userControl </a></li>
-</ul>
+<h2>Evidence Identification</h2>
 
-<h3>Learning Support Observables</h3>
-<ul>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.linear.csv">
-          linear </a></li>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.adaptive.csv">
-          adaptive </a></li>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/ppLS.userControl.csv">
-          userControl </a></li>
-</ul>
+<table border="1">
+<tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
+<?php
+        $fileQuery = array ('process' => 'EI', 'type' => 'data');
+$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+foreach($cursor as $fileRec) {
+?>
+<tr>
+   <td><?php echo $fileRec['app']; ?></td>
+   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+   <td><?php echo $fileRec['timestamp']; ?></td>
+   <td><?php echo $fileRec['doc']; ?></td>
+</tr>
+<?php 
+}
+?>
+</table>
 
-<h3>Bayes net scores</h3>
-<ul>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/stats.linear.csv">
-          linear </a></li>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/stats.adaptive.csv">
-          adaptive </a></li>
-  <li> <a href="https://pluto.coe.fsu.edu/PhysicsPlayground/stats.userControl.csv">
-          userControl </a></li>
-</ul>
-        
+
+
+<h2>Evidence Accumulation</h3>
+
+<table border="1">
+<tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
+<?php
+        $fileQuery = array ('process' => 'EA', 'type' => 'data');
+$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+foreach($cursor as $fileRec) {
+?>
+<tr>
+   <td><?php echo $fileRec['app']; ?></td>
+   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+   <td><?php echo $fileRec['timestamp']; ?></td>
+   <td><?php echo $fileRec['doc']; ?></td>
+</tr>
+<?php 
+}
+?>
+</table>
+
+<h1>Links to log files</h1>
+
+<h2>Evidence Identification</h2>
+
+<table border="1">
+<tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
+<?php
+        $fileQuery = array ('process' => 'EI', 'type' => 'log');
+$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+foreach($cursor as $fileRec) {
+?>
+<tr>
+   <td><?php echo $fileRec['app']; ?></td>
+   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+   <td><?php echo $fileRec['timestamp']; ?></td>
+   <td><?php echo $fileRec['doc']; ?></td>
+</tr>
+<?php 
+}
+?>
+</table>
+
+
+
+<h2>Evidence Accumulation</h3>
+
+<table border="1">
+<tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
+<?php
+        $fileQuery = array ('process' => 'EA', 'type' => 'log');
+$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+foreach($cursor as $fileRec) {
+?>
+<tr>
+   <td><?php echo $fileRec['app']; ?></td>
+   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+   <td><?php echo $fileRec['timestamp']; ?></td>
+   <td><?php echo $fileRec['doc']; ?></td>
+</tr>
+<?php 
+}
+?>
+</table>
+
+
+<h2>Shutdow Page</h2>
+<p> Here is the <a href=Shutdown.php">shutdown page.</a></p>
+
 </body>
 </html>

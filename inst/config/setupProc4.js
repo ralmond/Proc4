@@ -195,5 +195,45 @@ db.Activity.createIndex( { app:1, uid: 1, timestamp: -1});
 
 
 
+db.createCollection("OutputFiles", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["app","process","name","type","filename"],
+            properties: {
+                app: {
+                    bsonType: "string",
+                    description: "Application ID (guid; string)"
+                },
+                process: {
+                    bsonType: "string",
+                    description: "Which process generated the file."
+                },
+                type: {
+                    bsonType: "string",
+                    description: "Is this a data or log file?",
+                    enum:["data","log"]
+                },
+                name: {
+                    bsonType: "string",
+                    description: "A label for the file contents."
+                },
+                filename: {
+                    bsonType: "string",
+                    description: "Name of the File."
+                },
+                timestamp: {
+                    bsonType: "date",
+                    description: "Timestamp"
+                },
+                doc: {
+                    bsonType: "string",
+                    description: "Descrition of the application."
+                }
+            }
+        }
+    },
+    validationAction: "warn"
+});
 
         
