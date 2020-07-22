@@ -401,20 +401,24 @@ ListenerSet <-
   setRefClass("ListenerSet",
               fields=c(sender="character",
                        dbname="character",
+                       admindbname="character",
                        dburi="character",
                        colname="character",
                        listeners="list",
-                       db="MongoDB"),
+                       db="MongoDB",
+                       adminDB="MongoDB"),
               methods = list(
                   initialize =
                     function(sender="sender",
                              dbname="test",
+                             admindbname="",
                              dburi="mongodb://localhost",
                              listeners=list(),
                              colname="Messages",
                              ...) {
                       callSuper(sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,
+                                admindbname=admindbname,
                                 colname=colname,listeners=listeners,
                                 ...)
                     }
@@ -423,7 +427,34 @@ ListenerSet <-
 
 ## Listener/Message Methods
 ListenerSet$methods(
-                messdb = function () {
+                admindb = function () {
+                  if (is.null(adminDB) && nchar(dburi) > 0L
+                      && nchar(admindbname) > 0L) {
+                    adminDB <<- mongo("OutputFiles",admindbname,dburi)
+                  }
+                  adminDB
+                },
+                registerOutput = function (name, filename, app, process,
+                                           type="data", doc="") {
+                  if (!is.null(admindb())) {
+                    flog.info("Registering %s file %s.",type,name)
+                    newrec <- buildJQuery(
+                        app=app,process=process,type=type,
+                        name=name,filename=filename,
+                        timestamp=as.character(Sys.time()),
+                        doc=doc)
+                    qq <- buildJQuery(app=app,name=name, process=process)
+                    if (admindb()$count(qq) == 0L)
+                      admindb()$insert(newrec)
+                    else
+                      admindb()$update(qq,sprintf('{"$set":%s}',newrec))
+                  }
+                }
+
+            )
+
+ListenerSet$methods(
+               messdb = function () {
                   if (is.null(db) && nchar(dburi) > 0L) {
                     db <<- mongo(colname,dbname,dburi)
                   }
@@ -454,6 +485,8 @@ ListenerSet$methods(
                     messdb()$remove(buildJQuery(app=app))
                 }
             )
+
+
 setMethod(receiveMessage,"ListenerSet",
           function(x,mess) x$notifyListeners(mess))
 setMethod(notifyListeners,"ListenerSet",

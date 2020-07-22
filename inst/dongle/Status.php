@@ -88,14 +88,14 @@
 <tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
 <?php
         $fileQuery = array ('process' => 'EI', 'type' => 'data');
-$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+$cursor =$mong->Proc4->OutputFiles->find($fileQuery);
 foreach($cursor as $fileRec) {
 ?>
 <tr>
-   <td><?php echo $fileRec['app']; ?></td>
-   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
-   <td><?php echo $fileRec['timestamp']; ?></td>
-   <td><?php echo $fileRec['doc']; ?></td>
+    <td><?php echo basename($fileRec['app']); ?></td>
+    <td><?php echo '<a href="logs/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo $fileRec['timestamp']; ?></td>
+    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
 <?php 
 }
@@ -110,12 +110,12 @@ foreach($cursor as $fileRec) {
 <tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
 <?php
         $fileQuery = array ('process' => 'EA', 'type' => 'data');
-$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+$cursor =$mong->Proc4->OutputFiles->find($fileQuery);
 foreach($cursor as $fileRec) {
 ?>
 <tr>
-   <td><?php echo $fileRec['app']; ?></td>
-   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo basename($fileRec['app']); ?></td>
+    <td><?php echo '<a href="logs/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
    <td><?php echo $fileRec['timestamp']; ?></td>
    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
@@ -132,12 +132,12 @@ foreach($cursor as $fileRec) {
 <tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
 <?php
         $fileQuery = array ('process' => 'EI', 'type' => 'log');
-$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+$cursor =$mong->Proc4->OutputFiles->find($fileQuery);
 foreach($cursor as $fileRec) {
 ?>
 <tr>
-   <td><?php echo $fileRec['app']; ?></td>
-   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo basename($fileRec['app']); ?></td>
+    <td><?php echo '<a href="data/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
    <td><?php echo $fileRec['timestamp']; ?></td>
    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
@@ -154,12 +154,12 @@ foreach($cursor as $fileRec) {
 <tr><th>Application</th><th>Name</th><th>Timestamp</th><th>doc</th></tr>
 <?php
         $fileQuery = array ('process' => 'EA', 'type' => 'log');
-$cursor =$mong->Proc4->outputFiles->find($fileQuery);
+$cursor =$mong->Proc4->OutputFiles->find($fileQuery);
 foreach($cursor as $fileRec) {
 ?>
 <tr>
-   <td><?php echo $fileRec['app']; ?></td>
-   <td><?php echo '<a href="data/'.$fileRec['filename'].'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo basename($fileRec['app']); ?></td>
+    <td><?php echo '<a href="data/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
    <td><?php echo $fileRec['timestamp']; ?></td>
    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
