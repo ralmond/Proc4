@@ -93,7 +93,7 @@ foreach($cursor as $fileRec) {
 ?>
 <tr>
     <td><?php echo basename($fileRec['app']); ?></td>
-    <td><?php echo '<a href="logs/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo '<a href="data/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
     <td><?php echo $fileRec['timestamp']; ?></td>
     <td><?php echo $fileRec['doc']; ?></td>
 </tr>
@@ -115,7 +115,7 @@ foreach($cursor as $fileRec) {
 ?>
 <tr>
     <td><?php echo basename($fileRec['app']); ?></td>
-    <td><?php echo '<a href="logs/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo '<a href="data/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
    <td><?php echo $fileRec['timestamp']; ?></td>
    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
@@ -137,7 +137,7 @@ foreach($cursor as $fileRec) {
 ?>
 <tr>
     <td><?php echo basename($fileRec['app']); ?></td>
-    <td><?php echo '<a href="data/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo '<a href="logs/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
    <td><?php echo $fileRec['timestamp']; ?></td>
    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
@@ -159,7 +159,7 @@ foreach($cursor as $fileRec) {
 ?>
 <tr>
     <td><?php echo basename($fileRec['app']); ?></td>
-    <td><?php echo '<a href="data/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
+    <td><?php echo '<a href="logs/'.basename($fileRec['filename']).'"</a>'; ?><?php echo $fileRec['name']; ?></a></td>
    <td><?php echo $fileRec['timestamp']; ?></td>
    <td><?php echo $fileRec['doc']; ?></td>
 </tr>
