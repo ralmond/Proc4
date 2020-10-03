@@ -294,9 +294,11 @@ buildJQterm <- function (name,value) {
       vstring <- toJSON(unboxer(value),POSIXt="mongo")
     } else {
       ## Unmarked $in query
-      vstring <- paste('{"$in":',toJSON(value,POSIXt="mongo"),'}',sep="")
+      vstring <- paste('{"$in":',toJSON(unlist(value),
+                                        POSIXt="mongo"),'}',sep="")
     }
   } else {
+    compOps <- sub('^\\$','',compOps)   #Strip leading $
     if(!all(compOps %in% mongoQueries)) {
       stop("Unspported operator ",compOps[!(compOps%in%mongoQueries)],
            " in query for field ",name)
@@ -304,7 +306,8 @@ buildJQterm <- function (name,value) {
     if(compOps[1]=="nin" || compOps[1]=="in" || compOps[1]=="") {
       ## Special Handling for (n)in query)
       op <- ifelse(compOps[1]=="","in",compOps[1])
-      vstring <- paste('{"$',op,'":',toJSON(value,POSIXt="mongo"),'}',sep="")
+      vstring <- paste('{"$',op,'":',toJSON(unlist(value),
+                                            POSIXt="mongo"),'}',sep="")
     } else {
       ## iterate over values.
       vstring <- sapply(1:length(compOps),
