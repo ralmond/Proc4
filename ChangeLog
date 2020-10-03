@@ -1,3 +1,9 @@
+2020-07-31  Russell Almond  <ralmond@Cherry>
+
+	* R/Message.R (buildJQterm): Strip leading $ from operators.
+	(buildJQterm): added unlist to deal with unnecessary listification
+	in fromJSON.
+
 2020-06-12  Russell Almond  <ralmond@Cherry>
 
 	* inst/config/setupApps.js: New code for setting up new
