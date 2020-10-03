@@ -1,3 +1,7 @@
+2020-10-03  Russell Almond  <ralmond@pei>
+
+	* R/Listeners.R (buildListener): Need basename here, as we don't want the full URL-like app name.
+
 2020-06-12  Russell Almond  <ralmond@Cherry>
 
 	* inst/config/setupApps.js: New code for setting up new

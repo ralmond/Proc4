@@ -170,7 +170,7 @@ foreach($cursor as $fileRec) {
 
 
 <h2>Shutdow Page</h2>
-<p> Here is the <a href=Shutdown.php">shutdown page.</a></p>
+<p> Here is the <a href="Shutdown.php">shutdown page.</a></p>
 
 </body>
 </html>

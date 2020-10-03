@@ -516,7 +516,7 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 ## fieldlist -- Table only
 ## messSet
 buildListener <- function (specs,app,dburi) {
-  name <- gsub("<app>",app,as.character(specs$name),fixed=TRUE)
+  name <- gsub("<app>",basename(app),as.character(specs$name),fixed=TRUE)
   type <- specs$type
   class <- findClass(type)
   if (length(class)==0)
