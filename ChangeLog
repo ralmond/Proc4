@@ -1,3 +1,6 @@
+2020-10-03  Russell Almond  <ralmond@pei>
+
+	* R/Listeners.R (buildListener): Need basename here, as we don't want the full URL-like app name.
 2020-07-31  Russell Almond  <ralmond@Cherry>
 
 	* R/Message.R (buildJQterm): Strip leading $ from operators.
