@@ -140,5 +140,9 @@ showClass("ListenerSet")
     \item{messdb}{\code{signature()}:  Returns the
       \code{\link[mongolite]{mongo}} database collection to which to log
       messages. Creates the column if it has not been initialized.}
+    \item{registerOutput}{\code{signature(name, filename, app, process,
+        type="data", doc="")}:  Adds/updates a field in the database
+      collection of output files.  This allows processes looking at the
+      database to find output summaries.}
   }
 }
