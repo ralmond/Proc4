@@ -169,8 +169,20 @@ foreach($cursor as $fileRec) {
 </table>
 
 
-<h2>Shutdow Page</h2>
-<p> Here is the <a href="Shutdown.php">shutdown page.</a></p>
+<h2>Links to Other Pages</h2>
+<ul>
+    <li> <a href=Status.php">status</a> page.</li>
+    <li> <a href=Shutdown.php">Shutdown</a> page.</li>
+    <li> <a href=EIBuilder.php">Evidence Identification (EI)
+        Builder (Loader)</a>.</li>
+    <li> <a href=EABuilder.php">Evidence Accumulation (EA)
+        Net Builder</a>.</li>
+    <li> <a href=EIEvent.php">Evidence Identification (EI)
+        Launcher</a>.</li>
+    <li> <a href=EABN.php">Evidence Accumulation (EA)
+        Launcher</a>.</li>
+</ul>
+
 
 </body>
 </html>

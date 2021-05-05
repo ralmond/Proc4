@@ -39,54 +39,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST' 
       Password: <input type="password" id="pwd" name="pwd"/ required><br/>
       <input type="submit" name="Do it!"/>
     </form>
-<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    include 'config.php';
-    include 'checkPwd.php';
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST')
+    {
+        include 'config.php';
+        include 'checkPwd.php';
 
-    $mong = new MongoDB\Client("mongodb://localhost"); // connect
+        $mong = new MongoDB\Client("mongodb://localhost"); // connect
 
-    $app = $_POST['app'];
-    if (strpos($app,'ecd://epls.coe.fsu.edu/') != 0) {
-        die("That application is not supported on this server.");
-    }
+        $app = $_POST['app'];
+        if (strpos($app,'ecd://epls.coe.fsu.edu/') != 0) {
+            die("That application is not supported on this server.");
+        }
 
-    if (!in_array($app,$INI['apps'])) {
-        die("App '$app' not registered.");
-    }
-    $aid = $_POST['aid'];
-    $pwd = $_POST['pwd'];
-    $filepwd = get_htpasswd('/usr/local/share/Proc4/p4pwds',$aid);
-    if (!matches($pwd,$filepwd)) {
-        die("Username or password not matched.");
-    }
-    $proc = $_POST['process'];
-    $signal = $_POST['signal'];
-    if ($signal == 'halt' && !array_key_exists('shouldHalt',$_POST))
-        die("Halt selected but not confirmed.");
-    
-
-    $mong = new MongoDB\Client("mongodb://localhost"); 
+        if (!in_array($app,$INI['apps'])) {
+            die("App '$app' not registered.");
+        }
+        $aid = $_POST['aid'];
+        $pwd = $_POST['pwd'];
+        $filepwd = get_htpasswd('/usr/local/share/Proc4/p4pwds',$aid);
+        if (!matches($pwd,$filepwd)) {
+            die("Username or password not matched.");
+        }
+        $proc = $_POST['process'];
+        $signal = $_POST['signal'];
+        if ($signal == 'halt' && !array_key_exists('shouldHalt',$_POST))
+            die("Halt selected but not confirmed.");
         
-    $col=$mong->Proc4->AuthorizedApps;
-    $rec=$col->findOne(['app' => $app],['limit' => 1]);
-    if ($rec == null) {
-        die("No record for process.");
-    } else {
-        $result = $col->updateOne(['app' => $app],
-                                  ['$set' => [$proc.'signal' => $signal]]);
-    }    
 
-?>
-<p><?php echo $proc." process for ".$app." sent signal ".$signal."."; ?></p>
-     
+        $mong = new MongoDB\Client("mongodb://localhost"); 
+        
+        $col=$mong->Proc4->AuthorizedApps;
+        $rec=$col->findOne(['app' => $app],['limit' => 1]);
+        if ($rec == null) {
+            die("No record for process.");
+        } else {
+            $result = $col->updateOne(['app' => $app],
+                                      ['$set' => [$proc.'signal' => $signal]]);
+        }    
+
+    ?>
+    <p><?php echo $proc." process for ".$app." sent signal ".$signal."."; ?></p>
+    
 <?php
 }
 ?>
 
-<h2>Status Page</h2>
-<p> Here is the <a href=Status.php">status page.</a></p>
+<h2>Links to Other Pages</h2>
+<ul>
+    <li> <a href=Status.php">status</a> page.</li>
+    <li> <a href=Shutdown.php">Shutdown</a> page.</li>
+    <li> <a href=EIBuilder.php">Evidence Identification (EI)
+        Builder (Loader)</a>.</li>
+    <li> <a href=EABuilder.php">Evidence Accumulation (EA)
+        Net Builder</a>.</li>
+    <li> <a href=EIEvent.php">Evidence Identification (EI)
+        Launcher</a>.</li>
+    <li> <a href=EABN.php">Evidence Accumulation (EA)
+        Launcher</a>.</li>
+</ul>
 </body>
 </html>
 

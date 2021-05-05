@@ -1,0 +1,80 @@
+---
+title: "Discrete Partial Credit Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Discrete Partial Credit Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(CPTtools)
+```
+
+# Required Software
+
+## Mongo Database
+
+The Proc4 system is designed to work with the Mongo database.  This
+can be downloaded and installed from https://www.mongodb.org/.  The
+community edition works fine.  Assuming that the R processes are
+running on the same server as the database, it does not need to be
+configured to allow access from hosts other than localhost.
+
+The Mongo connection is optional.  However, the `Listener` objects
+mostly assume a database connection.  The `EABN` package, in
+particular, has a mechanism for sending and recieving JSON messages
+without using the database as a queue.
+
+## R packages
+
+The following R packages are used by the system:
+
+* `jsonlite` -- Used for parsing JSON messages.
+* `futile.logger` -- Used for logging system
+
+The following R packages are suggested:
+
+* `mongolite` -- Required if mongo database is used.
+* `rmarkdown`, `knitr` -- Used to build vignettes.
+
+# Configuring the Mongo Database
+
+
+setupDatabases.js
+
+## Proc 4 collections
+
+## Authorized Apps
+
+# Configuration files
+
+## Configuration Directory 
+
+/usr/local/share/Proc4
+
+## Javascript configuration Files
+
+Proc4.ini, Proc4.js
+
+## R initialization files
+
+EAini.R, EIini.R
+
+# The PHP Dongle
+
+## Game interface
+
+PlayerStart.php
+PlayerStop.php
+PlayerStats.php
+PlayerLevels.php
+
+
