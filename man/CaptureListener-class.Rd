@@ -4,6 +4,7 @@
 \alias{CaptureListener-class}
 \alias{isListener,CaptureListener-method}
 \alias{receiveMessage,CaptureListener-method}
+\alias{listenerName,CaptureListener-method}
 
 \title{Class \code{"CaptureListener"}}
 \description{
@@ -27,6 +28,7 @@ All reference classes extend and inherit methods from
     \item{receiveMessage}{\code{signature(x = "CaptureListener")}: If
       the message is in the \code{messSet}, it adds the message to the
       message list.  (See details) }
+    \item{listenerName}{Returns the name assigned to the listener.}
   }
 }
 \details{
@@ -74,6 +76,7 @@ stopifnot(all.equal(mess1,cl$lastMessage()))
     \item{\code{lastMessage()}:}{Returns the most recent message. }
     \item{\code{receiveMessage(mess)}:}{ Does the work of inserting the
       message.  See Details. }
+    \item{\code{reset(app)}:}{ Empties the message list.}
     \item{\code{initialize(messages, ...)}:}{ Sets the default values for the fields. }
   }
 }

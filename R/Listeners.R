@@ -4,11 +4,13 @@
 
 setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
+setGeneric("resetListeners",function(x,which,app) standardGeneric("resetListeners"))
 setMethod("isListener","ANY",function(x) FALSE)
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
 #setClass("Listener",contains="VIRTUAL")
 #setMethod("isListener","Listener",function(x) TRUE)
+setGeneric("listenerName", function (x) standardGeneric("listenerName"))
 
 
 setOldClass("mongo")
@@ -22,24 +24,29 @@ setClassUnion("MongoDB",c("mongo","NULL"))
 
 CaptureListener <-
   setRefClass("CaptureListener",
-              fields=c(messages="list"),
+              fields=c(name = "character",messages="list"),
               methods=list(
-                  initialize = function(messages=list(),...)
-                    callSuper(messages=messages,...),
+                  initialize = function(name="Capture",messages=list(),...)
+                    callSuper(name=name,messages=messages,...),
                   receiveMessage = function (mess) {
                     messages <<- c(mess,messages)
                   },
                   lastMessage = function() {
                     messages[[1]]
+                  },
+                  reset = function(app) {
+                    messages <<- list()
                   }))
 
-CaptureListener <- function (messages=list(),...) {
-  new("CaptureListener",messages=messages,...)
+CaptureListener <- function (name="Capture",messages=list(),...) {
+  new("CaptureListener",name=name,messages=messages,...)
 }
 
 setMethod("isListener","CaptureListener",function(x) TRUE)
 setMethod("receiveMessage","CaptureListener",
           function(x,mess) x$receiveMessage(mess))
+setMethod("listenerName","CaptureListener",function(x) x$name)
+
 
 
 #################################################
@@ -50,7 +57,8 @@ setMethod("receiveMessage","CaptureListener",
 
 InjectionListener <-
   setRefClass("InjectionListener",
-              fields=c(sender="character",
+              fields=c(name = "character",
+                       sender="character",
                        dbname="character",
                        dburi="character",
                        colname="character",
@@ -58,13 +66,14 @@ InjectionListener <-
                        db="MongoDB"),
               methods=list(
                   initialize=
-                    function(sender="sender",
+                    function(name="Injection",
+                             sender="sender",
                              dbname="test",
                              dburi="mongodb://localhost",
                              colname="Messages",
                              messSet=character(),
                              ...) {
-                      callSuper(sender=sender,db=NULL,
+                      callSuper(name=name,sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,
                                 colname=colname,messSet=messSet,
                                 ...)
@@ -88,31 +97,38 @@ InjectionListener <-
                       flog.debug("%s ignoring message %s",toString(sender),
                                  toString(mess))
                     }
+                  },
+                  reset = function(app) {
+                    if (!is.null(messdb()))
+                      messdb()$remove(buildJQuery(app=app))
                   }
               ))
 
-InjectionListener <- function (sender="sender",
+InjectionListener <- function (name="Injection",
+                               sender="sender",
                                dbname="test",
                                dburi="mongodb://localhost",
                                messSet=character(),
                                colname="Messages",...) {
-  new("InjectionListener",sender=sender,dbname=dbname,dburi=dburi,
+  new("InjectionListener",name=name,sender=sender,dbname=dbname,dburi=dburi,
       colname=colname,messSet=messSet,...)
 }
 
 setMethod("isListener","InjectionListener",function(x) TRUE)
 setMethod("receiveMessage","InjectionListener",
           function(x,mess) x$receiveMessage(mess))
+setMethod("listenerName","InjectionListener",function(x) x$name)
 
 #################################################
-## InjectionListener
+## UpsertListener
 
 ## This a simple listener whose goal is to simply to inject the
 ## message into a mongo collection where it can be used as a queue.
 
 UpsertListener <-
   setRefClass("UpsertListener",
-              fields=c(sender="character",
+              fields=c(name="character",
+                       sender="character",
                        dbname="character",
                        dburi="character",
                        colname="character",
@@ -121,14 +137,15 @@ UpsertListener <-
                        db="MongoDB"),
               methods=list(
                   initialize=
-                    function(sender="sender",
+                    function(name="Upsert",
+                             sender="sender",
                              dbname="test",
                              dburi="mongodb://localhost",
                              colname="Messages",
                              messSet=character(),
                              qfields=c("app","uid"),
                              ...) {
-                      callSuper(sender=sender,db=NULL,
+                      callSuper(name=name,sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,
                                 colname=colname,messSet=messSet,
                                 qfields=qfields,
@@ -156,22 +173,28 @@ UpsertListener <-
                       flog.debug("%s ignoring message %s",toString(sender),
                                  toString(mess))
                     }
+                  },
+                  reset = function(app) {
+                    if (!is.null(messdb()))
+                      messdb()$remove(buildJQuery(app=app))
                   }
               ))
 
-UpsertListener <- function (sender="sender",
+UpsertListener <- function (name="Upsert",
+                            sender="sender",
                             dbname="test",
                             dburi="mongodb://localhost",
                             messSet=character(),
                             colname="Messages",
                             qfields=c("app","uid"),...) {
-  new("UpsertListener",sender=sender,dbname=dbname,dburi=dburi,
+  new("UpsertListener",name=name,sender=sender,dbname=dbname,dburi=dburi,
       colname=colname,messSet=messSet,qfields=qfields,...)
 }
 
 setMethod("isListener","UpsertListener",function(x) TRUE)
 setMethod("receiveMessage","UpsertListener",
           function(x,mess) x$receiveMessage(mess))
+setMethod("listenerName","UpsertListener",function(x) x$name)
 
 
 #################################################
@@ -183,7 +206,8 @@ setMethod("receiveMessage","UpsertListener",
 
 UpdateListener <-
   setRefClass("UpdateListener",
-              fields=c(dbname="character",
+              fields=c(name="character",
+                       dbname="character",
                        dburi="character",
                        colname="character",
                        messSet = "character",
@@ -193,7 +217,7 @@ UpdateListener <-
                        db="MongoDB"),
               methods=list(
                   initialize=
-                    function(dbname="test",
+                    function(name="Update",dbname="test",
                              dburi="mongodb://localhost",
                              colname="Messages",
                              messSet=character(),
@@ -201,7 +225,7 @@ UpdateListener <-
                              jsonEncoder="unparseData",
                              qfields=c("app","uid"),
                              ...) {
-                      callSuper(db=NULL,
+                      callSuper(name=name,db=NULL,
                                 dburi=dburi,dbname=dbname,
                                 colname=colname,messSet=messSet,
                                 targetField=targetField,
@@ -250,10 +274,15 @@ UpdateListener <-
                     } else {
                       flog.debug("%s ignoring message %s",dbname,toString(mess))
                     }
+                  },
+                  reset = function(app) {
+                    if (!is.null(messdb()))
+                      messdb()$remove(buildJQuery(app=app))
                   }
+
               ))
 
-UpdateListener <- function (dbname="test",
+UpdateListener <- function (name="Update",dbname="test",
                             dburi="mongodb://localhost",
                             messSet=character(),
                             colname="Messages",
@@ -261,7 +290,7 @@ UpdateListener <- function (dbname="test",
                             qfields=c("app","uid"),
                             jsonEncoder="unparseData",
                             ...) {
-  new("UpdateListener",dbname=dbname,dburi=dburi,messSet=messSet,
+  new("UpdateListener",name=name,dbname=dbname,dburi=dburi,messSet=messSet,
       colname=colname,targetField=targetField,jsonEncoder=jsonEncoder,
       qfields=qfields,...)
 }
@@ -269,7 +298,7 @@ UpdateListener <- function (dbname="test",
 setMethod("isListener","UpdateListener",function(x) TRUE)
 setMethod("receiveMessage","UpdateListener",
           function(x,mess) x$receiveMessage(mess))
-
+setMethod("listenerName","UpdateListener",function(x) x$name)
 
 ##############################################
 ## Table Listener -- Based on work by Lukas Liu and Nan Wang
@@ -341,6 +370,9 @@ TableListener <-
                     df <<- rbind(df, new.line)
                   }
                 },
+                reset = function(app) {
+                    initDF()
+                },
                 returnDF = function() {
                   ## deletes the first row of DF because initDF()
                   ## creates an empty row
@@ -359,8 +391,7 @@ TableListener <- function (name="ppData",
 setMethod("isListener","TableListener",function(x) TRUE)
 setMethod("receiveMessage","TableListener",
           function(x,mess) x$receiveMessage(mess))
-setGeneric("name", function (x) standardGeneric("name"))
-setMethod("name","TableListener",function(x) x$name)
+setMethod("listenerName","TableListener",function(x) x$name)
 
 
 #############################################
@@ -370,20 +401,24 @@ ListenerSet <-
   setRefClass("ListenerSet",
               fields=c(sender="character",
                        dbname="character",
+                       admindbname="character",
                        dburi="character",
                        colname="character",
                        listeners="list",
-                       db="MongoDB"),
+                       db="MongoDB",
+                       adminDB="MongoDB"),
               methods = list(
                   initialize =
                     function(sender="sender",
                              dbname="test",
+                             admindbname="",
                              dburi="mongodb://localhost",
                              listeners=list(),
                              colname="Messages",
                              ...) {
                       callSuper(sender=sender,db=NULL,
                                 dburi=dburi,dbname=dbname,
+                                admindbname=admindbname,
                                 colname=colname,listeners=listeners,
                                 ...)
                     }
@@ -392,7 +427,34 @@ ListenerSet <-
 
 ## Listener/Message Methods
 ListenerSet$methods(
-                messdb = function () {
+                admindb = function () {
+                  if (is.null(adminDB) && nchar(dburi) > 0L
+                      && nchar(admindbname) > 0L) {
+                    adminDB <<- mongo("OutputFiles",admindbname,dburi)
+                  }
+                  adminDB
+                },
+                registerOutput = function (name, filename, app, process,
+                                           type="data", doc="") {
+                  if (!is.null(admindb())) {
+                    flog.info("Registering %s file %s.",type,name)
+                    newrec <- buildJQuery(
+                        app=app,process=process,type=type,
+                        name=name,filename=filename,
+                        timestamp=as.character(Sys.time()),
+                        doc=doc)
+                    qq <- buildJQuery(app=app,name=name, process=process)
+                    if (admindb()$count(qq) == 0L)
+                      admindb()$insert(newrec)
+                    else
+                      admindb()$update(qq,sprintf('{"$set":%s}',newrec))
+                  }
+                }
+
+            )
+
+ListenerSet$methods(
+               messdb = function () {
                   if (is.null(db) && nchar(dburi) > 0L) {
                     db <<- mongo(colname,dbname,dburi)
                   }
@@ -417,8 +479,14 @@ ListenerSet$methods(
                     flog.info(".... to %s",name)
                     receiveMessage(listeners[[name]],mess)
                   }
+                },
+                reset = function(app) {
+                  if (!is.null(messdb()))
+                    messdb()$remove(buildJQuery(app=app))
                 }
             )
+
+
 setMethod(receiveMessage,"ListenerSet",
           function(x,mess) x$notifyListeners(mess))
 setMethod(notifyListeners,"ListenerSet",
@@ -427,4 +495,75 @@ setMethod(isListener,"ListenerSet",
           function(x) TRUE)
 setMethod(isListener,"ANY",
           function(x) hasMethod("receiveMessage",class(x)))
+setMethod("resetListeners","ListenerSet", function(x,which,app) {
+  if (which=="ALL" || "Self" %in% which)
+    x$reset(app)
+  for (name in names(x$listeners))
+    if (which=="ALL" || name %in% which)
+      x$listeners[[name]]$reset(app)
+  x
+})
 
+
+## Fields we may need to deal with:
+## name
+## type
+## dbname
+## dburi
+## colname
+## qfields -- Upsert/Update Only
+## targetField -- Update Only
+## fieldlist -- Table only
+## messSet
+buildListener <- function (specs,app,dburi) {
+  name <- gsub("<app>",basename(app),as.character(specs$name),fixed=TRUE)
+  type <- specs$type
+  class <- findClass(type)
+  if (length(class)==0)
+    stop("Cannot find class ",type, "for listener ",name)
+  args <- list(name=name)
+
+  ## Substitute for <app> in sender field
+  if (!is.null(specs$sender)) {
+    args <- c(args,
+              sender = list(gsub("<app>",app,as.character(specs$sender),fixed=TRUE)))
+  }
+  ## dburi is set by the caller, not the config.json
+  if (!is.null(specs$dburi)) {
+    args <- c(args, dburi =list(dburi))
+  }
+  if (!is.null(specs$dbname)) {
+    args <- c(args, dbname = list(as.character(specs$dbname)))
+  }
+  if (!is.null(specs$colname)) {
+    args <- c(args, colname = list(as.character(specs$colname)))
+  }
+  ## Note name change here.
+  if (!is.null(specs$messages)) {
+    args <- c(args, messSet = list(as.character(specs$messages)))
+  }
+  if (!is.null(specs$targetField)) {
+    args <- c(args, targetField = list(as.character(specs$targetField)))
+  }
+  if (!is.null(specs$jsonEncoder)) {
+    args <- c(args, jsonEncoder = list(as.character(specs$jsonEncoder)))
+  }
+  ## qfields
+  if (!is.null(specs$qfields)) {
+    args <- c(args, qfields = list(as.character(specs$qfields)))
+  }
+  ## feildList
+  if (!is.null(specs$fields)) {
+    fieldlist <- as.character(specs$fields)
+    names(fieldlist) <- names(specs$fields)
+    args <- c(args,fieldlist=list(fieldlist))
+  }
+
+  flog.info("Building %s with name %s.\n",name,type)
+  flog.info("Args:",args,capture=TRUE)
+  do.call(type,args)
+
+}
+
+## Used in both EA and EI.
+setClassUnion("NullListenerSet",c("ListenerSet","NULL"))

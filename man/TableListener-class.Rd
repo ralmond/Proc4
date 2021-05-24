@@ -4,7 +4,7 @@
 \alias{TableListener-class}
 \alias{isListener,TableListener-method}
 \alias{receiveMessage,TableListener-method}
-\alias{name,TableListener-method}
+\alias{listenerName,TableListener-method}
 
 \title{Class \code{"TableListener"}}
 \description{
@@ -27,7 +27,7 @@
       the message is in the \code{messSet}, it adds a row to its
       internal table using the fields specified in \code{fieldlist}. 
       (See details.) }
-    \item{name}{\code{signature(x = "TableListener")}: returns the name
+    \item{listenerName}{\code{signature(x = "TableListener")}: returns the name
       of the table.  This is usually also the filename where the table
       will be stored. }
   }
@@ -125,6 +125,7 @@ tabMaker$returnDF()
       \code{receiveMessage()}.}
     \item{\code{initialize(name, fieldlist, messSet, ...)}:}{
       Initializes the fields. }
+    \item{\code{reset(app)}:}{ Calls \code{initDF()} to reset the table.}
     \item{\code{returnDF()}:}{ Returns the part of the \code{df} which
       has data (e.g., omits first line which is used to set the types.)}
   }

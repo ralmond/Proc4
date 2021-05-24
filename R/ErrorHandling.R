@@ -121,3 +121,34 @@ withFlogging <- function(expr,...,context=deparse(substitute(expr)),
         function(msg,obj)
           invisible(structure(msg, class = "try-error", condition = obj)))
 }
+
+
+shinyAppender <-
+  setRefClass("shinyAppender",
+              fields=c(file="character",
+                       field="character",
+                       messages="data.frame"),
+              methods=list(
+                  initialize = function (file="",field="",
+                                         messages=data.frame(
+                                             Messages=character()))
+                  {
+                    callSuper(file=file, field=field, steps=steps,
+                              messages=messages)
+                  },
+                  update = function (line)
+                  {
+                    if (length(file) == 1L && nchar(file)>0L) {
+                      cat(line, file = file, append = TRUE, sep = "")
+                    }
+                    messages$Messages <<- c(messages$Messages,line)
+                    if (length(field)==1L && nchar(field)>0L) {
+                      output[[field]] <- renderTable(messages,colnames=FALSE)
+                    }
+                  }
+              ))
+
+
+
+
+

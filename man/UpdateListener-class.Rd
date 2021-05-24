@@ -4,7 +4,7 @@
 \alias{UpdateListener-class}
 \alias{isListener,UpdateListener-method}
 \alias{receiveMessage,UpdateListener-method}
-
+\alias{listenerName,UpdateListener-method}
 \title{Class \code{"UpdateListener"}}
 \description{
 
@@ -29,6 +29,7 @@
       the message is in the \code{messSet}, it updates the record
       corresponding to \code{app(mess)} and \code{uid(mess)} in the
       database with the contents of \code{details(mess)}.  (See details.) }
+    \item{listenerName}{Returns the name assigned to the listener.}
   }
 }
 \details{
@@ -111,6 +112,8 @@ receiveMessage(upwind,mess2)
       Initializes the connection if it has not been set up.}
     \item{\code{receiveMessage(mess)}:}{ Does the work of updating the
       database.  See Details. }
+    \item{\code{reset(app)}:}{ Empties the database collection of
+      messages with this app id.}
     \item{\code{initialize(sender, dbname, dburi, colname, messSet,
         ...)}:}{Sets default values for fields.}
   }

@@ -8,10 +8,14 @@ importFrom("utils", "limitedLabels")
 
 export(P4Message)
 exportClasses(P4Message)
-export(m_id,app,uid,context,timestamp,sender,mess,details,all.equal.P4Message,
+export(m_id,"m_id<-",app,uid,
+       context,"context<-",
+       timestamp,"timestamp<-",
+       sender,mess,details,all.equal.P4Message,
        processed, markAsProcessed, processingError, markAsError,
        makeDBuri)
-exportMethods(m_id,app,uid,context,timestamp,sender,mess,details,
+exportMethods(m_id,"m_id<-",app,uid,context,"context<-",
+              timestamp,"timestamp<-",sender,mess,details,
               toString,show, processed, processingError)
 
 export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
@@ -22,11 +26,12 @@ exportMethods(as.json,as.jlist)
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
-       TableListener)
-exportClasses(ListenerSet,MongoDB,CaptureListener,
+       TableListener, buildListener,listenerName, resetListeners)
+exportClasses(ListenerSet,NullListenerSet,MongoDB,CaptureListener,
        InjectionListener,
-       UpdateListener,UpsertListener,TableListener,name)
-exportMethods(isListener,receiveMessage,notifyListeners,name)
+       UpdateListener,UpsertListener,TableListener)
+exportMethods(isListener,receiveMessage,notifyListeners,listenerName,
+              resetListeners)
 
 export(withFlogging)
 

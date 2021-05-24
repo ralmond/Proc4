@@ -4,7 +4,7 @@
 \alias{UpsertListener-class}
 \alias{isListener,UpsertListener-method}
 \alias{receiveMessage,UpsertListener-method}
-
+\alias{listenerName,UpsertListener-method}
 \title{Class \code{"UpsertListener"}}
 \description{
 
@@ -28,6 +28,7 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
     \item{receiveMessage}{\code{signature(x = "UpsertListener")}: If
       the message is in the \code{messSet}, it saves or replaces the
       message inthe database.  (See details) }
+    \item{listenerName}{Returns the name assigned to the listener.}
   }
 }
 \details{
@@ -99,6 +100,8 @@ receiveMessage(ul,mess1)
       Initializes the connection if it has not been set up.}
     \item{\code{receiveMessage(mess)}:}{ Does the work of inserting the
       message.  See Details. }
+    \item{\code{reset(app)}:}{ Empties the database collection of
+      messages with this app id.}
     \item{\code{initialize(sender, dbname, dburi, colname, messSet,
         qfields, ...)}:}{ Sets the default values for the fields. }
   }

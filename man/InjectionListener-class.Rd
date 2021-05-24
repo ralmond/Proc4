@@ -4,7 +4,7 @@
 \alias{InjectionListener-class}
 \alias{isListener,InjectionListener-method}
 \alias{receiveMessage,InjectionListener-method}
-
+\alias{listenerName,InjectionListener-method}
 \title{Class \code{"InjectionListener"}}
 \description{
 
@@ -27,6 +27,7 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
     \item{receiveMessage}{\code{signature(x = "InjectionListener")}: If
       the message is in the \code{messSet}, it saves the message to the
       database.  (See details) }
+    \item{listenerName}{Returns the name assigned to the listener.}
   }
 }
 \details{
@@ -92,6 +93,8 @@ receiveMessage(ilwind,mess1)
       Initializes the connection if it has not been set up.}
     \item{\code{receiveMessage(mess)}:}{ Does the work of inserting the
       message.  See Details. }
+    \item{\code{reset(app)}:}{ Empties the database collection of
+      messages with this app id.}
     \item{\code{initialize(sender, dbname, dburi, colname, messSet,
         ...)}:}{Sets default values for fields.}
   }

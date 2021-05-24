@@ -1,3 +1,40 @@
+2020-10-03  Russell Almond  <ralmond@pei>
+
+	* R/Listeners.R (buildListener): Need basename here, as we don't want the full URL-like app name.
+2020-07-31  Russell Almond  <ralmond@Cherry>
+
+	* R/Message.R (buildJQterm): Strip leading $ from operators.
+	(buildJQterm): added unlist to deal with unnecessary listification
+	in fromJSON.
+
+2020-06-12  Russell Almond  <ralmond@Cherry>
+
+	* inst/config/setupApps.js: New code for setting up new
+	configuration for AuthorizedApps collection.
+
+	* R/Message.R (getManyRecs): Bug in getManyRecs (sort vs sorts).
+
+	* R/ErrorHandling.R (shinyAppender): Trial class to append to a
+	shiny list.
+	
+
+2020-04-26  Russell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (listenerName):  Changed funciton name and name is
+	too likely to cause conflicts.
+
+	* R/Listeners.R (resetListeners):  Added reset method.
+
+	* R/Message.R (m_id<-,context<-,timestamp<-):  Added setter
+	methods.
+	
+
+2020-04-20  Russell Almond  <ralmond@Cherry>
+
+	* R/Listeners.R (buildListener): Added this function to build a
+	listener from JSON specifications.
+	(XXXListener):  Added name field to all listeners.
+
 2020-04-04  Russell Almond  <ralmond@Cherry>
 
 	* R/Message.R (markAsProcessed): stupid missing ! causing infinite

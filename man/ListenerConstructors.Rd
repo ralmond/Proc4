@@ -16,14 +16,14 @@
   
 }
 \usage{
-CaptureListener(messages = list(), ...) 
-InjectionListener(sender = "sender", dbname = "test",
+CaptureListener(name="Capture",messages = list(), ...) 
+InjectionListener(name="Injection",sender = "sender", dbname = "test",
     dburi = "mongodb://localhost", 
     messSet = character(), colname = "Messages", ...)
-UpdateListener(dbname = "test", dburi = "mongodb://localhost",
+UpdateListener(name="Update",dbname = "test", dburi = "mongodb://localhost",
     messSet = character(), colname = "Messages", targetField = "data",
     qfields = c("app", "uid"), jsonEncoder = "unparseData", ...)
-UpsertListener(sender = "sender", dbname = "test",
+UpsertListener(name="Upsert",sender = "sender", dbname = "test",
     dburi = "mongodb://localhost", 
     messSet = character(), colname = "Messages",
     qfields = c("app", "uid"), ...)
