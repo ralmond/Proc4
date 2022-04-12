@@ -1,8 +1,8 @@
 ---
-title: "Discrete Partial Credit Models"
+title: "Installing Proc4"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Discrete Partial Credit Models}
+  %\VignetteIndexEntry{Installing Proc4}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

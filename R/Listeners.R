@@ -5,6 +5,7 @@
 setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
 setGeneric("resetListeners",function(x,which,app) standardGeneric("resetListeners"))
+setMethod("resetListeners","NULL",function(x,which,app) x)
 setMethod("isListener","ANY",function(x) FALSE)
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
@@ -80,7 +81,7 @@ InjectionListener <-
                     },
                   messdb = function () {
                     if (is.null(db)) {
-                      db <<- mongo(colname,dbname,dburi)
+                      db <<- mongolite::mongo(colname,dbname,dburi)
                     }
                     db
                   },
@@ -153,7 +154,7 @@ UpsertListener <-
                     },
                   messdb = function () {
                     if (is.null(db)) {
-                      db <<- mongo(colname,dbname,dburi)
+                      db <<- mongolite::mongo(colname,dbname,dburi)
                     }
                     db
                   },
@@ -235,7 +236,7 @@ UpdateListener <-
                     },
                   messdb = function () {
                     if (is.null(db)) {
-                      db <<- mongo(colname,dbname,dburi)
+                      db <<- mongolite::mongo(colname,dbname,dburi)
                     }
                     db
                   },
@@ -430,7 +431,7 @@ ListenerSet$methods(
                 admindb = function () {
                   if (is.null(adminDB) && nchar(dburi) > 0L
                       && nchar(admindbname) > 0L) {
-                    adminDB <<- mongo("OutputFiles",admindbname,dburi)
+                    adminDB <<- mongolite::mongo("OutputFiles",admindbname,dburi)
                   }
                   adminDB
                 },
@@ -456,7 +457,7 @@ ListenerSet$methods(
 ListenerSet$methods(
                messdb = function () {
                   if (is.null(db) && nchar(dburi) > 0L) {
-                    db <<- mongo(colname,dbname,dburi)
+                    db <<- mongolite::mongo(colname,dbname,dburi)
                   }
                   db
                 },

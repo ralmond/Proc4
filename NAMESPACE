@@ -1,6 +1,5 @@
 import(methods)
 import(futile.logger)
-importFrom("mongolite","mongo")
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
            "serializeJSON", "unserializeJSON")
 importFrom("utils", "limitedLabels")

@@ -194,7 +194,10 @@ cleanMessageJlist <- function (rec) {
 
 parseMessage<- function (rec) {
   rec <- cleanMessageJlist(rec)
-  new("P4Message","_id"=as.character(ununboxer(rec$"_id")),
+  ## Need to force the `oid` label on to match specs.
+  id <- as.character(ununboxer(rec$"_id"))
+  if (is.null(names(id)))  names(id) <- "oid"
+  new("P4Message","_id"=id,
       app=as.character(ununboxer(rec$app)),
       uid=as.character(ununboxer(rec$uid)),
       context=as.vector(ununboxer(rec$context)),

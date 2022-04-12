@@ -137,7 +137,7 @@ m3 <- saveRec(m3,testcol)
 ev1 <- saveRec(ev1,testcol)
 
 m1 <- saveRec(m1,testcol)
-m1b <- getOneRec(buildJQuery("_id"=c("oid"=m1@"_id")),testcol,parseMessage)
+m1b <- getOneRec(buildJQuery("_id"=m_id(m1)),testcol,parseMessage)
 stopifnot(all.equal(m1,m1b))
 m23 <- getManyRecs(buildJQuery("uid"="Fred",sender=c("EI","EA")),
                   testcol,parseMessage)
