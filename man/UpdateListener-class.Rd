@@ -71,7 +71,7 @@ mess2 <- P4Message(app="default",uid="Phred",context="Down Hill",
                                                 list("Stairs"="silver")),
                                 bankBalance=10))
 data2json <- function(dat) {
-  toJSON(sapply(dat,unboxer))
+  jsonlite::toJSON(sapply(dat,unboxer))
 }
 
 upwind <- UpdateListener(messSet=c("Money Earned","Money Spent"),

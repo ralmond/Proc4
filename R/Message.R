@@ -37,13 +37,13 @@ setMethod("app","P4Message", function(x) x@app)
 setMethod("uid","P4Message", function(x) x@uid)
 setMethod("mess","P4Message", function(x) x@mess)
 setMethod("context","P4Message", function(x) x@context)
-setMethod("context<-","P4Message", function(x) {
+setMethod("context<-","P4Message", function(x, value) {
   x@context <- value
   x})
 setMethod("sender","P4Message", function(x) x@sender)
 setMethod("timestamp","P4Message", function(x) x@timestamp)
 setMethod("timestamp<-","P4Message", function(x,value) {
-  x@timestamp <- as.POSIXtc(value)
+  x@timestamp <- as.POSIXct(value)
   x})
 setMethod("details","P4Message", function(x) x@data)
 setMethod("processed","P4Message", function(x) x@processed)

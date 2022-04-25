@@ -1,6 +1,7 @@
 \name{resetListeners}
 \alias{resetListeners}
 \alias{resetListeners,ListenerSet-method}
+\alias{resetListeners,NULL-method}
 \title{Clears messages caches associated with listeners}
 \description{
 
@@ -13,6 +14,7 @@
 \usage{
 resetListeners(x, which, app)
 \S4method{resetListeners}{ListenerSet}(x, which, app)
+\S4method{resetListeners}{NULL}(x, which, app)
 }
 \arguments{
   \item{x}{A \code{\linkS4class{ListenerSet}} object containing the
