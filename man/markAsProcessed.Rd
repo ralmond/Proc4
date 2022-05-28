@@ -100,7 +100,8 @@ processingError(x)
 }
 \examples{
 
-col <- mongo("TestMessages")
+\dontrun{
+col <- mongolite::mongo("TestMessages")
 col$remove('{}')             # Clear out anything else in queue.
 mess1 <- P4Message("One","Adder","Tester","Add me",app="adder",
                    details=list(x=1,y=1))
@@ -132,7 +133,7 @@ mess2a <- getOneRec(buildJQuery(app="adder",uid="Two"),col,parseMessage)
 stopifnot(processed(mess1a),processed(mess2a),
           is.null(processingError(mess1a)),
           grepl("Error",processingError(mess2a)))
-
+}
 }
 \keyword{ interface }
 \keyword{ database }

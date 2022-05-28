@@ -1,3 +1,11 @@
+2022-04-11  Russell Almond  <ralmond@cherry.local>
+
+	* R/Message.R (parseSimpleData): forced the _id column to always have the name "oid" (necessary for monog).
+
+2021-12-29  Russell Almond  <ralmond@cherry.local>
+
+	* R/Listeners.R: added Null method for resetListeners
+
 2020-10-03  Russell Almond  <ralmond@pei>
 
 	* R/Listeners.R (buildListener): Need basename here, as we don't want the full URL-like app name.

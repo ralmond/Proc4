@@ -23,7 +23,8 @@
 
 }
 \usage{
-P4Message(uid, context, sender, mess, timestamp = Sys.time(), details = list(), app = "default", processed=FALSE)
+P4Message(uid, context, sender, mess, timestamp = Sys.time(), details =
+list(), app = "default", processed=FALSE) 
 m_id(x)
 m_id(x) <- value
 app(x)
@@ -98,8 +99,8 @@ details(x)
   \code{timestamp()}, function returns an object of type \code{POSIXt}
   and the \code{details()} function returns a list.
 
-  The function \code{all.equal.P4Message} returns either ‘TRUE’  or a
-  vector of mode "character" describing the differences between
+  The function \code{all.equal.P4Message} returns either \code{TRUE}  or a
+  vector of mode \dQuote{character} describing the differences between
   \code{target} and \code{current}.
 
 }

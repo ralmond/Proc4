@@ -1,0 +1,13 @@
+{
+    "apps":{
+	"demo":"ecd://epls.coe.fsu.edu/PhysicsPlayground/demo",
+	"P4Test":"ecd://epls.coe.fsu.edu/P4Test",
+	"Fred":"jrd://example.com/Fred"
+    },
+    "pwds":{
+	"EAP":"secret",
+	"ASP":"secret",
+	"EIP":"secret",
+	"C4":"secret"
+    }
+}

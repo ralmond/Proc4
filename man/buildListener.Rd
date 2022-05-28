@@ -126,7 +126,7 @@ jspecs <- '[
 	}
     ]'
 
-speclist <- fromJSON(jspecs,FALSE)
+speclist <- jsonlite::fromJSON(jspecs,FALSE)
 
 l1 <- buildListener(speclist[[1]],"test","mongodb://localhost")
 stopifnot (isListener(l1),listenerName(l1)=="ppLStest",

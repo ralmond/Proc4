@@ -3,6 +3,8 @@
 \docType{class}
 \alias{ListenerSet-class}
 \alias{ListenerSet}
+\alias{NullListenerSet}
+\alias{NullListenerSet-class}
 \alias{isListener,ListenerSet-method}
 \alias{receiveMessage,ListenerSet-method}
 \alias{notifyListeners,ListenerSet-method}
@@ -20,7 +22,8 @@
 \section{Extends}{
 
 All reference classes extend and inherit methods from
-\code{"\linkS4class{envRefClass}"}. 
+\code{"\linkS4class{envRefClass}"}.   The class union
+\code{NullListenerSet} is either a \code{ListenerSet} or \code{NULL}. 
 
 }
 \section{Methods}{
