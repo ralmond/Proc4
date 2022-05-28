@@ -1,6 +1,6 @@
 ---
-title: Dongle: A lightweight interface between EI, EA and AS processes and
-      the Presentation Process
+title: "Dongle: A lightweight interface between EI, EA and AS processes and
+      the Presentation Process"
 author: Russell G. Almond
 output: rmarkdown::html_vignette
 bibliography: Proc4.bib
@@ -11,6 +11,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r options, include=FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
 
 # Introduction
 
@@ -39,7 +42,7 @@ record is a available for a given user, a default record for that
 application is returned. In this way the dongle process is as fast as
 the load on the web server and network latency allows.
 
-Figure \[fig:P4Lamp\] shows the basic architecture. At its heart, it is
+Figure \@ref(fig:P4Lamp) shows the basic architecture. At its heart, it is
 a modified LAMP (Linux, Apache, Mongo,[^1] PHP stack. The game engine
 communicates to the other processes through HTTP requests to the web
 server, and the other three processes (EI—evidence identification,
@@ -47,7 +50,8 @@ EA—evidence accumulation, and AS—activity selection) communicate through
 the database.
 
 ![Proc4 Dongle
-Architecture.[]{data-label="fig:P4Lamp"}](Proc4-Lamp.png){height=".25\textheight"}\
+Architecture.[]{data-label="fig:P4Lamp"}](Proc4-Lamp.png){height=".25\textheight"}
+
 
 # Proc4 Message Format {#sect:P4Messages}
 
@@ -55,12 +59,12 @@ The Proc4 message is an object consisting of two parts: a header and a
 body. The header is a series of mandatory and optional fields which are
 used to route and prioritize the message. The data portion is a
 container object which can hold anything. In general, its value will be
-determined by the message. Listing \[lst:P4\] shows the data structure
+determined by the message. Example \@ref(ex:P4) shows the data structure
 in JSON format.
 
 
 
-```{json}
+```{example, fig.cap="(ex:P4) Sample message in P4 format", eval=FALSE}
 {
     app: "ecd://epls.coe.fsu.edu/PP",
     uid: "Student 1",
@@ -175,11 +179,11 @@ processes periodically check this, and if it is false, then they shut
 down gracefully.
 
 This collection was never give an formal schema.
-Listing \[lst:AuthorizedApps\] shows the code that creates it. The
+Example \@ref(lst:AuthorizedApps) shows the code that creates it. The
 `app` and `active` fields should be counted as required and as
 recommended. 
 
-```{js}
+```{example, fig.cap="(lst:AuthorizedApps) Mongo script to create AuthorizedApps collection.", eval=FALSE}
 // In Proc4.js configuration file.
 var apps = [
     {"app":"ecd://epls.coe.fsu.edu/P4test","doc":"Testing",
@@ -203,10 +207,10 @@ This fields is mostly manipulated with raw database commands setting the
 `active` field. The launch scripts for the EI and EA processes both
 set the field `active` to true. (They will also, if necessary, add a
 record for the application.) To signal a graceful shutdown, simply set
-the field to false. Listing \[lst:shutdown\] gives some example
+the field to false. Example \@ref(lst:shutdown) gives some example
 syntaxes (to run from the mongo command shell).
 
-```{js}
+```{example, fig.cap=="(lst:shutdown) Mongo scripts to signal processes to shutdown", eval=FALSE}
 // Shutdown just the P4test engine
 db.AuthorizedApps.update({app:{"$regex":"P4test"}},
 						 {"$set":{active:false}});
@@ -232,9 +236,9 @@ scoring server when the players logged in, the `data` field of the
 collection was used to store information about the player which needed
 to persist between game sessions; in particular, the player’s bank
 balance and the , a list of completed levels with the coin awarded for
-each. Listing \[lst:Players\] gives the schema for this collection.
+each. Example \@ref(lst:Players) gives the schema for this collection.
 
-```{js}
+```{example, eval=FALSE, fig.cap="(lst:Players)  Players collection schema definition"}
 db.createCollection("Players", {
     validator: {
         \$jsonSchema: {
@@ -273,7 +277,7 @@ db.createCollection("Players", {
 db.Players.createIndex( { app:1, uid: 1});
 ```
 
-Note that this is a subset of the basic \code{Proc4} message
+Note that this is a subset of the basic `Proc4` message
 format. The `active` field should be set to true when the player
 starts play, and to false when the player stops. 
 The PHP scripts `PlayerStart.php` and `PlayerStop.php` start and stop
@@ -309,10 +313,10 @@ evidence, (3) it updates a list of `statistics` for the updated
 student model, (4) it posts the updated statistics so they can be
 viewed both other processes. 
 One of the places it posts the updated statistics is in the
-`Statistics` collection in the database. Listing \[lst:Statistics\]
+`Statistics` collection in the database. Example \@ref(lst:Statistics)
 provides the schema for that collection.
 
-```{js}
+```{example, fig.cap="(lst:Statistics) Mongo script to create Statistics collection and indexes.", eval=FALSE}
 db.createCollection("Statistics", {
     validator: {
         \$jsonSchema: {
@@ -371,12 +375,12 @@ The script `PlayerStats.php` returns the current record in the
 
 
 The last collection was never actually implemented, but it was created
-for future expansion. Listing \[lst:Activities\] provides its draft
+for future expansion. Example \@ref(lst:Activities) provides its draft
 schema. Its purpose was to provide a place the AS could post messages
 about which level to provide next. The script `PlayerLevel.php` would
 return its current value.
 
-```{js}
+```{example, fig.cap="(lst:Activities) Mongo script to create Activities collection and indexes.", eval=FALSE}
 db.createCollection("Activities", {
     validator: {
         \$jsonSchema: {
@@ -513,14 +517,14 @@ available as well.
 
 The configuration file contains a list of application IDs and the
 passwords for the databases. The file is shown in
-Listing \[lst:Proc4ini\]. The applications are particularly important
+Example \@ref(lst:Proc4ini). The applications are particularly important
 as they serve as a password for systems that use this facility. In
 particular, unless the `app` field of the POST request is one of the
 applications listed in the ini file, then the scripts will return an
 error. This should prevent random hacking, but more serious security
 might be needed if there is a more substantial risk.
 
-```{ini}
+```{example, fig.cap="(lst:Proc4ini) Proc4.ini -- PHP-style parameter file.", eval=FALSE}
 test = "ecd://epls.coe.fsu.edu/P4test"
 userControl = "ecd://epls.coe.fsu.edu/PhysicsPlayground/userControl"
 linear = "ecd://epls.coe.fsu.edu/PhysicsPlayground/linear"
@@ -563,7 +567,7 @@ and the upload into the `EIRecords` database.
 
 Between extraction and importation, the messages must be converted
 from xAPI (actually a wrapped xAPI format) to P4 format. This is done
-by the bash script `LLtoP4` (Listing \[lst:LLtoP4\]). The translation
+by the bash script `LLtoP4` (Example \@ref(lst:LLtoP4)). The translation
 is done in three steps. The first step, using the program `jq`
 (<https://stedolan.github.io/jq/>), extracts the fields relevant for
 the P4 messages from the unused information in the wrapped xAPI
@@ -575,7 +579,7 @@ URL-like guids to shorter keywords. The third step promotes some
 information (in particular, the `app` and `context` fields) which are in the
 extensions to the header.
 
-```{bash}
+```{bash, fig.cap="(lst:LLtoP4) Learning Locker to P4 JSON conversion script", eval=FALSE}
 #!/bin/bash
 jq -f filter1.jq | sed -f filter2.sed | jq -f filter3.jq
 ```
@@ -599,9 +603,9 @@ argument to the shell script) and a file
 starts. In every loop, that file is checked. If it no longer exists, the
 script exits. So the loop can be shut down by removing the file. (The
 script is typically started using so that it runs as background
-process.) Listing \[lst:LLtoP4Loop\] shows the listing.
+process.) Example \@ref(lst:LLtoP4Loop) shows the listing.
 
-```{bash}
+```{bash, fig.cap="(lst:LLtoP4Loop) Shell process for transfering LL events to EI input queue.", eval=FALSE}
 #!/bin/bash
 IP=127.0.0.1
 name=$1
@@ -635,7 +639,7 @@ This manual assumes that a modify LAMP (Linux, Apache, Mongo, PHP) stack
 is configured on the target machine. (Sorry, Windows users, a fair
 amount of adaptation will be needed to run under Windows.) Refer to the
 help files for your Linux distribution and Mongo to accomplish this
-task. Also, for the Proc4 for R library, R [@R] will need to be
+task. Also, for the Proc4 for R library will need to be
 installed on the target system.
 
 ## Configuration Files
