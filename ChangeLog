@@ -1,3 +1,10 @@
+2022-05-28  Russell Almond  <ralmond@cherry.local>
+
+	* R/Proc4-package.R: Added with new Roxygen style docs.
+
+	* R/ErrorHandling.R, R/Message.R, R/Listeners.R: Ran Rd2roxygen to
+	go to Roxygen2 style documentation. 
+
 2022-04-11  Russell Almond  <ralmond@cherry.local>
 
 	* R/Message.R (parseSimpleData): forced the _id column to always have the name "oid" (necessary for monog).
