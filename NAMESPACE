@@ -3,6 +3,7 @@ import(futile.logger)
 importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
            "serializeJSON", "unserializeJSON")
 importFrom("utils", "limitedLabels")
+importFrom("mongolite", "mongo")
 
 
 export(P4Message)
@@ -18,11 +19,15 @@ exportMethods(m_id,"m_id<-",app,uid,context,"context<-",
               timestamp,"timestamp<-",sender,mess,details,
               toString,show, processed, processingError)
 
-export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
+export(as.json,as.jlist,
        parseMessage,parseData,unparseData,parseSimpleData,
-       unboxer,ununboxer, cleanMessageJlist,
-       getOneRec,getManyRecs)
-exportMethods(as.json,as.jlist)
+       unboxer, ununboxer, cleanMessageJlist, parseObject,
+       parse.jlist)
+exportMethods(as.json,as.jlist,parse.jlist)
+exportClasses(MongoRec)
+
+export(saveRec, buildJQuery, buildJQterm, getOneRec, getManyRecs)
+
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,

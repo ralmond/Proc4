@@ -12,7 +12,9 @@
 
 }
 \usage{
-withFlogging(expr, ..., context = deparse(substitute(expr)), loggername = flog.namespace(), tracelevel = c("WARN", "ERROR", "FATAL"))
+withFlogging(expr, ..., context = deparse(substitute(expr)),
+             loggername = flog.namespace(),
+            tracelevel = c("WARN", "ERROR", "FATAL"))
 }
 \arguments{
   \item{expr}{The expression which will be exectued.}
@@ -58,7 +60,7 @@ withFlogging(expr, ..., context = deparse(substitute(expr)), loggername = flog.n
 
   Third, if the class of the exception is in the \code{tracelevel} list,
   then a stack trace will be logged (at the \dQuote{DEBUG} level) along
-  with the error.  This should aid debugging.  
+  with the error.  This should aid debugging.
 
   Fourth, in the case of an error or fatal error, an object of class
   \code{try-error} (see \code{\link[base]{try}}).  Among other things,
@@ -72,13 +74,13 @@ withFlogging(expr, ..., context = deparse(substitute(expr)), loggername = flog.n
   then the value of \code{expr} will be returned.  If an error occurs
   during execution, then an object of class \code{try-error} will be
   returned.
-  
+
 }
 \references{
 
   The code for executing the stack trace was taken from
   \url{https://stackoverflow.com/questions/1975110/printing-stack-trace-and-continuing-after-error-occurs-in-r}
-  
+
 
 }
 \author{Russell Almond}

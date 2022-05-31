@@ -1,3 +1,12 @@
+2022-05-30  Russell Almond  <ralmond@cherry.local>
+
+	* R/as.json.R (MongoRec): Added MongoRec base class.
+	(as.json): Passed optional arguments to toJSON.
+	(parse.jlist,parseJSON):  Added new parsing functions to mirror
+	as.json.
+	(unboxer): Removed a seminingly unnecessary level of recursion,
+	and removed dependency on internal as.scalar method
+
 2022-05-28  Russell Almond  <ralmond@cherry.local>
 
 	* R/Proc4-package.R: Added with new Roxygen style docs.
@@ -7,7 +16,7 @@
 
 2022-04-11  Russell Almond  <ralmond@cherry.local>
 
-	* R/Message.R (parseSimpleData): forced the _id column to always have the name "oid" (necessary for monog).
+	* R/Message.R (parseSimpleData): forced the _id column to always have the name "oid" (necessary for mongo).
 
 2021-12-29  Russell Almond  <ralmond@cherry.local>
 

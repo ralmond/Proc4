@@ -85,9 +85,6 @@
 #' 
 #' }
 #' 
-NULL
-
-
 setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
 setMethod("isListener","ANY",function(x) FALSE)
@@ -195,6 +192,56 @@ setMethod("isListener","ANY",function(x) FALSE)
 setGeneric("resetListeners",function(x,which,app) standardGeneric("resetListeners"))
 setMethod("resetListeners","NULL",function(x,which,app) x)
 
+#' Notifies listeners that a new message is available.
+#' 
+#' 
+#' This is a generic function for objects that send \code{\link{P4Message}}
+#' objects.  When this function is called, the message is sent to the
+#' listeners; that is, the \code{\link{receiveMessage}} function is called on
+#' the listener objects.  Often, this protocol is implemented by having the
+#' \code{sender} include a \code{\link{ListenerSet}} object.
+#' 
+#' 
+#' @param sender An object which sends messages.
+#' @param mess A \code{\link{P4Message}} to be sent.
+#' @return
+#' 
+#' Function is invoked for its side effect, so return value may be anything.
+#' @author Russell Almond
+#' @seealso \code{\link{P4Message}}, \code{\linkS4class{Listener}},
+#' \code{\link{ListenerSet}}
+#' @keywords interface objects
+#' @examples
+#' 
+#' \dontrun{## Requires Mongo database set up.
+#' MyListener <- setClass("MyListener",slots=c("name"="character"))
+#' setMethod("receiveMessage","MyListener",
+#'    function(x,mess)
+#'       cat("I (",x@name,") just got the message ",mess(mess),"\n"))
+#' 
+#' 
+#' lset <-
+#' ListenerSet$new(sender="Other",dburi="mongodb://localhost",
+#'                 colname="messages")
+#' lset$addListener("me",MyListener())
+#' 
+#' mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
+#'          as.POSIXct("2018-11-04 21:15:25 EST"),
+#'          list(correct=TRUE,seletion="D"))
+#' 
+#' mess2 <- P4Message("Fred","Task 2","Evidence ID","Scored Response",
+#'          as.POSIXct("2018-11-04 21:17:25 EST"),
+#'          list(correct=FALSE,seletion="D"))
+#' 
+#' lset$notifyListeners(mess1)
+#' 
+#' lset$removeListener("me")
+#' 
+#' notifyListeners(lset,mess2)
+#' 
+#' }
+#' 
+#' @export notifyListeners
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
 #setClass("Listener",contains="VIRTUAL")
@@ -1078,58 +1125,6 @@ ListenerSet$methods(
                 removeListener = function (name) {
                   listeners[[name]] <<- NULL
                 },
-
-
-#' Notifies listeners that a new message is available.
-#' 
-#' 
-#' This is a generic function for objects that send \code{\link{P4Message}}
-#' objects.  When this function is called, the message is sent to the
-#' listeners; that is, the \code{\link{receiveMessage}} function is called on
-#' the listener objects.  Often, this protocol is implemented by having the
-#' \code{sender} include a \code{\link{ListenerSet}} object.
-#' 
-#' 
-#' @param sender An object which sends messages.
-#' @param mess A \code{\link{P4Message}} to be sent.
-#' @return
-#' 
-#' Function is invoked for its side effect, so return value may be anything.
-#' @author Russell Almond
-#' @seealso \code{\link{P4Message}}, \code{\linkS4class{Listener}},
-#' \code{\link{ListenerSet}}
-#' @keywords interface objects
-#' @examples
-#' 
-#' \dontrun{## Requires Mongo database set up.
-#' MyListener <- setClass("MyListener",slots=c("name"="character"))
-#' setMethod("receiveMessage","MyListener",
-#'    function(x,mess)
-#'       cat("I (",x@name,") just got the message ",mess(mess),"\n"))
-#' 
-#' 
-#' lset <-
-#' ListenerSet$new(sender="Other",dburi="mongodb://localhost",
-#'                 colname="messages")
-#' lset$addListener("me",MyListener())
-#' 
-#' mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
-#'          as.POSIXct("2018-11-04 21:15:25 EST"),
-#'          list(correct=TRUE,seletion="D"))
-#' 
-#' mess2 <- P4Message("Fred","Task 2","Evidence ID","Scored Response",
-#'          as.POSIXct("2018-11-04 21:17:25 EST"),
-#'          list(correct=FALSE,seletion="D"))
-#' 
-#' lset$notifyListeners(mess1)
-#' 
-#' lset$removeListener("me")
-#' 
-#' notifyListeners(lset,mess2)
-#' 
-#' }
-#' 
-#' @export notifyListeners
                 notifyListeners = function (mess) {
                   mess <- saveRec(mess,messdb())
                   flog.info("Sending message %s",toString(mess))
@@ -1146,6 +1141,8 @@ ListenerSet$methods(
                     messdb()$remove(buildJQuery(app=app))
                 }
             )
+
+
 
 
 setMethod(receiveMessage,"ListenerSet",
@@ -1286,21 +1283,24 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 #' l1 <- buildListener(speclist[[1]],"test","mongodb://localhost")
 #' stopifnot (isListener(l1),listenerName(l1)=="ppLStest",
 #'            is(l1,"TableListener"),
-#'            match("Coins Spent",l1$messSet,nomatch=0)>0)
+#'            # match("Coins Spent",l1$messSet,nomatch=0)>0,
+#' TRUE)
 #' 
 #' l2 <- buildListener(speclist[[2]],"test","mongodb://localhost")
 #' stopifnot (isListener(l2),listenerName(l2)=="ToEA",
 #'            is(l2,"InjectionListener"),
 #'            l2$sender=="EI_test",
 #'            l2$dburi=="mongodb://localhost",
-#'            match("New Observables",l2$messSet,nomatch=0)>0)
+#'            #match("New Observables",l2$messSet,nomatch=0)>0,
+#' TRUE)
 #' 
 #' 
 #' l3 <- buildListener(speclist[[3]],"test","mongodb://localhost")
 #' stopifnot (isListener(l3),listenerName(l3)=="PPPersistantData",
 #'            is(l3,"UpdateListener"),
 #'            l3$dburi=="mongodb://localhost",
-#'            match("Money Earned",l3$messSet,nomatch=0)>0)
+#'            #match("Money Earned",l3$messSet,nomatch=0)>0,
+#' TRUE)
 #' 
 #' 
 #' 
