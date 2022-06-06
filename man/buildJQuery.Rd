@@ -46,8 +46,8 @@ buildJQterm(name,value)
   for example, \code{count=c(gt=3,lt=6)}.  If no op is specified, then
   \code{"$eq"} is assumed.  Additionally, the \code{"$oid"} operator can
   be used to specify that a value should be treated as a Mongo record
-  identifier. 
-  
+  identifier.
+
   The \code{"$in"} and \code{"$nin"} are also ops, but the corrsponding
   value is a vector.  They test if the record is in or not in the
   specified value.  If the value is vector valued, and no operator is
@@ -57,7 +57,7 @@ buildJQterm(name,value)
   adding them onto the query document.  The \code{rawfields} argument
   adds the fields onto the document without further processing.  It is
   useful for control arugments like \code{"$limit"} and \code{"$sort"}.
-  
+
 }
 \value{
   The function \code{buildJQuery} returns a unicode string which
@@ -66,7 +66,7 @@ buildJQterm(name,value)
 }
 \references{
   The MongoDB 4.0 Manual:  \url{https://docs.mongodb.com/manual/}
-  
+
 }
 \author{Russell Almond}
 \seealso{
@@ -84,7 +84,7 @@ stopifnot(buildJQterm("uid",c("Phred","Fred"))=='"uid":{"$in":["Phred","Fred"]}'
 time1 <- as.POSIXct("2018-08-16 19:12:19 EDT")
 stopifnot(buildJQterm("time",time1)=='"time":{"$date":1534461139000}')
 time1l <- as.POSIXlt("2018-08-16 19:12:19 EDT")
-stopifnot(buildJQterm("time",time1l)=='"time":{"$date":1534461139000}')
+
 time2 <- as.POSIXct("2018-08-16 19:13:19 EDT")
 stopifnot(buildJQterm("time",c(time1,time2))==
           '"time":{"$in":[{"$date":1534461139000},{"$date":1534461199000}]}')

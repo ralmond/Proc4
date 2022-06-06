@@ -2,7 +2,11 @@
 title: "Dongle: A lightweight interface between EI, EA and AS processes and
       the Presentation Process"
 author: Russell G. Almond
-output: rmarkdown::html_vignette
+output: 
+    bookdown::html_document2:
+        rmarkdown::html_vignette
+    bookdown::pdf_document2:
+        rmarkdown::pdf_vignette
 bibliography: Proc4.bib
 link-citations: TRUE
 vignette: >
@@ -49,9 +53,9 @@ server, and the other three processes (EI—evidence identification,
 EA—evidence accumulation, and AS—activity selection) communicate through
 the database.
 
-![Proc4 Dongle
-Architecture.[]{data-label="fig:P4Lamp"}](Proc4-Lamp.png){height=".25\textheight"}
-
+```{r P4Lamp, fig.cap="Proc4 Dongle Architecture", out.height="25%", echo=FALSE}
+knitr::include_graphics("Proc4-Lamp.png")
+```
 
 # Proc4 Message Format {#sect:P4Messages}
 
@@ -59,11 +63,11 @@ The Proc4 message is an object consisting of two parts: a header and a
 body. The header is a series of mandatory and optional fields which are
 used to route and prioritize the message. The data portion is a
 container object which can hold anything. In general, its value will be
-determined by the message. Example \@ref(ex:P4) shows the data structure
+determined by the message. Example \@ref(exm:P4) shows the data structure
 in JSON format.
 
 
-
+::: {.example #P4 "Sample Message in P4 format"}
 ```{example, fig.cap="(ex:P4) Sample message in P4 format", eval=FALSE}
 {
     app: "ecd://epls.coe.fsu.edu/PP",
@@ -82,6 +86,7 @@ in JSON format.
     }
 }
 ```
+:::
 
 The fields have the following definition
 
