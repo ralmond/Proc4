@@ -4,7 +4,7 @@ title: "Dongle: A lightweight interface between EI, EA and AS processes and
 author: Russell G. Almond
 output: 
     bookdown::html_document2:
-        rmarkdown::html_vignette
+        base_format: rmarkdown::html_vignette
 bibliography: Proc4.bib
 link-citations: TRUE
 vignette: >
@@ -183,11 +183,13 @@ processes periodically check this, and if it is false, then they shut
 down gracefully.
 
 This collection was never give an formal schema.
-Example \@ref(lst:AuthorizedApps) shows the code that creates it. The
+Example \@ref(exm:AuthorizedApps) shows the code that creates it. The
 `app` and `active` fields should be counted as required and as
 recommended. 
 
-```{example, fig.cap="(lst:AuthorizedApps) Mongo script to create AuthorizedApps collection.", eval=FALSE}
+::: {.example #AuthorizedApps}
+Mongo script to create AuthorizedApps collection.
+```{js AuthorizedApps, eval=FALSE}
 // In Proc4.js configuration file.
 var apps = [
     {"app":"ecd://epls.coe.fsu.edu/P4test","doc":"Testing",
@@ -205,16 +207,19 @@ apps.forEach(function (row) {
 								 {"upsert":true});
 });
 ```
+:::
 
 
 This fields is mostly manipulated with raw database commands setting the
 `active` field. The launch scripts for the EI and EA processes both
 set the field `active` to true. (They will also, if necessary, add a
 record for the application.) To signal a graceful shutdown, simply set
-the field to false. Example \@ref(lst:shutdown) gives some example
+the field to false. Example \@ref(exm:shutdown) gives some example
 syntaxes (to run from the mongo command shell).
 
-```{example, fig.cap=="(lst:shutdown) Mongo scripts to signal processes to shutdown", eval=FALSE}
+:::{.example #shutdown}
+Mongo scripts to signal processes to shutdown
+```{js shutdown, eval=FALSE}
 // Shutdown just the P4test engine
 db.AuthorizedApps.update({app:{"$regex":"P4test"}},
 						 {"$set":{active:false}});
@@ -222,6 +227,7 @@ db.AuthorizedApps.update({app:{"$regex":"P4test"}},
 db.AuthorizedApps.update({active:true},
 						 {"$set":{active:false}});
 ```
+:::
 
 The graceful shutdown causes the process to process all remaining events
 in the queue and then stop. It became obvious that there was a need of a
@@ -240,9 +246,11 @@ scoring server when the players logged in, the `data` field of the
 collection was used to store information about the player which needed
 to persist between game sessions; in particular, the player’s bank
 balance and the , a list of completed levels with the coin awarded for
-each. Example \@ref(lst:Players) gives the schema for this collection.
+each. Example \@ref(exm:Players) gives the schema for this collection.
 
-```{example, eval=FALSE, fig.cap="(lst:Players)  Players collection schema definition"}
+:::{.example #Players}
+Players collection schema definition
+```{js Players, eval=FALSE}
 db.createCollection("Players", {
     validator: {
         \$jsonSchema: {
@@ -280,6 +288,8 @@ db.createCollection("Players", {
 });
 db.Players.createIndex( { app:1, uid: 1});
 ```
+:::
+
 
 Note that this is a subset of the basic `Proc4` message
 format. The `active` field should be set to true when the player
@@ -317,10 +327,12 @@ evidence, (3) it updates a list of `statistics` for the updated
 student model, (4) it posts the updated statistics so they can be
 viewed both other processes. 
 One of the places it posts the updated statistics is in the
-`Statistics` collection in the database. Example \@ref(lst:Statistics)
+`Statistics` collection in the database. Example \@ref(exm:Statistics)
 provides the schema for that collection.
 
-```{example, fig.cap="(lst:Statistics) Mongo script to create Statistics collection and indexes.", eval=FALSE}
+::: {.example #Statistics}
+Mongo script to create Statistics collection and indexes.
+```{js Statistics, eval=FALSE}
 db.createCollection("Statistics", {
     validator: {
         \$jsonSchema: {
@@ -362,6 +374,8 @@ db.createCollection("Statistics", {
 });
 db.Statistics.createIndex( { app:1, uid: 1, timestamp: -1});
 ```
+:::
+
 
 The EA process updates the `data` field of the record for the just processed
 student. The value of the `data` field is a named list of statistics. The value
@@ -379,12 +393,14 @@ The script `PlayerStats.php` returns the current record in the
 
 
 The last collection was never actually implemented, but it was created
-for future expansion. Example \@ref(lst:Activities) provides its draft
+for future expansion. Example \@ref(exm:Activities) provides its draft
 schema. Its purpose was to provide a place the AS could post messages
 about which level to provide next. The script `PlayerLevel.php` would
 return its current value.
 
-```{example, fig.cap="(lst:Activities) Mongo script to create Activities collection and indexes.", eval=FALSE}
+::: {.example #Activites}
+Mongo script to create Activities collection and indexes.
+```{js, Activities, eval=FALSE}
 db.createCollection("Activities", {
     validator: {
         \$jsonSchema: {
@@ -426,6 +442,7 @@ db.createCollection("Activities", {
 });
 db.Activity.createIndex( { app:1, uid: 1, timestamp: -1});
 ```
+:::
 
 Although this was not implemented, the following notes describe the
 planned design. The data field would contain four components: `topic`,
@@ -521,14 +538,16 @@ available as well.
 
 The configuration file contains a list of application IDs and the
 passwords for the databases. The file is shown in
-Example \@ref(lst:Proc4ini). The applications are particularly important
+Example \@ref(exm:Proc4ini). The applications are particularly important
 as they serve as a password for systems that use this facility. In
 particular, unless the `app` field of the POST request is one of the
 applications listed in the ini file, then the scripts will return an
 error. This should prevent random hacking, but more serious security
 might be needed if there is a more substantial risk.
 
-```{example, fig.cap="(lst:Proc4ini) Proc4.ini -- PHP-style parameter file.", eval=FALSE}
+::: {.example Proc4ini}
+Proc4.ini -- PHP-style parameter file.
+```{php, Proc4ini, eval=FALSE}
 test = "ecd://epls.coe.fsu.edu/P4test"
 userControl = "ecd://epls.coe.fsu.edu/PhysicsPlayground/userControl"
 linear = "ecd://epls.coe.fsu.edu/PhysicsPlayground/linear"
@@ -540,6 +559,7 @@ EAP = "secret"
 ASP = "secret"
 C4 = "secret"
 ```
+:::
 
 Installation requires the following steps:
 
@@ -571,7 +591,7 @@ and the upload into the `EIRecords` database.
 
 Between extraction and importation, the messages must be converted
 from xAPI (actually a wrapped xAPI format) to P4 format. This is done
-by the bash script `LLtoP4` (Example \@ref(lst:LLtoP4)). The translation
+by the bash script `LLtoP4` (Example \@ref(exm:LLtoP4)). The translation
 is done in three steps. The first step, using the program `jq`
 (<https://stedolan.github.io/jq/>), extracts the fields relevant for
 the P4 messages from the unused information in the wrapped xAPI
@@ -583,10 +603,14 @@ URL-like guids to shorter keywords. The third step promotes some
 information (in particular, the `app` and `context` fields) which are in the
 extensions to the header.
 
-```{bash, fig.cap="(lst:LLtoP4) Learning Locker to P4 JSON conversion script", eval=FALSE}
+::: {.example LLtoP4}
+Learning Locker to P4 JSON conversion script.
+```{bash LLtoP4, eval=FALSE}
 #!/bin/bash
 jq -f filter1.jq | sed -f filter2.sed | jq -f filter3.jq
 ```
+:::
+
 In theory, simply looping the shell command, `extractEvidence.sh
 `_date_` | LLtoP4 | importEvidence.sh`, is all that is necessary.
 In practice, two additional steps are needed. First, it is necessary to
@@ -607,9 +631,11 @@ argument to the shell script) and a file
 starts. In every loop, that file is checked. If it no longer exists, the
 script exits. So the loop can be shut down by removing the file. (The
 script is typically started using so that it runs as background
-process.) Example \@ref(lst:LLtoP4Loop) shows the listing.
+process.) Example \@ref(exm:LLtoP4Loop) shows the listing.
 
-```{bash, fig.cap="(lst:LLtoP4Loop) Shell process for transfering LL events to EI input queue.", eval=FALSE}
+::: {.example LLtoP4Loop}
+Shell process for transfering LL events to EI input queue.
+```{bash LLtoP4Loop, eval=FALSE}
 #!/bin/bash
 IP=127.0.0.1
 name=$1
@@ -635,6 +661,7 @@ do
     sleep 10s
 done
 ```
+:::
 
 ## Configuration {#sect:config}
 
