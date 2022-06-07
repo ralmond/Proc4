@@ -12,7 +12,7 @@ Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
 Depends: R (>= 3.0), methods,
 Imports: jsonlite, futile.logger, mongolite
-Suggests:  knitr, rmarkdown, tidyr, CPTtools
+Suggests:  knitr, rmarkdown, tidyr, CPTtools, bookdown, testthat
 Description: Utilities for working with messages in the four four process architecture as json objects.
 License: Artistic-2.0 
 URL: https://pluto.coe.fsu.edu/Proc4

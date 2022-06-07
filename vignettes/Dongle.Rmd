@@ -5,8 +5,6 @@ author: Russell G. Almond
 output: 
     bookdown::html_document2:
         rmarkdown::html_vignette
-    bookdown::pdf_document2:
-        rmarkdown::pdf_vignette
 bibliography: Proc4.bib
 link-citations: TRUE
 vignette: >
@@ -67,8 +65,9 @@ determined by the message. Example \@ref(exm:P4) shows the data structure
 in JSON format.
 
 
-::: {.example #P4 "Sample Message in P4 format"}
-```{example, fig.cap="(ex:P4) Sample message in P4 format", eval=FALSE}
+::: {.example #P4}
+Sample Message in P4 format
+```{js, fig.cap="Sample message in P4 format", eval=FALSE}
 {
     app: "ecd://epls.coe.fsu.edu/PP",
     uid: "Student 1",

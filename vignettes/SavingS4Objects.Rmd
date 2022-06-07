@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 ```{r libraries}
 library(jsonlite)
 library(Proc4)
+library(testthat)
 ```
 
 
@@ -136,16 +137,64 @@ The third method is to write custom code for unparsing (turning into something `
 So the serialized form of the object has all of the fields needed to rebuild the object.  The `class` field gives the name of the class, and the other field the appropriate slot values.  The function `fromJSON` returns the serialized data as a list (a _jlist_), so essentially the object can be recreated by `new(class,jlist)`.
 
 The function `parseObject` takes this approach.  The core of this function (minus some code for checking the arguments is.
-```{r parseObject}
+```{r parseObject, eval=FALSE}
 ## parseObject
 function (rec, class=rec$class) {
   jlp <- selectMethod("parse.jlist",c(class,"list"))
   if (!is.null(jlp))
     rec <- do.call(jlp,list(class,rec))
+  rec$class <- NULL # Make sure it is not marked as an extra argument.
   do.call("new",c(class,rec))
 }
 ```
    
- 
-            
-        
+This makes heavy use of the `do.call` function, which allows the program to compute the call to the function.  In the last line of the function, the argument list for `new` is built by prepending the class to the list of slot values `rec`, and then `new` is called on the result.
+
+Just as the `as.json` delegate much of its work to the `as.jlist`, `parseObject` delegates its work to the `parse.jlist` function.  Again, this is an object orient function, so that each class can process its own unique slots and then `callNextMethod` to deal with the inherited slots.  It bottoms out at an `ANY` method which removes the `class` element so it doesn't in the way when the object is built.)
+
+Note that there is object of the required class available to dispatch the method for the `parse.jlist` generic function.  So `parseObject` once again uses the `do.call` trick, this time with the `selectMethod` function used to find the method from the class name.
+
+Here is the `parse.jlist` method for the `Event` object.
+```{r parse.jlist.Event}
+setMethod("parse.jlist",c("Event","list"),
+          function(class, rec) {
+            rec$uid <- as.character(ununboxer(rec$uid))
+            rec$mess <- as.character(ununboxer(rec$mess))
+            rec$timestamp <- as.POSIXct(ununboxer(rec$timestamp))
+            rec$processed <- as.logical(ununboxer(rec$processed))
+            rec$data <- parseData(rec$data)
+            callNextMethod(class, rec)
+          })
+```
+
+For the most part, the steps are just ensuring that all of the slots of the class have the proper value types.  The `parseData` function is the inverse of `unparseData` and handles both serialized and non-serialized data.
+
+The call to `ununboxer` seems a bit odd.  The reason is mostly to facilitate testing.  This function removes the mark that `jsonlite` adds to indicate that a value should be a scalar and not a vector.  That mark will cause `all.equal` to fail, this makes it harder to text.  In particular, after adding the `ununboxer` calls, the `as.jlist` and `parse.jlist` are inverses, and this can be used to build unit tests.
+
+```{r test_parse_unparse}
+atlist <- attributes(anEvent)
+jlist <- as.jlist(anEvent,atlist)
+plist <- parse.jlist(anEvent,jlist)
+## Need to ensure order is the same.
+res <- try(testthat::expect_equal(plist[names(atlist)],atlist))
+res
+
+```
+Oops.  This failed.  The problem is related to the `_id` field inherited from `MongoRec`.  This can be seen below:
+
+```{r id_mismatch}
+atlist$"_id"
+plist$"_id"
+```
+
+The problem is two different conventions for a missing `_id` attribute.  The `Event` class needs an initializion method that takes care if this.  For the purposes of illustration, this is done manually below.
+```{r test_parse_unparse_fixed}
+m_id(anEvent) <- NA_character_
+atlist <- attributes(anEvent)
+jlist <- as.jlist(anEvent,atlist)
+plist <- parse.jlist(anEvent,jlist)
+## Need to ensure order is the same.
+res <- try(testthat::expect_equal(plist[names(atlist)],atlist))
+
+```
+

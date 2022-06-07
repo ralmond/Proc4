@@ -215,7 +215,10 @@ setGeneric("parse.jlist",function(class,rec)
 
 #' @describeIn parseObject
 ## Base case for call-next-method.
-setMethod("parse.jlist",c("ANY","list"), function(class,rec) rec)
+setMethod("parse.jlist",c("ANY","list"),
+          function(class,rec) {
+            rec
+            })
 
 
 #' Construct an S4 object from a list of its slot values.
@@ -246,10 +249,10 @@ parseObject <- function (rec, class=rec$class) {
   if (isS4(class)) class <- class(class)
   class <- getClass(class)
   rec <- as.list(rec)
-  rec$class <-NULL  ## This is not an object field.
   jlp <- selectMethod("parse.jlist",c(class,"list"))
   if (!is.null(jlp))
     rec <- do.call(jlp,list(class,rec))
+  rec$class <- NULL # Make sure it is not marked as an extra argument.
   do.call("new",c(class,rec))
 }
 
