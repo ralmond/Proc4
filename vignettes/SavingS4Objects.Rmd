@@ -195,6 +195,6 @@ jlist <- as.jlist(anEvent,atlist)
 plist <- parse.jlist(anEvent,jlist)
 ## Need to ensure order is the same.
 res <- try(testthat::expect_equal(plist[names(atlist)],atlist))
-
+res
 ```
 

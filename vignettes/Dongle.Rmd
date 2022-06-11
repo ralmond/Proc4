@@ -5,6 +5,9 @@ author: Russell G. Almond
 output: 
     bookdown::html_document2:
         base_format: rmarkdown::html_vignette
+        fig_caption: true
+        number_sections: true
+        global_numbering: true
 bibliography: Proc4.bib
 link-citations: TRUE
 vignette: >
@@ -545,7 +548,7 @@ applications listed in the ini file, then the scripts will return an
 error. This should prevent random hacking, but more serious security
 might be needed if there is a more substantial risk.
 
-::: {.example Proc4ini}
+::: {.example #Proc4ini}
 Proc4.ini -- PHP-style parameter file.
 ```{php, Proc4ini, eval=FALSE}
 test = "ecd://epls.coe.fsu.edu/P4test"
@@ -603,7 +606,7 @@ URL-like guids to shorter keywords. The third step promotes some
 information (in particular, the `app` and `context` fields) which are in the
 extensions to the header.
 
-::: {.example LLtoP4}
+::: {.example #LLtoP4}
 Learning Locker to P4 JSON conversion script.
 ```{bash LLtoP4, eval=FALSE}
 #!/bin/bash
@@ -633,7 +636,7 @@ script exits. So the loop can be shut down by removing the file. (The
 script is typically started using so that it runs as background
 process.) Example \@ref(exm:LLtoP4Loop) shows the listing.
 
-::: {.example LLtoP4Loop}
+::: {.example #LLtoP4Loop}
 Shell process for transfering LL events to EI input queue.
 ```{bash LLtoP4Loop, eval=FALSE}
 #!/bin/bash
