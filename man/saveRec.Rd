@@ -7,10 +7,10 @@
   uses \code{\link{as.json}} to covert the object to a JSON string.
 }
 \usage{
-saveRec(mess, col, serialize=TRUE)
+saveRec(rec, col, serialize=TRUE)
 }
 \arguments{
-  \item{mess}{The message (object) to be saved.}
+  \item{rec}{The message (object) to be saved.}
   \item{col}{A mongo collection object, produced with a call to
   \code{\link[mongolite]{mongo}()}. This can also be \code{NULL}, in
   which case the message will not be saved.}

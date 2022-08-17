@@ -2,3 +2,9 @@
 makeDBuri.Rd~
 .Rproj.user
 .Rhistory
+man/as.json.oldRd
+man/unboxer.oldRd
+vignettes/Dongle.R
+vignettes/Dongle.html
+vignettes/SavingS4Objects.R
+vignettes/SavingS4Objects.html

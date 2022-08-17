@@ -4,87 +4,88 @@
 
 
 
-#' A listener is an object which can recieve a message.
-#' 
-#' 
-#' A \emph{listener} an an object that takes on the observer or listerner role
+#' A listener is an object which can receive a message.
+#'
+#'
+#' A \emph{listener} an an object that takes on the observer or listener role
 #' in the the listener (or observer) design pattern.  A listener will register
 #' itself with a speaker, and when the speaker sends a message it will act
 #' accordingly.  The \code{receiveMessage} generic function must be implemented
 #' by a listener.  It is called when the speaker wants to send a message.
-#' 
-#' 
+#'
+#'
 #' The \code{Listener} class is a virtual class.  Any object can become a
 #' listener by giving it a method for \code{receiveMessage}.  The message is
 #' intended to be a subclass of \code{\linkS4class{P4Message}}, but in
 #' practice, no restriction is placed on the type of the message.
-#' 
+#'
 #' As \code{Listener} is a virtual class, it does not have a formal definition.
 #' Instead the generic function \code{isListner} is used to test if the object
 #' is a proper listener or not.  The default method checks for the presence of
 #' a \code{receiveMessage} method.  As this might not work properly with S3
 #' objects, an object can also register itself directly by setting a method for
 #' \code{isListner} which returns true.
-#' 
-#' Typically, a lister will register itself with the speaker objects.  For
+#'
+#' Typically, a listener will register itself with the speaker objects.  For
 #' example the \code{\linkS4class{ListenerSet}$addListener} method adds itself
 #' to a list of listeners maintained by the object.  When the
 #' \code{\linkS4class{ListenerSet}$notifyListeners} method is called, the
 #' \code{receiveMessage} method is called on each listener in the list.
-#' 
+#'
 #' @aliases Listener-class Listener receiveMessage isListener
 #' isListener,ANY-method
 #' @param x A object of the virtual class \code{Listner}.
 #' @param mess A \code{\linkS4class{P4Message}} which is being transmitted.
 #' @return
-#' 
+#'
 #' The \code{isListener} function should return \code{TRUE} or \code{FALSE},
-#' according to whether or not the object follows the listner protocol.
-#' 
+#' according to whether or not the object follows the listener protocol.
+#'
 #' The \code{receiveMessage} function is typically invoked for side effects and
 #' it may have any return value.
 #' @author Russell Almond
 #' @seealso Implementing Classes: \code{\linkS4class{CaptureListener}},
 #' \code{\linkS4class{UpdateListener}}, \code{\linkS4class{UpsertListener}},
 #' \code{\linkS4class{InjectionListener}}, \code{\linkS4class{TableListener}}
-#' 
+#'
 #' Related Classes: \code{\linkS4class{ListenerSet}},
 #' \code{\linkS4class{P4Message}}
 #' @references
-#' 
+#'
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}
+#'
 #' @keywords interface objects
 #' @examples
-#' 
-#' 
+#'
+#'
 #' \dontrun{## Requires Mongo database set up.
 #' MyListener <- setClass("MyListener",slots=c("name"="character"))
 #' setMethod("receiveMessage","MyListener",
 #'    function(x,mess)
 #'       cat("I (",x@name,") just got the message ",mess(mess),"\n"))
-#' 
-#' 
+#'
+#'
 #' lset <-
 #' ListenerSet$new(sender="Other",dburi="mongodb://localhost",
 #'                 colname="messages")
 #' lset$addListener("me",MyListener())
-#' 
+#'
 #' mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
 #'          as.POSIXct("2018-11-04 21:15:25 EST"),
 #'          list(correct=TRUE,seletion="D"))
-#' 
+#'
 #' mess2 <- P4Message("Fred","Task 2","Evidence ID","Scored Response",
 #'          as.POSIXct("2018-11-04 21:17:25 EST"),
 #'          list(correct=FALSE,seletion="D"))
-#' 
+#'
 #' lset$notifyListeners(mess1)
-#' 
+#'
 #' lset$removeListener("me")
-#' 
+#'
 #' notifyListeners(lset,mess2)
-#' 
+#'
 #' }
-#' 
+#'
 setGeneric("receiveMessage",function(x,mess) standardGeneric("receiveMessage"))
 setGeneric("isListener",function(x) standardGeneric("isListener"))
 setMethod("isListener","ANY",function(x) FALSE)
@@ -92,14 +93,14 @@ setMethod("isListener","ANY",function(x) FALSE)
 
 
 #' Clears messages caches associated with listeners
-#' 
-#' 
+#'
+#'
 #' Listeners often cache the messages in some way.  This causes the message
 #' cache to be cleared, and operation which is often useful before a rerun.
 #' The \code{which} argument is used to control which listeners should have
 #' their cache cleared.
-#' 
-#' 
+#'
+#'
 #' Each \code{\link{Listener}} object (including the listener set) has a
 #' \code{$reset()} method which empties the cache of messages.  This method
 #' calls the \code{$reset()} method for each of the listeners named in
@@ -107,7 +108,7 @@ setMethod("isListener","ANY",function(x) FALSE)
 #' listeners and the special keyword \dQuote{Self} is used to refer to the
 #' \code{\link{ListenerSet}} object itself (which may have a database
 #' colleciton).
-#' 
+#'
 #' @aliases resetListeners resetListeners,ListenerSet-method
 #' resetListeners,NULL-method
 #' @param x A \code{\linkS4class{ListenerSet}} object containing the listeners
@@ -121,18 +122,18 @@ setMethod("isListener","ANY",function(x) FALSE)
 #' @return The \code{\link{ListenerSet}} object is returned.
 #' @author Russell Almond
 #' @seealso
-#' 
+#'
 #' \code{\link{ListenerSet}}, \code{\link{Listener}}
 #' @keywords interface database
 #' @examples
-#' 
-#' 
+#'
+#'
 #' \dontrun{## Requires Mongo database set up.
-#' 
+#'
 #' data2json <- function(dat) {
 #'   toJSON(sapply(dat,unboxer))
 #' }
-#' 
+#'
 #' listeners <- list(
 #'   cl = CaptureListener(name="cl"),
 #'   upd = UpdateListener(name="upd",messSet="New Observables",
@@ -152,14 +153,14 @@ setMethod("isListener","ANY",function(x) FALSE)
 #'                                solvedtime="numeric",
 #'                                trophy="ordered(none,silver,gold)"))
 #'   )
-#'   
+#'
 #' lset <- ListenerSet$new(sender="Other",dburi="mongodb://localhost",
 #'                 colname="messages",dbname="test",listeners=listeners)
-#' 
+#'
 #' mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EIEvent",mess="New Observables",
 #'                    details=list(trophy="gold",solvedtime=10))
-#' 
+#'
 #' resetListeners(lset,"ALL","default")
 #' receiveMessage(lset,mess1)
 #' ## Check recieved messages.
@@ -169,7 +170,7 @@ setMethod("isListener","ANY",function(x) FALSE)
 #'           listeners$ups$messdb()$count(buildJQuery(app="default"))==1L,
 #'           listeners$il$messdb()$count(buildJQuery(app="default"))==1L,
 #'           nrow(listeners$tl$returnDF())==1L)
-#' 
+#'
 #' resetListeners(lset,c("Self","cl","il","tl"),"default")
 #' stopifnot(lset$messdb()$count(buildJQuery(app="default"))==0L,
 #'           length(listeners$cl$messages)==0L,
@@ -177,7 +178,7 @@ setMethod("isListener","ANY",function(x) FALSE)
 #'           listeners$ups$messdb()$count(buildJQuery(app="default"))==1L,
 #'           listeners$il$messdb()$count(buildJQuery(app="default"))==0L,
 #'           nrow(listeners$tl$returnDF())==0L)
-#' 
+#'
 #' resetListeners(lset,"ALL","default")
 #' stopifnot(lset$messdb()$count(buildJQuery(app="default"))==0L,
 #'           length(listeners$cl$messages)==0L,
@@ -185,62 +186,62 @@ setMethod("isListener","ANY",function(x) FALSE)
 #'           listeners$ups$messdb()$count(buildJQuery(app="default"))==0L,
 #'           listeners$il$messdb()$count(buildJQuery(app="default"))==0L,
 #'           nrow(listeners$tl$returnDF())==0L)
-#' 
-#' 
+#'
+#'
 #' }
-#' 
+#'
 setGeneric("resetListeners",function(x,which,app) standardGeneric("resetListeners"))
 setMethod("resetListeners","NULL",function(x,which,app) x)
 
 #' Notifies listeners that a new message is available.
-#' 
-#' 
+#'
+#'
 #' This is a generic function for objects that send \code{\link{P4Message}}
 #' objects.  When this function is called, the message is sent to the
 #' listeners; that is, the \code{\link{receiveMessage}} function is called on
 #' the listener objects.  Often, this protocol is implemented by having the
 #' \code{sender} include a \code{\link{ListenerSet}} object.
-#' 
-#' 
+#'
+#'
 #' @param sender An object which sends messages.
 #' @param mess A \code{\link{P4Message}} to be sent.
 #' @return
-#' 
+#'
 #' Function is invoked for its side effect, so return value may be anything.
 #' @author Russell Almond
 #' @seealso \code{\link{P4Message}}, \code{\linkS4class{Listener}},
 #' \code{\link{ListenerSet}}
 #' @keywords interface objects
 #' @examples
-#' 
+#'
 #' \dontrun{## Requires Mongo database set up.
 #' MyListener <- setClass("MyListener",slots=c("name"="character"))
 #' setMethod("receiveMessage","MyListener",
 #'    function(x,mess)
 #'       cat("I (",x@name,") just got the message ",mess(mess),"\n"))
-#' 
-#' 
+#'
+#'
 #' lset <-
 #' ListenerSet$new(sender="Other",dburi="mongodb://localhost",
 #'                 colname="messages")
 #' lset$addListener("me",MyListener())
-#' 
+#'
 #' mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
 #'          as.POSIXct("2018-11-04 21:15:25 EST"),
 #'          list(correct=TRUE,seletion="D"))
-#' 
+#'
 #' mess2 <- P4Message("Fred","Task 2","Evidence ID","Scored Response",
 #'          as.POSIXct("2018-11-04 21:17:25 EST"),
 #'          list(correct=FALSE,seletion="D"))
-#' 
+#'
 #' lset$notifyListeners(mess1)
-#' 
+#'
 #' lset$removeListener("me")
-#' 
+#'
 #' notifyListeners(lset,mess2)
-#' 
+#'
 #' }
-#' 
+#'
 #' @export notifyListeners
 setGeneric("notifyListeners",function(sender,mess)
   standardGeneric("notifyListeners"))
@@ -250,23 +251,23 @@ setGeneric("notifyListeners",function(sender,mess)
 
 
 #' Returns the name of an object.
-#' 
-#' 
+#'
+#'
 #' This returns a character string identifying the object.
-#' 
-#' 
+#'
+#'
 #' @param x An object whose name is of interest.
 #' @return
-#' 
+#'
 #' A character scalar identifying the object.
 #' @author Russell Almond
 #' @seealso
-#' 
+#'
 #' \code{\linkS4class{TableListener}}
 #' @keywords manip
 #' @examples
-#' 
-#' 
+#'
+#'
 #' mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EIEvent",mess="New Observables",
 #'                    details=list(trophy="gold",solvedtime=10))
@@ -276,50 +277,50 @@ setGeneric("notifyListeners",function(sender,mess)
 #'                                timestamp="character",
 #'                                solvedtime="numeric",
 #'                                trophy="ordered(none,silver,gold)"))
-#' 
+#'
 #' listenerName(tabMaker)
-#' 
-#' 
+#'
+#'
 setGeneric("listenerName", function (x) standardGeneric("listenerName"))
 
 
 #' Class \code{"MongoDB"}
-#' 
-#' 
+#'
+#'
 #' An S4-style class for the \code{\link[mongolite]{mongo}} class.  Note that
 #' this is actually a class union, allowing for \code{NULL} if the database is
 #' not yet initialized.
-#' 
-#' 
+#'
+#'
 #' @name MongoDB-class
 #' @aliases MongoDB-class MongoDB
 #' @docType class
 #' @note
-#' 
+#'
 #' The original \code{\link[mongolite]{mongo}} class is an S3 class.  Rather
 #' than just call \code{\link[methods]{setOldClass}} and exposing that, I've
 #' explosed a class union (\code{\link[methods]{setClassUnion}}) with the
 #' \code{mongo} class and \code{NULL}.
-#' 
+#'
 #' A typical usage would have this type used in the slot of an object, which
 #' would initialize the value to \code{NULL}, and then set it to a \code{mongo}
 #' object when the database connection is openned.
 #' @section Objects from the Class:
-#' 
+#'
 #' \code{NULL} is an object of this class.
-#' 
+#'
 #' Objects of this class can be created with calls to
 #' \code{\link[mongolite]{mongo}}.
 #' @author Russell Almond
 #' @seealso \code{\link{ListenerSet}}, \code{\link[mongolite]{mongo}}
 #' @keywords classes
 #' @examples
-#' 
+#'
 #' showClass("MongoDB")
 #' showClass("ListenerSet")
 #' lset <- ListenerSet$new()
 #' lset$messdb
-#' 
+#'
 setOldClass("mongo")
 setClassUnion("MongoDB",c("mongo","NULL"))
 
@@ -329,25 +330,25 @@ setClassUnion("MongoDB",c("mongo","NULL"))
 ## This a simple listener whose goal is to simply hold the message to
 ## it can be checked later.
 #' Class \code{"CaptureListener"}
-#' 
-#' 
+#'
+#'
 #' This listener simply takes its messages and adds them to a list.  It is is
 #' mainly used for testing the message system.
-#' 
-#' 
+#'
+#'
 #' This listener simply takes all messages and pushes them onto the
 #' \code{messages} field.  The \code{messages} field is the complete list of
 #' received messages, most recent to most ancient.  The method
 #' \code{lastMessage()} returns the most recent message.
-#' 
+#'
 #' @name CaptureListener-class
 #' @aliases CaptureListener-class isListener,CaptureListener-method
 #' receiveMessage,CaptureListener-method listenerName,CaptureListener-method
 #' @docType class
 #' @section Extends:
-#' 
+#'
 #' This class implements the \code{\link{Listener}} interface.
-#' 
+#'
 #' All reference classes extend and inherit methods from
 #' \code{"\linkS4class{envRefClass}"}.
 #' @author Russell Almond
@@ -356,22 +357,22 @@ setClassUnion("MongoDB",c("mongo","NULL"))
 #' \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
 #' \code{\linkS4class{TableListener}},
 #' @references
-#' 
+#'
 #' This is an example of the observer design pattern.
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 #' @keywords classes
 #' @examples
-#' 
-#' 
+#'
+#'
 #' mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EABN",mess="Statistics",
 #'                    details=list("Physics_EAP"=0.5237,"Physics_Mode"="High"))
-#' 
+#'
 #' cl <- CaptureListener()
 #' receiveMessage(cl,mess1)
 #' stopifnot(all.equal(mess1,cl$lastMessage()))
-#' 
-#' 
+#'
+#'
 CaptureListener <-
   setRefClass("CaptureListener",
               fields=c(name = "character",messages="list"),
@@ -405,27 +406,27 @@ setMethod("listenerName","CaptureListener",function(x) x$name)
 ## This a simple listener whose goal is to simply to inject the
 ## message into a mongo collection where it can be used as a queue.
 #' Class \code{"InjectionListener"}
-#' 
-#' 
+#'
+#'
 #' This listener takes messages that match its incomming set and inject them
 #' into another Mongo database (presumably a queue for another service).
-#' 
-#' 
+#'
+#'
 #' The database is a \code{\link[mongolite]{mongo}} collection identified by
 #' \code{dburi}, \code{dbname} and \code{colname} (collection within the
 #' database).  The \code{mess} field of the \code{\link{P4Message}} is checked
 #' against the applicable messages in \code{messSet}.  If it is there, then the
 #' message is inserted into the collection.
-#' 
+#'
 #' @name InjectionListener-class
 #' @aliases InjectionListener-class isListener,InjectionListener-method
 #' receiveMessage,InjectionListener-method
 #' listenerName,InjectionListener-method
 #' @docType class
 #' @section Extends:
-#' 
+#'
 #' This class implements the \code{\link{Listener}} interface.
-#' 
+#'
 #' All reference classes extend and inherit methods from
 #' \code{"\linkS4class{envRefClass}"}.
 #' @author Russell Almond
@@ -434,22 +435,22 @@ setMethod("listenerName","CaptureListener",function(x) x$name)
 #' \code{\linkS4class{UpsertListener}}, \code{\linkS4class{CaptureListener}},
 #' \code{\linkS4class{TableListener}}, \code{\link[mongolite]{mongo}}
 #' @references
-#' 
+#'
 #' This is an example of the observer design pattern.
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 #' @keywords classes
 #' @examples
-#' 
+#'
 #' \dontrun{
-#' 
+#'
 #' mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EIEvent",mess="New Observables",
 #'                    details=list(trophy="gold",solvedtime=10))
 #' ilwind <- InjectionListener(sender="EIEvent",messSet="New Observables")
 #' receiveMessage(ilwind,mess1)
-#' 
+#'
 #' }
-#' 
+#'
 InjectionListener <-
   setRefClass("InjectionListener",
               fields=c(name = "character",
@@ -521,32 +522,32 @@ setMethod("listenerName","InjectionListener",function(x) x$name)
 ## message into a mongo collection where it can be used as a queue.
 
 #' Class \code{"UpsertListener"}
-#' 
-#' 
+#'
+#'
 #' This listener takes messages that match its incomming set and inject them
 #' into another Mongo database (presumably a queue for another service).  If a
 #' matching message exists, it is replaced instead.
-#' 
-#' 
+#'
+#'
 #' The database is a \code{\link[mongolite]{mongo}} collection identified by
 #' \code{dburi}, \code{dbname} and \code{colname} (collection within the
 #' database).  The \code{mess} field of the \code{\link{P4Message}} is checked
 #' against the applicable messages in \code{messSet}.  If it is there, then the
 #' message is saved in the collection.
-#' 
+#'
 #' Before the message is saved, the collection is checked to see if another
 #' message exits which matches on the fields listed in \code{qfields}.  If this
 #' is true, the message in the database is replaced.  If not, the message is
 #' inserted.
-#' 
+#'
 #' @name UpsertListener-class
 #' @aliases UpsertListener-class isListener,UpsertListener-method
 #' receiveMessage,UpsertListener-method listenerName,UpsertListener-method
 #' @docType class
 #' @section Extends:
-#' 
+#'
 #' This class implements the \code{\link{Listener}} interface.
-#' 
+#'
 #' All reference classes extend and inherit methods from
 #' \code{"\linkS4class{envRefClass}"}.
 #' @author Russell Almond
@@ -556,12 +557,12 @@ setMethod("listenerName","InjectionListener",function(x) x$name)
 #' \code{\linkS4class{InjectionListener}}, \code{\linkS4class{TableListener}},
 #' \code{\link[mongolite]{mongo}}
 #' @references
-#' 
+#'
 #' This is an example of the observer design pattern.
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 #' @keywords classes
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EABN",mess="Statistics",
@@ -570,7 +571,7 @@ setMethod("listenerName","InjectionListener",function(x) x$name)
 #'          messSet=c("Statistics"))
 #' receiveMessage(ul,mess1)
 #' }
-#' 
+#'
 UpsertListener <-
   setRefClass("UpsertListener",
               fields=c(name="character",
@@ -651,13 +652,13 @@ setMethod("listenerName","UpsertListener",function(x) x$name)
 ## earned or balance of money/earned or spent in the game.
 
 #' Class \code{"UpdateListener"}
-#' 
-#' 
+#'
+#'
 #' This \code{\link{Listener}} updates an existing record (in a Mongo
 #' collection) for the student (\code{uid}), with the contents of the data
 #' (details) field of the message.
-#' 
-#' 
+#'
+#'
 #' The database is a \code{\link[mongolite]{mongo}} collection identified by
 #' \code{dburi}, \code{dbname} and \code{colname} (collection within the
 #' database).  The \code{mess} field of the \code{\link{P4Message}} is checked
@@ -667,15 +668,15 @@ setMethod("listenerName","UpsertListener",function(x) x$name)
 #' \code{targetField} is set to \code{details(mess)}.  The function
 #' \code{jsonEncoder} is called to encode the target field as a JSON object for
 #' injection into the database.
-#' 
+#'
 #' @name UpdateListener-class
 #' @aliases UpdateListener-class isListener,UpdateListener-method
 #' receiveMessage,UpdateListener-method listenerName,UpdateListener-method
 #' @docType class
 #' @section Extends:
-#' 
+#'
 #' This class implements the \code{\link{Listener}} interface.
-#' 
+#'
 #' All reference classes extend and inherit methods from
 #' \code{"\linkS4class{envRefClass}"}.
 #' @author Russell Almond
@@ -683,15 +684,15 @@ setMethod("listenerName","UpsertListener",function(x) x$name)
 #' \code{\link{UpdateListener}}, \code{\linkS4class{InjectionListener}},
 #' \code{\linkS4class{CaptureListener}}, \code{\linkS4class{UpsertListener}},
 #' \code{\linkS4class{TableListener}}, \code{\link[mongolite]{mongo}}
-#' 
+#'
 #' The function \code{\link{unparseData}} is the default encoder.
 #' @references
-#' 
+#'
 #' This is an example of the observer design pattern.
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 #' @keywords classes
 #' @examples
-#' 
+#'
 #' mess2 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EIEvent",mess="Money Earned",
 #'                    details=list(trophyHall=list(list("Down Hill"="gold"),
@@ -700,14 +701,14 @@ setMethod("listenerName","UpsertListener",function(x) x$name)
 #' data2json <- function(dat) {
 #'   jsonlite::toJSON(sapply(dat,unboxer))
 #' }
-#' 
+#'
 #' upwind <- UpdateListener(messSet=c("Money Earned","Money Spent"),
 #'                          targetField="data",colname="Players",
 #'                          jsonEncoder="data2json")
-#' 
+#'
 #' receiveMessage(upwind,mess2)
-#' 
-#' 
+#'
+#'
 UpdateListener <-
   setRefClass("UpdateListener",
               fields=c(name="character",
@@ -808,12 +809,12 @@ setMethod("listenerName","UpdateListener",function(x) x$name)
 ## Table Listener -- Based on work by Lukas Liu and Nan Wang
 
 #' Class \code{"TableListener"}
-#' 
-#' 
+#'
+#'
 #' A listener that captures data from a \code{\linkS4class{P4Message}} and puts
 #' it into a dataframe.
-#' 
-#' 
+#'
+#'
 #' This listener builds up a data frame with selected data from the messages.
 #' What data is captured is controlled by the \code{fieldlist} object.  This is
 #' a named character vector whose names correspond to field names and whose
@@ -861,27 +862,27 @@ setMethod("listenerName","UpdateListener",function(x) x$name)
 #' ordered factor with three levels.  (Note that levels should be in increasing
 #' order for ordered factors, but this doesn't matter for unordered factors.)}
 #' }
-#' 
+#'
 #' For most fields, the field name is matched to the corresponding element of
 #' the \code{\link{details}} of the messages.  The exceptions are the names
 #' \code{\link{app}}, \code{\link{context}}, \code{\link{uid}},
 #' \code{\link{mess}}, \code{\link{sender}}, \code{\link{timestamp}}, which
 #' return the value of the corresponding header fields of the message.  Note
 #' that
-#' 
+#'
 #' @name TableListener-class
 #' @aliases TableListener-class isListener,TableListener-method
 #' receiveMessage,TableListener-method listenerName,TableListener-method
 #' @docType class
 #' @section Extends:
-#' 
+#'
 #' This class implements the \code{\link{Listener}} interface.
-#' 
+#'
 #' All reference classes extend and inherit methods from
 #' \code{"\linkS4class{envRefClass}"}.
 #' @author Russell Almond, Lukas Liu, Nan Wang
 #' @seealso
-#' 
+#'
 #' \code{\link{Listener}}, \code{\linkS4class{P4Message}},
 #' \code{\linkS4class{UpdateListener}}, \code{\linkS4class{InjectionListener}},
 #' \code{\linkS4class{CaptureListener}}, \code{\linkS4class{UpsertListener}},
@@ -890,9 +891,9 @@ setMethod("listenerName","UpdateListener",function(x) x$name)
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 #' @keywords classes
 #' @examples
-#' 
-#' 
-#' 
+#'
+#'
+#'
 #' mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
 #'                    sender="EIEvent",mess="New Observables",
 #'                    details=list(trophy="gold",solvedtime=10))
@@ -902,11 +903,11 @@ setMethod("listenerName","UpdateListener",function(x) x$name)
 #'                                timestamp="character",
 #'                                solvedtime="numeric",
 #'                                trophy="ordered(none,silver,gold)"))
-#' 
+#'
 #' receiveMessage(tabMaker,mess1)
 #' tabMaker$returnDF()
-#' 
-#' 
+#'
+#'
 TableListener <-
   setRefClass("TableListener",
               fields=list(name = "character",
@@ -1002,22 +1003,22 @@ setMethod("listenerName","TableListener",function(x) x$name)
 ## Listener Set
 
 #' Class \code{"ListenerSet"}
-#' 
-#' 
+#'
+#'
 #' This is a \dQuote{mix-in} class that adds a speaker protocol to an object,
 #' which is complementary to the \code{\linkS4class{Listener}} protocol.  This
 #' object maintains a list of listeners.  When the \code{notifyListeners}
 #' method is called, it notifies each of the listeners by calling the
 #' \code{\link{receiveMessage}} method on the listener.
-#' 
-#' 
+#'
+#'
 #' @name ListenerSet-class
 #' @aliases ListenerSet-class ListenerSet NullListenerSet NullListenerSet-class
 #' isListener,ListenerSet-method receiveMessage,ListenerSet-method
 #' notifyListeners,ListenerSet-method
 #' @docType class
 #' @note
-#' 
+#'
 #' The \code{notifyListeners} method uses the
 #' \code{\link[futile.logger]{flog.logger}} protocol.  In particular, it logs
 #' sending the message at the \dQuote{INFO} level, and the actual message sent
@@ -1026,33 +1027,33 @@ setMethod("listenerName","TableListener",function(x) x$name)
 #' logging of the actual message and
 #' \code{\link[futile.logger]{flog.threshold}(WARN,name="Proc4")} will turn off
 #' logging of the message sent messages.
-#' 
+#'
 #' It is often useful to redirect the Proc4 logger to a log file.  In addition,
 #' changing the logging format to JSON, will allow the message to be recovered.
 #' Thus, try
 #' \code{\link[futile.logger]{flog.layout}(\link[futile.logger]{layout.json},name="Proc4"}
 #' to activate logging in JSON format.
 #' @section Extends:
-#' 
+#'
 #' All reference classes extend and inherit methods from
 #' \code{"\linkS4class{envRefClass}"}.  The class union \code{NullListenerSet}
 #' is either a \code{ListenerSet} or \code{NULL}.
 #' @author Russell Almond
 #' @seealso
-#' 
+#'
 #' \code{\link{Listener}}, \code{\link{receiveMessage}},
 #' \code{\link{notifyListeners}}, \code{\link[futile.logger]{flog.logger}},
 #' \code{\link[mongolite]{mongo}}, \code{\linkS4class{P4Message}}
-#' 
+#'
 #' Listener Classes.  \code{\linkS4class{CaptureListener}},
 #' \code{\linkS4class{UpdateListener}}, \code{\linkS4class{UpsertListener}},
 #' \code{\linkS4class{InjectionListener}}, \code{\linkS4class{TableListener}}
 #' @references \url{https://en.wikipedia.org/wiki/Observer_pattern}
 #' @keywords classes
 #' @examples
-#' 
+#'
 #' showClass("ListenerSet")
-#' 
+#'
 ListenerSet <-
   setRefClass("ListenerSet",
               fields=c(sender="character",
@@ -1072,7 +1073,7 @@ ListenerSet <-
                              listeners=list(),
                              colname="Messages",
                              ...) {
-                      callSuper(sender=sender,db=NULL,
+                      callSuper(sender=sender,db=NULL,adminDB=NULL,
                                 dburi=dburi,dbname=dbname,
                                 admindbname=admindbname,
                                 colname=colname,listeners=listeners,
@@ -1176,20 +1177,20 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 
 
 #' Builds a listener from a JSON description.
-#' 
-#' 
+#'
+#'
 #' This is used in configuration, it will build a listener from a JSON
 #' description of the listener.  The \dQuote{name} and \dQuote{type} fields are
 #' required.  The other fields should match the arguments for the constructor,
 #' with the exceptions noted below:
-#' 
-#' 
+#'
+#'
 #' The input to this function is a list that comes from JSON (or some other
 #' input method that returns a named list).  The \code{specs$type} field should
 #' be the name of a \code{\link{Listener}} class.  This means that
 #' \code{specs$type} is the name of a constructor function, and the rest of the
 #' \code{spec} argument are the arguments.
-#' 
+#'
 #' Currently, the following fields are used.  \describe{ \item{name}{The name
 #' of the listener, required.  The string \dQuote{<app>} is substituted for
 #' \code{app}.} \item{type}{Required, the name of the constructor for the
@@ -1215,7 +1216,7 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 #' \code{\linkS4class{TableListener}}; this field maps to the
 #' \dQuote{fieldlist} field of that class.} } Other fields in \code{specs} are
 #' ignored.
-#' 
+#'
 #' @param specs A named list (from the JSON) containing the instructions for
 #' building the listener.
 #' @param app A character value that will get substituted for the string
@@ -1224,21 +1225,21 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 #' for the connection.  Note that this is specified in the code and not in the
 #' JSON.
 #' @return
-#' 
+#'
 #' An object of the virtual class \code{\link{Listener}} (i.e., something for
 #' which \code{\link{isListener}} should return true.
 #' @note
-#' 
+#'
 #' The field name \dQuote{messages} maps to the internal field \code{messSet}.
 #' The field name \dQuote{fields} maps to the internal field \code{fieldlist}.
 #' @author Russell Almond
 #' @seealso
-#' 
+#'
 #' \code{\link{Listener}}, \code{\link[jsonlite]{fromJSON}}
 #' @keywords interface
 #' @examples
-#' 
-#' 
+#'
+#'
 #' jspecs <- '[
 #' 	{
 #' 	    "name":"ppLS<app>",
@@ -1249,10 +1250,10 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 #' 		"context":"character",
 #' 		"timestamp":"character",
 #' 		"currentMoney":"numeric",
-#' 		"appId":"numeric", 
+#' 		"appId":"numeric",
 #' 		"mess":"character",
-#' 		"money":"numeric", 
-#' 		"onWhat":"character", 
+#' 		"money":"numeric",
+#' 		"onWhat":"character",
 #' 		"LS_duration":"difftime",
 #' 		"learningSupportType":"character"
 #' 	    }
@@ -1277,15 +1278,15 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 #' 	    "messages":["Money Earned", "Money Spent"]
 #' 	}
 #'     ]'
-#' 
+#'
 #' speclist <- jsonlite::fromJSON(jspecs,FALSE)
-#' 
+#'
 #' l1 <- buildListener(speclist[[1]],"test","mongodb://localhost")
 #' stopifnot (isListener(l1),listenerName(l1)=="ppLStest",
 #'            is(l1,"TableListener"),
 #'            # match("Coins Spent",l1$messSet,nomatch=0)>0,
 #' TRUE)
-#' 
+#'
 #' l2 <- buildListener(speclist[[2]],"test","mongodb://localhost")
 #' stopifnot (isListener(l2),listenerName(l2)=="ToEA",
 #'            is(l2,"InjectionListener"),
@@ -1293,17 +1294,17 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 #'            l2$dburi=="mongodb://localhost",
 #'            #match("New Observables",l2$messSet,nomatch=0)>0,
 #' TRUE)
-#' 
-#' 
+#'
+#'
 #' l3 <- buildListener(speclist[[3]],"test","mongodb://localhost")
 #' stopifnot (isListener(l3),listenerName(l3)=="PPPersistantData",
 #'            is(l3,"UpdateListener"),
 #'            l3$dburi=="mongodb://localhost",
 #'            #match("Money Earned",l3$messSet,nomatch=0)>0,
 #' TRUE)
-#' 
-#' 
-#' 
+#'
+#'
+#'
 #' @export buildListener
 buildListener <- function (specs,app,dburi) {
   name <- gsub("<app>",basename(app),as.character(specs$name),fixed=TRUE)
@@ -1356,17 +1357,18 @@ buildListener <- function (specs,app,dburi) {
 }
 
 ## Used in both EA and EI.
+#' @describeIn ListenerSet Class union containing `"NULL"` and `"ListenerSet"`
 setClassUnion("NullListenerSet",c("ListenerSet","NULL"))
 
 #' Constructors for Listener Classes
-#' 
-#' 
+#'
+#'
 #' These functions create objects of class
 #' \code{\linkS4class{CaptureListener}}, \code{\linkS4class{UpdateListener}},
 #' \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
 #' and \code{\linkS4class{TableListener}}.
-#' 
-#' 
+#'
+#'
 #' The functions are as follows: \describe{
 #' \item{list("CaptureListener")}{Creates an object of class
 #' \code{\linkS4class{CaptureListener}} which stores the messages in a list.}
@@ -1379,7 +1381,7 @@ setClassUnion("NullListenerSet",c("ListenerSet","NULL"))
 #' the designated collection.} \item{list("TableListener")}{Creates an object
 #' of class \code{\linkS4class{TableListener}} which adds details from message
 #' to rows of a data frame.} } See the class descriptions for more information.
-#' 
+#'
 #' @aliases CaptureListener InjectionListener UpdateListener UpsertListener
 #' TableListener
 #' @param messages A list into which to add the messages.
@@ -1407,7 +1409,7 @@ setClassUnion("NullListenerSet",c("ListenerSet","NULL"))
 #' \code{\linkS4class{TableListener}}.
 #' @param \dots Other arguments passed to the constructor.
 #' @return
-#' 
+#'
 #' An object of the virtual class \code{\link{Listener}}.
 #' @author Russell Almond
 #' @seealso \code{\link{Listener}}, \code{\linkS4class{P4Message}},
@@ -1416,24 +1418,24 @@ setClassUnion("NullListenerSet",c("ListenerSet","NULL"))
 #' \code{\linkS4class{InjectionListener}}, \code{\linkS4class{TableListener}},
 #' \code{\linkS4class{ListenerSet}}, \code{\link[mongolite]{mongo}}
 #' @references
-#' 
+#'
 #' This is an example of the observer design pattern.
 #' \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 #' @keywords interface database
 #' @examples
-#' 
-#' 
+#'
+#'
 #' cl <- CaptureListener()
-#' 
+#'
 #' il <- InjectionListener(sender="EI_app",
 #'             dbname="EARecords",dburi="mongodb://localhost",
 #'             colname="EvidenceSets",messSet="New Observables")
-#' 
+#'
 #' upsl <- UpsertListener(sender="EI_app",
 #'             dbname="EARecords",dburi="mongodb://localhost",
 #'             colname="LatestEvidence",messSet="New Observables",
 #'             qfields=c("app","uid"))
-#' 
+#'
 #' trophy2json <- function(dat) {
 #'   paste('{', '"trophyHall"', ':','[',
 #'         paste(
@@ -1445,13 +1447,13 @@ setClassUnion("NullListenerSet",c("ListenerSet","NULL"))
 #'             colname="Players",targetField="data",
 #'             messSet=c("Money Earned","Money Spent"),
 #'             jsonEncoder="trophy2json")
-#' 
+#'
 #' tabMaker <- TableListener(name="Trophy Table",
 #'                    messSet="New Observables",
 #'                    fieldlist=c(uid="character", context="character",
 #'                                timestamp="character",
 #'                                solvedtime="numeric",
 #'                                trophy="ordered(none,silver,gold)"))
-#' 
-#' 
+#'
+#'
 NULL

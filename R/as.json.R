@@ -1,24 +1,26 @@
-#' Class \code{"MongoRec"}
+## as.json.R  These functions extend the capabilities of
+## jsonlite to handle S4 objects.  See Vingette "JSON for S4 Objects"
+
+
+#' Class "MongoRec".
 #'
-#'
-#' This is a lightweight class meant to be extended.  It contains a
-#' single field for a mongo identifier, which can be accessed using
-#' the `m_id()` method.  It is meant to store something that is a
-#' record in a mongo collection, where `_id` is the mongo identifier.
-#'
-#'
+#' @description
+#' This is a lightweight class meant to be extended.
+#' It contains a
+#' single field for a Mongo identifier, which can be accessed using
+#' the `m\_id()` method.  It is meant to store something that is a
+#' record in a Mongo collection, where `\_id` is the Mongo identifier.
 #'
 #' @name MongoRec-class
-#' @aliases MongoRec-class m_id,MongoRec-method m_id<-,MongoRec-method
-#' as.jlist,MongoRec,list-method as.json,MongoRec-method
 #' @docType class
 #' @section Objects from the Class:
 #'
-#' Objects can be created by calls to the \code{\link{MongoRec}()} function.
+#' Objects can be created by calls to the `MongoRec()` function.
+#' @slot _id (character) The Mongo ID, `NA_character_` if not saved.
 #' @author Russell G. Almond
-#' @seealso \code{\link{MongoRec}()} --- constructor
-#' \code{\link{as.json}},
-#' \code{\link{parseObject}}, \code{\link{saveRec}}, \code{\link{getOneRec}}
+#' @seealso
+#' [as.json()]
+#' [parseObject()], [saveRec()], [getOneRec()]
 #' @keywords classes
 #' @examples
 #'
@@ -28,26 +30,55 @@
 setClass("MongoRec",
          slots=c("_id"="character"    #Mongo ID
                  ))
-#' @describeIn MongoRec
+
+#' Accessor for the Mongo id element of a record.
+#'
+#' Objects of class \code{\linkS4class{MongoRec}} have a `_id` slot
+#' which stores the database ID.  This function accesses it.
+#'
+#' The `_id` slot should be a character object with the name
+#' \dquote{oid}.  The methods enforce this.  If the object does not
+#' have a Mongo ID (i.e., it was never stored in a database), then the
+#' value of `_id` should be `NA_character_`.
+#'
+#' @param x An object of type [MongoRec].
+#'
+#' @export
+#' @docType methods
+#' @rdname m_id
+#'
+#' @examples
+#' mr <- MongoRec()
+#' testthat::expect_true(is.na(m_id(mr))
+#' m_id(mr) <- "012345"
+#' testthat::expect_equal(m_id(mr),c(oid="012345"))
+#'
 setGeneric("m_id",function(x) standardGeneric("m_id"))
 
-#' @describeIn MongoRec
+#' @describeIn m_id Setter for Mongo ID
+#' @param value (character) the new ID value, use `NA_character_` for missing.
+#' @export
+#'
 setGeneric("m_id<-",function(x, value) standardGeneric("m_id<-"))
 
-#' @describeIn MongoRec
+#' @rdname m_id
+#' @aliases m_id,MongoRec-method
 setMethod("m_id","MongoRec", function(x) x@"_id")
 
-#' @describeIn MongoRec
+#' @rdname m_id
+#' @aliases m_id<-,MongoRec-method
 setMethod("m_id<-","MongoRec", function(x,value) {
   names(value) <- "oid"
   x@"_id" <- value
   x})
 
-#' @describeIn MongoRec
+#' @rdname MongoRec-class
+#' @aliases MongoRec
+#' Constructor for MongoRec object.
 MongoRec <- function(...,m_id=NA_character_)
   new("MongoRec", "_id"=c(oid=m_id))
 
-#' Converts P4 messages to JSON representation
+#' Converts S4 objects to JSON representation.
 #'
 #'
 #' These methods extend the \code{\link[jsonlite]{toJSON}} function providing
@@ -104,7 +135,7 @@ MongoRec <- function(...,m_id=NA_character_)
 #' which need to be serialized (usually through a call to
 #' \code{\link[jsonlite]{toJSON}}.
 #' @author Russell Almond
-#' @seealso In this package: \code{\link{parseJSON}}, \code{\link{saveRec}},
+#' @seealso In this package: \code{\link{parseObject}}, \code{\link{saveRec}},
 #' \code{\link{parseData}}, \code{\link{parseData}}
 #'
 #' In the jsonlite package: \code{\link[jsonlite]{toJSON}},
@@ -112,32 +143,8 @@ MongoRec <- function(...,m_id=NA_character_)
 #' \code{jsonlite::\link[jsonlite]{unbox}}
 #' @keywords IO interfaces
 #' @examples
-#'
-#' mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
-#'          as.POSIXct("2018-11-04 21:15:25 EST"),
-#'          list(correct=TRUE,seletion="D"))
-#' as.json(mess1)
-#' as.json(mess1,FALSE)
-#'
 #' \dontrun{
-#' ## This is the method for P4 Messages.
-#' setMethod("as.jlist",c("P4Message","list"), function(obj,ml) {
-#'   ml$"_id" <- NULL
-#'   ml$class <-NULL
-#'   ## Use manual unboxing for finer control.
-#'   ml$app <- unboxer(ml$app)
-#'   ml$uid <- unboxer(ml$uid)
-#'   if (!is.null(ml$context) && length(ml$context)==1L)
-#'     ml$context <- unboxer(ml$context)
-#'   if (!is.null(ml$sender) && length(ml$sender)==1L)
-#'     ml$sender <- unboxer(ml$sender)
-#'   if (!is.null(ml$mess) && length(ml$mess)==1L)
-#'     ml$mess <- unboxer(ml$mess)
-#'   ml$timestamp <- unboxer(ml$timestamp) # Auto_unboxer bug.
-#'   ## Saves name data; need recursvie version.
-#'   ml$data <- unparseData(ml$data)
-#'   ml
-#'   })
+#' vingette("JSON for S4 Objects")
 #' }
 #'
 #' @export as.json as.jlist
@@ -154,11 +161,13 @@ setGeneric("as.json",function(x,serialize=TRUE,
                               na = c("null", "string"))
   standardGeneric("as.json"))
 
-#' @describeIn as.json
+#' @rdname as.json
+#' @aliases as.jlist
 setGeneric("as.jlist",function(obj,ml,serialize=TRUE)
   standardGeneric("as.jlist"))
 
-#' @describeIn as.json
+#' @rdname as.json
+#' @aliases as.json,ANY-method
 setMethod("as.json","ANY",
           function(x,serialize=TRUE,
                    dataframe = c("rows", "columns", "values"),
@@ -176,7 +185,10 @@ setMethod("as.json","ANY",
            raw[1], null[1], na[1])
 })
 
-#' @describeIn as.json
+#' @rdname MongoRec
+#' @aliases as.json,MongoRec-method
+#' This method differs from the base method in
+#' that it defaults to `POSIXt="mongo"` and `raw="mongo"`.
 setMethod("as.json","MongoRec",
           function(x,serialize=TRUE,
                    dataframe = c("rows", "columns", "values"),
@@ -197,24 +209,31 @@ setMethod("as.json","MongoRec",
                    raw[1], null[1], na[1])
           })
 
-#' @describeIn as.json
+#' @describeIn as.json This is the default method, it simply returns
+#' the list of slots `ml`.  This also does not contain a call to
+#' `callNextMethod`, so it will serve as the termination point for an
+#' inheritance chain.
 setMethod("as.jlist",c("ANY","list"), function(obj,ml,serialize=TRUE) {
   ml
 })
 
-#' @describeIn MongoRec
+#' @describeIn MongoRec  This method actually removes the Mongo id
+#' (`_id`) as generally, that is not pass as part of an update query.
 setMethod("as.jlist",c("MongoRec","list"), function(obj,ml,serialize=TRUE) {
   ml$"_id" <- NULL
   callNextMethod(obj,ml,serialize)
 })
 
-#' @describeIn parseObject
+#' @describeIn parseObject This is the inner function for processing
+#' the slots prior to object creation.  Generally, this is the method
+#' that needs to be specialized.  See the `vignette("JSON for S4
+#' Objects")`.
 setGeneric("parse.jlist",function(class,rec)
   standardGeneric("parse.jlist"))
 
 
-#' @describeIn parseObject
-## Base case for call-next-method.
+#' @describeIn parseObject Base case for callNextMmethod; just returns
+#' the slot list.
 setMethod("parse.jlist",c("ANY","list"),
           function(class,rec) {
             rec
@@ -241,14 +260,14 @@ setMethod("parse.jlist",c("ANY","list"),
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' vignette("JSON for S4 Objects")
+#' }
 parseObject <- function (rec, class=rec$class) {
   if (is.list(class) && length(class)==1L)
     ## toJSON has wrapped the class name, fix.
     class <- as.character(class[[1]])
-  ## Maybe I shouldn't have named the argument class.
-  if (isS4(class)) class <- class(class)
-  class <- getClass(class)
-  rec <- as.list(rec)
+
   jlp <- selectMethod("parse.jlist",c(class,"list"))
   if (!is.null(jlp))
     rec <- do.call(jlp,list(class,rec))
@@ -256,7 +275,8 @@ parseObject <- function (rec, class=rec$class) {
   do.call("new",c(class,rec))
 }
 
-#' @describeIn MongoRec
+#' @describeIn MongoRec Makes sure the `_id` feild corresponds to
+#' conventions, and interst `NA` if it is missing.
 setMethod("parse.jlist",c("MongoRec","list"), function(class, rec) {
   if (is.null(rec$"_id"))
     id <- NA_character_
@@ -350,7 +370,8 @@ unboxer <- function (x) {
 }
 
 ## Need this for testing.
-#' @describeIn unboxer
+#' @describeIn unboxer  Undoes the effect of unboxer (in particular,
+#' removes the scalar mark).
 ununboxer <- function (x) {
   if (is(x,"scalar"))
     class(x) <- setdiff(class(x),"scalar")

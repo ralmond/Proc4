@@ -68,6 +68,7 @@ setGeneric("processingError",function(x) standardGeneric("processingError"))
 setGeneric("processingError<-",function(x, value)
   standardGeneric("processingError<-"))
 
+
 setMethod("app","P4Message", function(x) x@app)
 setMethod("uid","P4Message", function(x) x@uid)
 setMethod("mess","P4Message", function(x) x@mess)
@@ -91,6 +92,7 @@ setMethod("processingError<-","P4Message",
           function(x,value) {
             x@pError <- value
             x})
+
 
 
 

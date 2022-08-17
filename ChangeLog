@@ -1,3 +1,8 @@
+2022-06-20  Russell Almond  <ralmond@cherry.local>
+
+	* R/Message.R: Removed name, as too likely to cause conflicts.
+	Need to fix downstream EABN and EIEvent packages instead.
+
 2022-05-30  Russell Almond  <ralmond@cherry.local>
 
 	* R/as.json.R (MongoRec): Added MongoRec base class.

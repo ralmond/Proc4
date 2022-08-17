@@ -25,3 +25,6 @@ URL: https://pluto.coe.fsu.edu/Proc4
 VignetteBuilder: knitr
 Collate: ErrorHandling.R as.json.R jqmongo.R Message.R Listeners.R Proc4-package.R
 Config/testthat/edition: 3
+RoxygenNote: 7.1.2
+Roxygen: list(markdown=TRUE)
+Encoding: UTF-8

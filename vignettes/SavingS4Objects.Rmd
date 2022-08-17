@@ -50,7 +50,7 @@ The event class is divided into a number of header fields, and the data, which c
 
 Note that this class is also a subset of `MongoRec` which is a small class with a single slot `_id` (accessed with the function `m_id()`.  This is the Mongo identifier of the object.  The goal of object oriented programming is that we don't need to worry about the details in our package, as long at the authors of the `MongoRec` class have done their job properly.
 
-## Using the `toJSON` to serialize an S4 class
+## Using `toJSON` to serialize an S4 class
 
 Neither `toJSON` nor `serializeJSON` work out of the box.
 The `toJSON` function simply throws an error, as the new class is not yet registered.  The function `serializeJSON` generates proper JSON output, but not in a format for which it will be easy to write queries about.
@@ -197,4 +197,84 @@ plist <- parse.jlist(anEvent,jlist)
 res <- try(testthat::expect_equal(plist[names(atlist)],atlist))
 res
 ```
+
+### A better test
+
+A more complete test would be to create an Event object, write it out to JSON format and read it back, building the object.  This test requires an equality test for the Event object, that is a method for `all.equal`;  as this is an S3 generic, the method will be `all.equal.Event`.
+
+```{r all.equal.Event}
+all.equal.Event <- function (target, current,
+                             ...,
+                             checkTimestamp=FALSE,check_ids=TRUE) {
+  if (!is(current,"Event"))
+    return(paste("Target is 'Event' and current is '", 
+                 class(current),"'."))
+  msg <- character()
+  if (check_ids)
+    if ((is.na(target@"_id") && !is.na(current@"_id")) ||
+        (!is.na(target@"_id") &&
+         !isTRUE(all.equal(target@"_id", current@"_id"))))
+      msg <- c(msg,"Database IDs do not match.")
+  if (!isTRUE(all.equal(target@uid,current@uid)))
+    msg <- c(msg,"User IDs do not match.")
+  if (!isTRUE(all.equal(target@mess,current@mess)))
+    msg <- c(msg,"Messages do not match.")
+  if (!isTRUE(all.equal(target@processed,current@processed)))
+    msg <- c(msg, "Processed flags do not match.")
+  ## Check Data
+  namet <- names(target@data)
+  namec <- names(current@data)
+  if (length(target@data) != length(current@data) ||
+      !setequal(namet,namec)) {
+    msg <- c(msg,"Names or number of data differ.")
+    if (length(setdiff(namet,namec)) > 0L)
+      msg <- c(msg,paste("Data in target but not in current:",
+                         setdiff(namet,namec)))
+    if (length(setdiff(namec,namet)) > 0L)
+      msg <- c(msg,paste("Data in current but not in target:",
+                         setdiff(namec,namet)))
+  }
+  msgd <- all.equal(target@data,current@data,...)
+  if (!isTRUE(msgd)) msg <- c(msg,msgd)
+  ## Timestamp
+  if (checkTimestamp) {
+    if (abs(target@timestamp-current@timestamp) >
+        as.difftime(.1,units="secs"))
+      msg <- c(msg,"Timestamps differ by more than .1 secs")
+  }
+
+  ## Return true if message list is empty.
+  if (length(msg)==0L) TRUE
+  else msg
+}
+```
+
+A few notes about this function.  First, `all.equal` returns true if the `target` and `current` entries are the same, and otherwise returns a character vector giving the differences.  So, the method builds up a list of differences.  Second, remember that `NA == NA` returns `NA`, not true.  Using `all.equal` will return `TRUE` if both arguments are true, but not false if they are different.  So `isTrue(all.equal(...))` test for equality with `NA==NA` being marked as true.
+
+So lets test this equality method.
+```{r testEquality}
+anEvent1 <- anEvent
+all.equal(anEvent,anEvent1)
+
+anEvent1@mess <- "Shouted"
+all.equal(anEvent,anEvent1)
+```
+            
+This looks good, so now for the final check.
+
+```{r RoundTrip}
+evJSON <- as.json(anEvent)
+anEvent1 <- parseObject(fromJSON(evJSON),"Event")
+testthat::expect_equal(anEvent,anEvent1)
+```
+           
+## Summary:  JSON Represetation of S4 objects
+
+The `serializeJSON` and `unserializeJSON` methods provide the safest way of storing an R object as a JSON string; however, the representation is not friendly for other applications.  In particular, if the object is stored in an Mongo database, and indexes are built on some of the fields, a class-specific approach is needed to map the slots of the S4 class to Mongo data types.
+
+The `as.jlist` and `parse.jlist` generic functions provide a regular mechanism for describing the transformation.  The slots of the object are elements of the `jlist`, and the `as.jlist` function is responsible for doing pre-processing on the objects before `toJSON` is called, and `parse.jlist` is responsible for post-processing after `fromJSON` is called.
+
+The generic function `as.json` can then be called to do the conversion, and the function `parseObject` can be called to reconstruct an object from the output of `fromJSON`.  Note that the basic mechanism may not work for all classes.  Some classes may need a special method for `as.json`.  Although `parseObject` is not generic, if needed, the developer can always write a `parseXXX` function to do the work.
+
+Writing serialization and unserialization methods, like writing print and equality testing methods, is part of the work required when building a new class.  Although this framework doesn't do all the work, hopefully it makes the process a little bit more straightforward, providing a mechanism which can exploit the inheritance structure of the objects.
 

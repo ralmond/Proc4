@@ -401,7 +401,7 @@ schema. Its purpose was to provide a place the AS could post messages
 about which level to provide next. The script `PlayerLevel.php` would
 return its current value.
 
-::: {.example #Activites}
+::: {.example #Activities}
 Mongo script to create Activities collection and indexes.
 ```{js, Activities, eval=FALSE}
 db.createCollection("Activities", {
