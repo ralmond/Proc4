@@ -24,8 +24,8 @@ export(as.json,as.jlist,
        unboxer, ununboxer, cleanMessageJlist, parseObject,
        parse.jlist)
 exportMethods(as.json,as.jlist,parse.jlist)
-exportClasses(MongoRec)
 
+exportClasses(MongoRec)
 export(saveRec, buildJQuery, buildJQterm, getOneRec, getManyRecs)
 
 
