@@ -25,8 +25,9 @@ export(as.json,as.jlist,
        parse.jlist)
 exportMethods(as.json,as.jlist,parse.jlist)
 
-exportClasses(MongoRec)
-export(saveRec, buildJQuery, buildJQterm, getOneRec, getManyRecs)
+exportClasses(MongoRec, fake_mongo, MongoDB)
+export(saveRec, buildJQuery, buildJQterm,
+       getOneRec, getManyRecs, fake_mongo)
 
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners,

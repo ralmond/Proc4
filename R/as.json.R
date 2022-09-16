@@ -37,7 +37,7 @@ setClass("MongoRec",
 #' which stores the database ID.  This function accesses it.
 #'
 #' The `_id` slot should be a character object with the name
-#' \dquote{oid}.  The methods enforce this.  If the object does not
+#' \dQuote{oid}.  The methods enforce this.  If the object does not
 #' have a Mongo ID (i.e., it was never stored in a database), then the
 #' value of `_id` should be `NA_character_`.
 #'

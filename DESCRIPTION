@@ -11,7 +11,7 @@ Authors@R:
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
 Depends: R (>= 3.0), methods,
-Imports: jsonlite, futile.logger, mongolite, withr
+Imports: jsonlite, futile.logger, mongolite, withr, checkmate, rlang
 Suggests: 
     knitr,
     rmarkdown,
@@ -23,7 +23,7 @@ Description: Utilities for working with messages in the four four process archit
 License: Artistic-2.0 
 URL: https://pluto.coe.fsu.edu/Proc4
 VignetteBuilder: knitr
-Collate: ErrorHandling.R as.json.R jqmongo.R Message.R Listeners.R Proc4-package.R
+Collate: ErrorHandling.R as.json.R jqmongo.R Message.R MongoDB.R Listeners.R CaptureListener.R TableListener.R InjectionListener.R UpdateListener.R UpsertListener.R Proc4-package.R
 Config/testthat/edition: 3
 RoxygenNote: 7.1.2
 Roxygen: list(markdown=TRUE)

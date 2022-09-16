@@ -117,7 +117,7 @@ First, it modifies the `ml` argument, which is what is eventually returned.  In 
 The next example shows `as.json()` in action.
 
 ```{r testEvent}
-prettify(as.json(anEvent), indent=2)
+pretify(as.json(anEvent), indent=2)
 ```
 
 ## The `unparseData` function
