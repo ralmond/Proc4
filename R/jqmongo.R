@@ -384,7 +384,7 @@ saveRec <- function (rec, col, serialize=TRUE) {
       }
     }
   } else {
-    flog.trace("DB is null, not saving recage.")
+    flog.trace("DB is null, not saving record.")
   }
   rec
 }
