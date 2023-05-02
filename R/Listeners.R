@@ -347,8 +347,8 @@ ListenerSet <-
                        dburi="character",
                        colname="character",
                        listeners="list",
-                       db="MongoDB",
-                       adminDB="MongoDB"),
+                       db="ANY",
+                       adminDB="ANY"),
               methods = list(
                   initialize =
                     function(sender="sender",

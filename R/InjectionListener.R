@@ -59,7 +59,7 @@ InjectionListener <-
                        dburi="character",
                        colname="character",
                        messSet = "character",
-                       db="MongoDB"),
+                       db="ANY"),
               methods=list(
                   initialize=
                     function(name="Injection",

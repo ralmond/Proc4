@@ -65,7 +65,7 @@ UpsertListener <-
                        colname="character",
                        qfields="character",
                        messSet = "character",
-                       db="MongoDB"),
+                       db="ANY"),
               methods=list(
                   initialize=
                     function(name="Upsert",
