@@ -8,3 +8,6 @@ vignettes/Dongle.R
 vignettes/Dongle.html
 vignettes/SavingS4Objects.R
 vignettes/SavingS4Objects.html
+.DS_Store
+\#*
+
