@@ -1,39 +1,40 @@
 import(methods)
 import(futile.logger)
-importFrom("jsonlite", "toJSON", "fromJSON", "unbox","base64_enc","base64_dec",
+import(mongo)
+importFrom("jsonlite", "base64_enc","base64_dec",
            "serializeJSON", "unserializeJSON")
 importFrom("utils", "limitedLabels")
 
 
 export(P4Message)
 exportClasses(P4Message)
-export(m_id,"m_id<-",app,uid,
+export(app,"app<-",uid,"uid<-",
        context,"context<-",
        timestamp,"timestamp<-",
-       sender,mess,details,all.equal.P4Message,
+       sender,"sender<-",mess,"mess<-",details,
+       all.equal.P4Message,
        processed, markAsProcessed, processingError, markAsError,
-       makeDBuri)
+       serializeData)
 S3method(all.equal,P4Message,all.equal.P4Message)
-exportMethods(m_id,"m_id<-",app,uid,context,"context<-",
-              timestamp,"timestamp<-",sender,mess,details,
+exportMethods(app,"app<-",uid,"uid<-",context,"context<-",
+              timestamp,"timestamp<-",sender,"sender<-",
+              mess,"mess<-",details,"details<-",
               toString,show, processed, processingError)
 
-export(as.json,as.jlist,saveRec,buildJQuery,buildJQterm,
-       parseMessage,parseData,unparseData,parseSimpleData,
-       unboxer,ununboxer, cleanMessageJlist,
-       getOneRec,getManyRecs)
-exportMethods(as.json,as.jlist)
+export(buildMessage, cleanMessageJlist)
+exportMethods("as.jlist","parse.jlist")
 
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
+       listeningFor, clearMessages,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
        TableListener, buildListener,listenerName, resetListeners)
-exportClasses(ListenerSet,NullListenerSet,MongoDB,CaptureListener,
-       InjectionListener,
+exportClasses(ListenerSet,NullListenerSet,RefListener,
+       CaptureListener,InjectionListener,
        UpdateListener,UpsertListener,TableListener)
 exportMethods(isListener,receiveMessage,notifyListeners,listenerName,
-              resetListeners)
+              resetListeners,clearMessages,listeningFor)
 
-export(withFlogging)
+export(withFlogging,mongoAppender)
 
 
 

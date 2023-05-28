@@ -11,15 +11,15 @@
   This \code{\link{Listener}} updates an existing record (in a Mongo
   collection) for the student
   (\code{uid}), with the contents of the data (details) field of the
-  message. 
-  
+  message.
+
 }
 \section{Extends}{
 
   This class implements the \code{\link{Listener}} interface.
 
  All reference classes extend and inherit methods from
- \code{"\linkS4class{envRefClass}"}. 
+ \code{"\linkS4class{envRefClass}"}.
 
 }
 \section{Methods}{
@@ -45,18 +45,21 @@
   encode the target field as a JSON object for injection into the
   database.
 
+  If \code{targetField=""}, then the behavior is slightly different.  Instead the fields in
+  \details{mess} (labeled by their names) are updated.
+
 }
 \references{
 
   This is an example of the observer design pattern.
-  \url{https://en.wikipedia.org/wiki/Observer_pattern}. 
+  \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 
 }
 \author{Russell Almond}
 \seealso{
   \code{\link{Listener}}, \code{\linkS4class{P4Message}},
-  \code{\link{UpdateListener}}, 
-  \code{\linkS4class{InjectionListener}}, 
+  \code{\link{UpdateListener}},
+  \code{\linkS4class{InjectionListener}},
   \code{\linkS4class{CaptureListener}},
   \code{\linkS4class{UpsertListener}},
   \code{\linkS4class{TableListener}},
@@ -65,18 +68,39 @@
   The function \code{\link{unparseData}} is the default encoder.
 }
 \examples{
+
+## Updating the data field.
+fm <- mongo::fake_mongo(count=list(0L,1L))
+ul <- UpdateListener("tester", db=fm,messSet=c("Scored Response"))
+
+## New message, insert
+  mess1 <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
+                     as.POSIXct("2018-11-04 21:15:25 EST"),
+                     list(correct=TRUE,selection="D"))
+receiveMessage(ul,mess1)
+
+## Message is update, update.
+mess1a <- P4Message("Fred","Task 1","Evidence ID","Scored Response",
+                     as.POSIXct("2018-11-04 21:15:40 EST"),
+                     list(correct=TRUE,selection="D",key="D"))
+receiveMessage(ul,mess1a)
+
+### No target field, details are added to record.
+
+data2json <- function(dat) {
+  jsonlite::toJSON(mongo::unboxer(dat))
+}
+
+upwind <- UpdateListener(messSet=c("Money Earned","Money Spent"),
+                         db=mongo::MongoDB("Players",noMongo=TRUE),
+                         targetField="",
+                         jsonEncoder="data2json")
+
 mess2 <- P4Message(app="default",uid="Phred",context="Down Hill",
                    sender="EIEvent",mess="Money Earned",
                    details=list(trophyHall=list(list("Down Hill"="gold"),
                                                 list("Stairs"="silver")),
                                 bankBalance=10))
-data2json <- function(dat) {
-  jsonlite::toJSON(sapply(dat,unboxer))
-}
-
-upwind <- UpdateListener(messSet=c("Money Earned","Money Spent"),
-                         targetField="data",colname="Players",
-                         jsonEncoder="data2json")
 
 receiveMessage(upwind,mess2)
 

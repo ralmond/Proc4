@@ -25,7 +25,7 @@
     \item{isListener}{\code{signature(x = "TableListener")}: TRUE }
     \item{receiveMessage}{\code{signature(x = "TableListener")}: If
       the message is in the \code{messSet}, it adds a row to its
-      internal table using the fields specified in \code{fieldlist}. 
+      internal table using the fields specified in \code{fieldlist}.
       (See details.) }
     \item{listenerName}{\code{signature(x = "TableListener")}: returns the name
       of the table.  This is usually also the filename where the table
@@ -34,7 +34,7 @@
 }
 \references{
   This is an example of the observer design pattern.
-  \url{https://en.wikipedia.org/wiki/Observer_pattern}. 
+  \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 
 }
 \author{Russell Almond, Lukas Liu, Nan Wang}
@@ -71,15 +71,15 @@
   are the names \code{\link{app}}, \code{\link{context}},
   \code{\link{uid}}, \code{\link{mess}}, \code{\link{sender}},
   \code{\link{timestamp}}, which return the value of the corresponding
-  header fields of the message.  Note that 
-    
+  header fields of the message.  Note that
+
 
 }
 \seealso{
 
   \code{\link{Listener}}, \code{\linkS4class{P4Message}},
-  \code{\linkS4class{UpdateListener}}, 
-  \code{\linkS4class{InjectionListener}}, 
+  \code{\linkS4class{UpdateListener}},
+  \code{\linkS4class{InjectionListener}},
   \code{\linkS4class{CaptureListener}},
   \code{\linkS4class{UpsertListener}},
   \code{\link{TableListener}},
@@ -90,7 +90,12 @@
 
 mess1 <- P4Message(app="default",uid="Phred",context="Down Hill",
                    sender="EIEvent",mess="New Observables",
+                   as.POSIXct("2018-11-04 21:15:25 EST"),
                    details=list(trophy="gold",solvedtime=10))
+mess2 <- P4Message(app="default",uid="Phred",context="Around the Tree",
+                   sender="EIEvent",mess="New Observables",
+                   as.POSIXct("2018-11-04 21:16:35 EST"),
+                   details=list(trophy="silver",solvedtime=25))
 tabMaker <- TableListener(name="Trophy Table",
                    messSet="New Observables",
                    fieldlist=c(uid="character", context="character",

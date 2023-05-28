@@ -1,3 +1,26 @@
+2023-05-25  Russell Almond  <ralmond@cherry>
+
+	* R/Listeners.R: ($notifyListeners):  Moved responsibility for setting `sender` field of message to here.
+
+2023-05-24  Russell Almond  <ralmond@cherry>
+
+	* R/InjectionListener.R (InjectionListener): Changed to pass DB to the class.
+
+	* R/UpdateListener.R (UpdateListener): Changed to pass DB to the class.
+
+	* R/UpsertListener.R (UpsertListener): Changed to pass DB to the class.
+	
+
+	* R/Listeners.R: Moved construction of DB link out of constructors.
+	(buildListener):   dburi and ssl_options are set by the caller, not the config.json This function now builds the Mongo object for the listener.
+
+
+2023-05-20  Russell Almond  <ralmond@cherry>
+
+	* R/Listeners.R: Moved various listener types into their own files.
+
+	* DESCRIPTION (Imports): Moved the database and json commands to the `mongo` package.
+
 2022-04-11  Russell Almond  <ralmond@cherry.local>
 
 	* R/Message.R (parseSimpleData): forced the _id column to always have the name "oid" (necessary for monog).

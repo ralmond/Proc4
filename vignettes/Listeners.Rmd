@@ -1,0 +1,57 @@
+---
+title: "Listener model for Interprocess Communication"
+author: Russell G. Almond
+output: rmarkdown::html_vignette
+bibliography: Proc4.bib
+link-citations: TRUE
+vignette: >
+  %\VignetteIndexEntry{Proc4 Arch}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r options, include=FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+# Observer Design Pattern
+
+[Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern)
+
+## Listener Interface
+
+`recieveMessage(x, mess)`
+`isListener(x)`
+`listenerName(x)`
+`clearMessages(x,app)`
+`listeningFor(x,newSet)`
+
+## message sets
+
+
+# Listener Types
+
+## Capture Listener
+
+## Injection Listener
+
+## Upsert Listener
+
+## Update Listener
+
+## Table Listener
+
+# ListenerSet
+
+## Managing listener collection
+
+## Logging messages
+
+## Registering Output
+
+# Configuration
+
+## Database connections
+
+## JSON configuration files
+

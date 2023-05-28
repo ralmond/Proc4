@@ -3,10 +3,8 @@
 
 TableListener <-
   setRefClass("TableListener",
-              fields=list(name = "character",
-                          fieldlist = "character",  #Named list of types
-                          df = "data.frame",
-                          messSet="character"
+              fields=list(fieldlist = "character",  #Named list of types
+                          df = "data.frame"
                           ),
               methods=list(
                   initialize =
@@ -48,25 +46,23 @@ TableListener <-
                   ## captures the incoming message and stick into the
                   ## data frame.
                   if (ncol(df)==0L) initDF()
-                  if (mess(mess) %in% messSet) {
-                    flog.debug("Adding row for %s (%s): %s",uid(mess),
-                               context(mess), toString(mess))
-                    new.line <- df[1,,drop=FALSE]
-                    for (f in names(new.line)) {
-                      new.val <- switch(f,
-                                        "app"=app(mess),
-                                        "context"=context(mess),
-                                        "uid"=uid(mess),
-                                        "mess"=mess(mess),
-                                        "sender"=sender(mess),
-                                        "timestamp"=ifelse(typeof(new.line$timestamp) == "character",
-                                                           as.character(timestamp(mess)),
-                                                           timestamp(mess)),
-                                        details(mess)[[f]])
-                      if(!is.null(new.val)) new.line[1,f] <- new.val
-                    }
-                    df <<- rbind(df, new.line)
+                  flog.debug("Adding row for %s (%s): %s",uid(mess),
+                             context(mess), toString(mess))
+                  new.line <- df[1,,drop=FALSE]
+                  for (f in names(new.line)) {
+                    new.val <- switch(f,
+                                      "app"=app(mess),
+                                      "context"=context(mess),
+                                      "uid"=uid(mess),
+                                      "mess"=mess(mess),
+                                      "sender"=sender(mess),
+                                      "timestamp"=ifelse(typeof(new.line$timestamp) == "character",
+                                                         as.character(timestamp(mess)),
+                                                         timestamp(mess)),
+                                      details(mess)[[f]])
+                    if(!is.null(new.val)) new.line[1,f] <- new.val
                   }
+                  df <<- rbind(df, new.line)
                 },
                 reset = function(app) {
                     initDF()
@@ -76,7 +72,8 @@ TableListener <-
                   ## creates an empty row
                   df[-1, ]
                 }
-                ))
+              ),
+              contains="RefListener")
 
 
 TableListener <- function (name="ppData",
@@ -86,8 +83,4 @@ TableListener <- function (name="ppData",
   new("TableListener",name=name,fieldlist=fieldlist,messSet=messSet,...)
 }
 
-setMethod("isListener","TableListener",function(x) TRUE)
-setMethod("receiveMessage","TableListener",
-          function(x,mess) x$receiveMessage(mess))
-setMethod("listenerName","TableListener",function(x) x$name)
 

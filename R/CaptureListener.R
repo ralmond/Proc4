@@ -7,27 +7,26 @@
 
 CaptureListener <-
   setRefClass("CaptureListener",
-              fields=c(name = "character",messages="list"),
+              fields=c(messages="list"),
               methods=list(
                   initialize = function(name="Capture",messages=list(),...)
                     callSuper(name=name,messages=messages,...),
                   receiveMessage = function (mess) {
-                    messages <<- c(mess,messages)
+                        messages <<- c(mess,messages)
                   },
                   lastMessage = function() {
+                    if(length(messages)==0L) return(NULL)
                     messages[[1]]
                   },
                   reset = function(app) {
                     messages <<- list()
-                  }))
+                  }),
+                  contains="RefListener")
 
-CaptureListener <- function (name="Capture",messages=list(),...) {
-  new("CaptureListener",name=name,messages=messages,...)
+CaptureListener <- function (name="Capture",messages=list(),messSet=character(),...) {
+  new("CaptureListener",name=name,messages=messages,messSet=messSet)
 }
 
-setMethod("isListener","CaptureListener",function(x) TRUE)
-setMethod("receiveMessage","CaptureListener",
-          function(x,mess) x$receiveMessage(mess))
-setMethod("listenerName","CaptureListener",function(x) x$name)
+
 
 
