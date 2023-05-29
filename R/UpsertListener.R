@@ -19,16 +19,16 @@ UpsertListener <-
                                 qfields=qfields,
                                 ...)
                     },
-                  receiveMessage = function (mess) {
-                      flog.debug("Updating record for %s: %s",uid(mess),toString(mess))
-                      flog.debug(".. from %s",sender(mess))
-                      flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
+                  receiveMessage = function (message) {
+                      flog.debug("Updating record for %s: %s",uid(message),toString(message))
+                      flog.debug(".. from %s",sender(message))
+                      flog.trace("Message:",x=as.jlist(message,attributes(message)),
                                  capture=TRUE)
-                      m_id(mess) <- NA_character_
-                      query <- lapply(qfields,function(f) do.call(f,list(mess)))
+                      m_id(message) <- NA_character_
+                      query <- lapply(qfields,function(f) do.call(f,list(message)))
                       names(query) <- qfields
                       mdbReplace(db,do.call(buildJQuery,query),
-                                 as.json(mess,serialize=TRUE),upsert=TRUE)
+                                 as.json(message,serialize=TRUE),upsert=TRUE)
                   },
                   reset = function(app) {
                     mdbRemove(db,buildJQuery(app=app))

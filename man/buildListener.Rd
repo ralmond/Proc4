@@ -11,7 +11,8 @@
 }
 \usage{
 buildListener(specs, app, dburi, defaultdb="Proc4",
-              ssl_options=mongolite::ssl_options())
+              ssl_options=mongolite::ssl_options(),
+              noMongo = !missing(dburi) && length(dburi) > 0L && nchar(dburi) > 0L)
 }
 \arguments{
   \item{specs}{A named list (from the JSON) containing the instructions
@@ -24,7 +25,10 @@ buildListener(specs, app, dburi, defaultdb="Proc4",
     not in the JSON.}
   \item{defaultdb}{The name of the database with which the Listener will interact.}
   \item{ssl_options}{Options used for an SSL connection to the database.
-  \code{\link[mongolite]{ssl_options}}.}
+    \code{\link[mongolite]{ssl_options}}.}
+  \item{noMongo}{A logical value.  If true, then the connection to the
+    Mongo database will not be made, and CRUD operations will basically
+    become no-ops.}
 }
 \details{
 
@@ -109,7 +113,6 @@ jspecs <- '[
 	{
 	    "name":"ToEA",
 	    "type":"InjectionListener",
-	    "sender":"EI_<app>",
 	    "dbname":"EARecords",
 	    "colname":"EvidenceSets",
 	    "messages":["New Observables"]

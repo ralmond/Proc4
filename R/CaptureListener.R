@@ -11,8 +11,8 @@ CaptureListener <-
               methods=list(
                   initialize = function(name="Capture",messages=list(),...)
                     callSuper(name=name,messages=messages,...),
-                  receiveMessage = function (mess) {
-                        messages <<- c(mess,messages)
+                  receiveMessage = function (message) {
+                        messages <<- c(message,messages)
                   },
                   lastMessage = function() {
                     if(length(messages)==0L) return(NULL)

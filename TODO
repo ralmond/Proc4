@@ -1,10 +1,10 @@
 * Think about how we get ssl_options into the configuration.
 
-* Refactor Listener class, and add message set maintenance
+* Add message set maintenance
 
 * Add database support for table listener
 
+*  Undocumented code objects:
+    ‘mongoAppender’ ‘serializeData’
 
-
-
-
+* Rewrite Proc4-package.Rd

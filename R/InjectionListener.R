@@ -17,13 +17,14 @@ InjectionListener <-
                                 messSet=messSet,
                                 ...)
                     },
-                  receiveMessage = function (mess) {
-                      flog.debug("Sending message %s",toString(mess))
-                      flog.debug(".. from %s",sender(mess))
-                      flog.trace("Message:",x=as.jlist(mess,attributes(mess)),
+                  receiveMessage = function (message) {
+                      flog.debug("Sending message %s",toString(message))
+                      flog.debug(".. from %s",sender(message))
+                      flog.trace("Message:",x=as.jlist(message,
+                                                       attributes(message)),
                                  capture=TRUE)
-                      mongo::m_id(mess) <- NA_character_
-                      mdbInsert(messdb(),as.json(mess,serialize=TRUE))
+                      mongo::m_id(message) <- NA_character_
+                      mdbInsert(messdb(),as.json(message,serialize=TRUE))
                   },
                   reset = function(app) {
                     if (!is.null(messdb()))

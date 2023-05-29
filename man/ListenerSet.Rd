@@ -8,22 +8,24 @@
 \alias{isListener,ListenerSet-method}
 \alias{receiveMessage,ListenerSet-method}
 \alias{notifyListeners,ListenerSet-method}
+\alias{clearMessages,ListenerSet-method}
+
 
 \title{Class \code{"ListenerSet"}}
 \description{
 
   This is a \dQuote{mix-in} class that adds a speaker protocol to an
-  object, which is complementary to the \code{\linkS4class{Listener}}
+  object, which is complementary to the \code{\link{Listener}}
   protocol.  This object maintains a list of listeners.  When the
   \code{notifyListeners} method is called, it notifies each of the
   listeners by calling the \code{\link{receiveMessage}} method on the
-  listener. 
+  listener.
 }
 \section{Extends}{
 
 All reference classes extend and inherit methods from
 \code{"\linkS4class{envRefClass}"}.   The class union
-\code{NullListenerSet} is either a \code{ListenerSet} or \code{NULL}. 
+\code{NullListenerSet} is either a \code{ListenerSet} or \code{NULL}.
 
 }
 \section{Methods}{
@@ -58,7 +60,7 @@ All reference classes extend and inherit methods from
   }
 
   In addition, the \code{ListenerSet} maintains a named list of
-  \code{\linkS4class{Listener}} objects (that is, objects that have a
+  \code{\link{Listener}} objects (that is, objects that have a
   \code{receiveMessage} method).  The methods \code{addListener} and
   \code{removeListener} maintain this list.
 }
@@ -80,9 +82,9 @@ All reference classes extend and inherit methods from
   It is often useful to redirect the Proc4 logger to a log file.  In
   addition, changing the logging format to JSON, will allow the message
   to be recovered.  Thus, try
-  \code{\link[futile.logger]{flog.layout}(\link[futile.logger]{layout.json},name="Proc4"} 
+  \code{\link[futile.logger]{flog.layout}(\link[futile.logger]{layout.json},name="Proc4"}
   to activate logging in JSON format.
-  
+
 }
 \seealso{
 
@@ -95,7 +97,7 @@ All reference classes extend and inherit methods from
   \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
   \code{\linkS4class{UpsertListener}}, \code{\linkS4class{InjectionListener}},
   \code{\linkS4class{TableListener}}
-  
+
 
 }
 \examples{
@@ -115,10 +117,10 @@ showClass("ListenerSet")
     \item{\code{colname}:}{Object of class \code{character}: the name of
       the collection in which messages should be logged.}
     \item{\code{listeners}:}{A named \code{list} of
-      \code{\linkS4class{Listener}} objects, that is objects for which
+      \code{\link{Listener}} objects, that is objects for which
       \code{\link{isListener}} is true.}
     \item{\code{db}:}{Object of class \code{\linkS4class{MongoDB}} which
-      is a handle 
+      is a handle
       to the collection where messages are logged, or \code{NULL} if the
       log database has not been initialized.  As the database may have
       not been initialized, programs should call the \code{messdb()}

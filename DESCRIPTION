@@ -1,6 +1,6 @@
 Package: Proc4
-Version: 0.7-1
-Date: 2023/05/20
+Version: 0.8-1
+Date: 2023/05/28
 Title: Four Process Assessment Database and Dispatcher
 Authors@R: 
     person(given = "Russell",
@@ -11,8 +11,8 @@ Authors@R:
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
 Depends: R (>= 3.0), methods,
-Imports: futile.logger, mongo
-Suggests: mongolite, knitr, rmarkdown, tidyr, CPTtools, rlang, bookdown, devtools, testthat (>= 3.0.0)
+Imports: futile.logger, mongo, jsonlite
+Suggests: mongolite, knitr, rmarkdown, tidyr, CPTtools, rlang, bookdown, devtools, withr, testthat (>= 3.0.0)
 Description: Utilities for working with messages in the four four process architecture as json objects.
 Collate:  ErrorHandling.R Message.R Listeners.R CaptureListener.R InjectionListener.R TableListener.R UpdateListener.R UpsertListener.R
 License: Artistic-2.0 

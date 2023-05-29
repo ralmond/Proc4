@@ -107,7 +107,7 @@ There are five major features of this package documented below:
   particular, the record is retrieved from the database and converted
   into a list using \code{\link[jsonlite]{fromJSON}}.  The parsing
   function is then called on the result to build the object.  The
-  function \code{\link{parseMessage}} provides an example.  The function
+  function \code{\link{buildMessage}} provides an example.  The function
   \code{\link{cleanMessageJlist}} does much of the interior work of the
   parsing and is intended for subclasses of
   \code{\linkS4class{P4Message}}.  The \code{\link{getOneRec}} and

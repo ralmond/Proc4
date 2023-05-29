@@ -18,8 +18,8 @@
 
 }
 \usage{
-markAsProcessed(mess, col)
-markAsError(mess, col, e)
+markAsProcessed(col, mess)
+markAsError(col, mess, e)
 processed(x)
 processingError(x)
 }

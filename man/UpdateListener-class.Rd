@@ -46,7 +46,7 @@
   database.
 
   If \code{targetField=""}, then the behavior is slightly different.  Instead the fields in
-  \details{mess} (labeled by their names) are updated.
+  \code{details(mess)} (labeled by their names) are updated.
 
 }
 \references{

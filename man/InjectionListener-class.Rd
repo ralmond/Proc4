@@ -80,7 +80,7 @@ receiveMessage(ilwind,mess1)
       column of the Mongo database. }
     \item{\code{messSet}:}{A vector of class \code{character} giving the
       name of messages which are sent to the database.  Only messages
-      for which \code{mess(mess)} is an element of \code{messSet} will
+      for which \code{mess(message)} is an element of \code{messSet} will
       be inserted.}
     \item{\code{db}:}{Object of class \code{MongoDB} giving the
       database.  Use \code{messdb()} to access this field to makes sure
@@ -91,7 +91,7 @@ receiveMessage(ilwind,mess1)
   \describe{
     \item{\code{messdb()}:}{Accessor for the database collection.
       Initializes the connection if it has not been set up.}
-    \item{\code{receiveMessage(mess)}:}{ Does the work of inserting the
+    \item{\code{receiveMessage(message)}:}{ Does the work of inserting the
       message.  See Details. }
     \item{\code{reset(app)}:}{ Empties the database collection of
       messages with this app id.}

@@ -12,11 +12,11 @@
   
 }
 \usage{
-notifyListeners(sender, mess)
+notifyListeners(sender, message)
 }
 \arguments{
   \item{sender}{An object which sends messages. }
-  \item{mess}{A \code{\link{P4Message}} to be sent.}
+  \item{message}{A \code{\link{P4Message}} to be sent.}
 }
 \value{
 
@@ -26,7 +26,7 @@ notifyListeners(sender, mess)
 }
 \author{Russell Almond}
 \seealso{
-  \code{\link{P4Message}}, \code{\linkS4class{Listener}},
+  \code{\link{P4Message}}, \code{\link{Listener}},
   \code{\link{ListenerSet}} 
 }
 \examples{

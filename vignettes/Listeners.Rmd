@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 bibliography: Proc4.bib
 link-citations: TRUE
 vignette: >
-  %\VignetteIndexEntry{Proc4 Arch}
+  %\VignetteIndexEntry{Listeners}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

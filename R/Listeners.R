@@ -34,7 +34,7 @@ RefListener <-
                   messdb = function () {
                     db
                   },
-                  receiveMessage = function (mess) {
+                  receiveMessage = function (message) {
                     stop(sprintf("Abstract Listener %s has no receive message method.",name))
                   },
                   reset = function(app) {

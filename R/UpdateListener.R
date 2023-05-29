@@ -31,30 +31,33 @@ UpdateListener <-
                                 qfields=qfields,
                                 ...)
                     },
-                  receiveMessage = function (mess) {
-                    flog.debug("Updating record for %s (%s): %s",uid(mess),
-                               context(mess), toString(mess))
+                  receiveMessage = function (message) {
+                    flog.debug("Updating record for %s (%s): %s",uid(message),
+                               context(message), toString(message))
                     if (nchar(targetField) > 0L) {
-                      encoded <- do.call(jsonEncoder,list(details(mess)))
+                      encoded <- do.call(jsonEncoder,list(details(message)))
                       flog.trace("New Data Value:",encoded,capture=TRUE)
                       update <- sprintf('{"$set":{"%s":%s, "context":"%s", "timestamp":%s}}',
                                         targetField,
                                         encodeString(encoded,quote='"'),
-                                        context(mess),
-                                        jsonlite::toJSON(unboxer(timestamp(mess)), POSIXt="mongo"))
+                                        context(message),
+                                        jsonlite::toJSON(unboxer(timestamp(message)), POSIXt="mongo"))
                     } else {
                       update <- sprintf('{"$set":%s}',
                                         do.call(jsonEncoder,
-                                                list(details(mess))))
+                                                list(details(message))))
                     }
-                    query <- lapply(qfields,function(f) do.call(f,list(mess)))
+                    query <- lapply(qfields,function(f) do.call(f,list(message)))
                     names(query) <- qfields
                     qq <- do.call(buildJQuery,query)
-                    if (mdbCount(db,qq) == 0L) {
+                    count <- mdbCount(db,qq)
+                    if (is.na(count)) {
+                      flog.debug("Not saving record, database connection is invalid.")
+                    } else if (count == 0L) {
                       ## Initializize by saving message.
                       flog.trace("Record not found, inserting.")
-                      mess@"_id" <- NA_character_
-                      mdbInsert(db,as.json(mess))
+                      m_id(message) <- NA_character_
+                      mdbInsert(db,as.json(message))
                     } else {
                       flog.trace("Record found, updating.")
                     }
