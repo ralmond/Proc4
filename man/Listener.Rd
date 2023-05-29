@@ -107,10 +107,10 @@ listeningFor(x, newSet)
       object in the \code{db} field.}
     \item{\code{receiveMessage(message)}:}{ Does the message processing.
       Note that the \code{RefListener} method returns and error, so
-      subclasses must implement this.  Note, also that the filtering of
+      \emph{subclasses must implement this}.  Note, also that the filtering of
       which messages to handle is done by the S4 method.}
     \item{\code{reset(app)}:}{ This method clears out the old messages.
-      Again, subclasses must implement this message as the
+      Again, \emph{subclasses must implement this method} as the
       \code{RefListener} class implementation raises an error.  The
       \code{app} argument is because several different implementations
       may store messages for more than one application in the same place.}

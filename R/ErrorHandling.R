@@ -141,15 +141,21 @@ mongoAppender <-
               fields=c(db="JSONDB",
                        app="character",
                        engine="character",
-                       tee="ANY"),
+                       tee="character"),
               methods=c(
+                initialize = function(app="default",
+                                      engine="Unspecified",
+                                      db=mongo::MongoDB("Log",noMongo=TRUE),
+                                      tee=character()) {
+                  callSuper(db=db,app=app,engine=engine,tee=tee)
+                },
                 logit = function(line) {
                   pline <- parseline(line)
                   entry <- buildJQuery(app=app,engine=engine,level=pline$level,
                                        timestamp=pline$time,
                                        message=pline$message)
                   mdbInsert(db,entry)
-                  if (is(tee,"connection") || is.character(tee)) {
+                  if (length(tee) > 0L) {
                     cat(line,file=tee,append=TRUE,sep="")
                   }
                 },

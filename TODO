@@ -5,6 +5,6 @@
 * Add database support for table listener
 
 *  Undocumented code objects:
-    ‘mongoAppender’ ‘serializeData’
+    ‘serializeData’
 
-* Rewrite Proc4-package.Rd
+

@@ -34,6 +34,7 @@ exportClasses(ListenerSet,NullListenerSet,RefListener,
 exportMethods(isListener,receiveMessage,notifyListeners,listenerName,
               resetListeners,clearMessages,listeningFor)
 
+exportClasses(mongoAppender)
 export(withFlogging,mongoAppender)
 
 
