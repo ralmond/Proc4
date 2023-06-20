@@ -361,7 +361,10 @@ unboxer <- function (x) {
   if (is(x,"list")) {
     lapply(x,unboxer) #Saves name data.
   } else {
-    if (length(x) == 1L) {
+    if (is(x,"POSIXlt")) {
+      ##Bug in jsonlite::unbox.
+      jsonlite::unbox(as.POSIXct(x))
+    } else if (length(x) == 1L) {
       jsonlite::unbox(x)
     } else {
       x
