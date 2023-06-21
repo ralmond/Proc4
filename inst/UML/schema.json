@@ -1,0 +1,40 @@
+{
+    "app":"ecd://<server>/<pathto>/<appname>/<version>",
+    "appStem":"<appname>",
+    "version":"<versionID>",
+    "releasedate":"<timestamp>",
+    "maintainer":"<emailorlistofemails>",
+    "PROCESSES":[
+	{
+	"Process_Name":"<nameOfProcess>",
+	"MESSAGES":[
+	    {
+	    "mess":"<message string>",
+	    // Either mess or verb/object is requried
+	    "verb":"<verb string>",
+	    "object":"<objectString>",
+	    //These flags indicate whether or not these header fields may are included in the model.
+	    "context":"(always|possible|never)",
+	    "timestamp":"(always|possible|never)",
+	    "processed":"(always|possible|never)",
+	    "pError":"(always|possible|never)",
+	    "watermarks":"[{mark:<label>,time:<datetime>}]",
+	    "DATA":[
+		{
+		"fieldName":"<Key of object>",
+		"valueType":"<Type, whose typology?>",
+		"range":[
+		    "<literal data value>",
+		    {"<op>":"<value>"}
+		],
+		"optional":"<boolean>",
+		"doc":"<optional docstring>."
+	    }],
+	    "doc":"<optional docstring>"
+	}],
+	"doc":"<optional docstring>"
+    }],
+    "doc":"<optional docstring>"
+}
+
+	
