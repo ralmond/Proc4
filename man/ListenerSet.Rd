@@ -130,22 +130,24 @@ showClass("ListenerSet")
 }
 \section{Class-Based Methods}{
   \describe{
-    \item{\code{notifyListeners(mess)}:}{This method calls
+    \item{\code{$notifyListeners(mess)}:}{This method calls
       \code{\link{receiveMessage}} on all of the listeners.  See
       Protocol section above. }
-    \item{\code{addListener(name, listener)}:}{ This method addes a
+    \item{\code{$addListener(name, listener)}:}{ This method addes a
       lsitener to the list.}
-    \item{\code{initialize(sender, dburi, listeners, colname, ...)}:}{This
+    \item{\code{$initialize(sender, dburi, listeners, colname, ...)}:}{This
       creates the listener.  Note, this does not initialize the database
       collection.  Call \code{messdb()} to initialize the collection.}
-    \item{\code{removeListener(name)}:}{ This removes a listener from
+    \item{\code{$removeListener(name)}:}{ This removes a listener from
       the collection by its name.}
-    \item{\code{reset(app)}:}{ Empties the database collection of
+    \item{\code{$reset(app)}:}{ Empties the database collection of
       messages with this app id.}
-    \item{messdb}{\code{signature()}:  Returns the
+    \item{$messdb}{\code{signature()}:  Returns the
       \code{\link[mongolite]{mongo}} database collection to which to log
       messages. Creates the column if it has not been initialized.}
-    \item{registerOutput}{\code{signature(name, filename, app, process,
+    \item{$registrydb}{\code{signature()}:  Returns the
+      \code{\link[mongolite]{mongo}} database collection in which output files will be registered.}
+    \item{$registerOutput}{\code{signature(name, filename, app, process,
         type="data", doc="")}:  Adds/updates a field in the database
       collection of output files.  This allows processes looking at the
       database to find output summaries.}

@@ -77,3 +77,7 @@ test_that("Injection Listener buildListener",{
   expect_s4_class(l2,"InjectionListener")
   expect_true(any(grepl("New Observables",listeningFor(l2))))
 })
+
+test_that("Injection Listener listenerDataTable", {
+})
+

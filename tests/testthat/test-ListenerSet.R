@@ -14,7 +14,7 @@ test_that("ListenerSet Constructor",{
   expect_equal(listenerName(ls$listeners[["Test1"]]),"Test1")
   expect_equal(listenerName(ls$listeners[["Test2"]]),"Test2")
   expect_equal(ls$messdb()$colname,"Messages")
-  expect_equal(ls$admindb()$colname,"Output")
+  expect_equal(ls$registrydb()$colname,"Output")
 })
 test_that("ListenerSet notifyListeners",{
   cl1 <- CaptureListener("Test1")
@@ -121,3 +121,10 @@ test_that("ListenerSet registerOutput",{
     buildJQuery(app="default",name="Scores", process="TestEngine"))
 
 })
+
+test_that("ListenerSet registerOutput", {
+})
+
+test_that("buildListnerSet", {
+})
+

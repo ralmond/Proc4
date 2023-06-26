@@ -17,6 +17,7 @@ InjectionListener <-
                                 messSet=messSet,
                                 ...)
                     },
+                  messdb = function() {db},
                   receiveMessage = function (message) {
                       flog.debug("Sending message %s",toString(message))
                       flog.debug(".. from %s",sender(message))
@@ -27,7 +28,6 @@ InjectionListener <-
                       mdbInsert(messdb(),as.json(message,serialize=TRUE))
                   },
                   reset = function(app) {
-                    if (!is.null(messdb()))
                       mdbRemove(messdb(),buildJQuery(app=app))
                   }
               ),
@@ -40,4 +40,19 @@ InjectionListener <- function (name="Injection",
   new("InjectionListener",name=name,db=db,messSet=messSet,...)
 }
 
+
+setMethod("listenerDataTable","InjectionListener",
+          function(listener,fields=NULL,appid=character()) {
+            stat1 <- mdbFind(listener$messdb(),buildJQuery(app=appid))
+            if (isTRUE(nrow(stat1) > 0L)) {
+              sdat <- data.frame(stat1[,c("app","uid","context","timestamp")],
+                                 do.call(cbind,stat1$data))
+              sdat$app <- basename(sdat$app)
+              return(sdat)
+            } else {
+              flog.warn("No records in statistics file.")
+              return(NULL)
+            }
+
+          })
 

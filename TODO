@@ -5,6 +5,7 @@
 * Add database support for table listener
 
 *  Undocumented code objects:
-    ‘serializeData’
+    buildListenerSet, listnerDataTable, registerOutput
+
 
 

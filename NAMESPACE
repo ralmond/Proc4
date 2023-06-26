@@ -7,19 +7,25 @@ importFrom("utils", "limitedLabels")
 
 
 export(P4Message)
-exportClasses(P4Message)
+exportClasses(P4Message,MessageQueue,MongoQueue,ListQueue)
 export(app,"app<-",uid,"uid<-",
        context,"context<-",
        timestamp,"timestamp<-",
        sender,"sender<-",mess,"mess<-",details,
        all.equal.P4Message,
        processed, markAsProcessed, processingError, markAsError,
-       serializeData)
+       serializeData,fetchNextMessage,
+       resetProcessedMessages,cleanMessageQueue,
+       importMessages,resetProcessedMessages)
 S3method(all.equal,P4Message,all.equal.P4Message)
 exportMethods(app,"app<-",uid,"uid<-",context,"context<-",
               timestamp,"timestamp<-",sender,"sender<-",
               mess,"mess<-",details,"details<-",
-              toString,show, processed, processingError)
+              toString,show, processed, processingError,
+              markAsProcessed, markAsError,
+              resetProcessedMessages,cleanMessageQueue,
+              importMessages,resetProcessedMessages)
+
 
 export(buildMessage, cleanMessageJlist)
 exportMethods("as.jlist","parse.jlist")
@@ -27,12 +33,14 @@ exportMethods("as.jlist","parse.jlist")
 export(receiveMessage,isListener,ListenerSet,notifyListeners,
        listeningFor, clearMessages,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
-       TableListener, buildListener,listenerName, resetListeners)
+       TableListener, buildListener, listenerName, resetListeners,
+       buildListenerSet, registerOutput, listenerDataTable)
 exportClasses(ListenerSet,NullListenerSet,RefListener,
        CaptureListener,InjectionListener,
        UpdateListener,UpsertListener,TableListener)
 exportMethods(isListener,receiveMessage,notifyListeners,listenerName,
-              resetListeners,clearMessages,listeningFor)
+              resetListeners,clearMessages,listeningFor, registerOutput,
+              listenerDataTable)
 
 exportClasses(mongoAppender)
 export(withFlogging,mongoAppender)

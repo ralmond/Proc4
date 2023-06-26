@@ -10,7 +10,7 @@
 
 }
 \usage{
-buildListener(specs, app, dburi, defaultdb="Proc4",
+buildListener(specs, app, dburi, defaultDB="Proc4",
               ssl_options=mongolite::ssl_options(),
               noMongo = !missing(dburi) && length(dburi) > 0L && nchar(dburi) > 0L)
 }
@@ -23,7 +23,8 @@ buildListener(specs, app, dburi, defaultdb="Proc4",
   \item{dburi}{If a database is used for this listener, then this is the
     uri for the connection.  Note that this is specified in the code and
     not in the JSON.}
-  \item{defaultdb}{The name of the database with which the Listener will interact.}
+  \item{defaultDB}{The name of the database with which the Listener will interact,
+  only used if no \code{dbname} field in \code{specs}.}
   \item{ssl_options}{Options used for an SSL connection to the database.
     \code{\link[mongolite]{ssl_options}}.}
   \item{noMongo}{A logical value.  If true, then the connection to the
@@ -138,4 +139,5 @@ l3 <- buildListener(speclist[[3]],"test",mongo::makeDBuri())
 
 }
 \keyword{ interface }
+\concept{ listener }
 

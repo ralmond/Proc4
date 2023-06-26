@@ -13,6 +13,10 @@ setGeneric("notifyListeners",function(sender,message)
 setGeneric("listenerName", function (x) standardGeneric("listenerName"))
 setGeneric("listeningFor", function (x, newSet) standardGeneric("listeningFor"))
 
+setGeneric("listenerDataTable",function(listener,fields=NULL,appid=character())
+  standardGeneric("listenerDataTable"))
+
+
 #############################################
 ## Abstract Listener
 
@@ -74,17 +78,17 @@ ListenerSet <-
               fields=c(sender="character",
                        listeners="list",
                        db="JSONDB",
-                       adminDB="JSONDB"),
+                       registryDB="JSONDB"),
               methods = list(
                   initialize =
                     function(sender="sender",listeners=list(),
                              db=mongo::MongoDB(noMongo=TRUE),
-                             adminDB=mongo::MongoDB(noMongo=TRUE),
+                             registryDB=mongo::MongoDB(noMongo=TRUE),
                              ...) {
                       callSuper(sender=sender,
                                 listeners=listeners,
                                 db=db,
-                                adminDB=adminDB,
+                                registryDB=registryDB,
                                 ...)
                     }
               ))
@@ -92,11 +96,11 @@ ListenerSet <-
 
 ## Listener/Message Methods
 ListenerSet$methods(
-                admindb = function() adminDB,
+                registrydb = function() registryDB,
                 messdb = function() db,
                 registerOutput = function (name, filename, app, process,
                                            type="data", doc="") {
-                  if (!mdbAvailable(admindb())) return()
+                  if (!mdbAvailable(registrydb())) return()
                   flog.info("Registering %s file %s.",type,name)
                   newrec <- buildJQuery(
                       app=app,process=process,type=type,
@@ -104,10 +108,10 @@ ListenerSet$methods(
                       timestamp=as.character(Sys.time()),
                       doc=doc)
                   qq <- buildJQuery(app=app,name=name, process=process)
-                  if (mdbCount(admindb(),qq) == 0L)
-                    mdbInsert(admindb(),newrec)
+                  if (mdbCount(registrydb(),qq) == 0L)
+                    mdbInsert(registrydb(),newrec)
                   else
-                    mdbUpdate(admindb(),qq,sprintf('{"$set":%s}',newrec))
+                    mdbUpdate(registrydb(),qq,sprintf('{"$set":%s}',newrec))
                 }
             )
 
@@ -140,10 +144,12 @@ ListenerSet$methods(
 
 ListenerSet <- function(sender="Proc4",listeners=list(),
                         db=mongo::MongoDB(noMongo=TRUE),
-                        adminDB=mongo::MongoDB(noMongo=TRUE)) {
+                        registryDB=mongo::MongoDB(noMongo=TRUE)) {
   new("ListenerSet",sender=sender,listeners=listeners,
-      db=db, adminDB=adminDB)
+      db=db, registryDB=registryDB)
 }
+
+
 setMethod("receiveMessage","ListenerSet",
           function(x,message) x$notifyListeners(message))
 setMethod("notifyListeners","ListenerSet",
@@ -161,7 +167,16 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
       clearMessages(x$listeners[[name]],app)
   x
 })
-
+setGeneric("registerOutput",
+           function (registrar, name, filename, app, process,
+                     type="data", doc="")
+             StandardGeneric("registerOutput"))
+setMethod("registerOutput","ListenerSet",
+          function (registrar, name, filename, app, process,
+                    type="data", doc="")
+            registrar$registerOutput(name, filename,
+                                     app, process,
+                                     type="data", doc=""))
 
 ## Fields we may need to deal with:
 ## name
@@ -175,7 +190,7 @@ setMethod("resetListeners","ListenerSet", function(x,which,app) {
 ## targetField -- Update Only
 ## fieldlist -- Table only
 ## messSet
-buildListener <- function (specs,app,dburi,defaultdb="Proc4",
+buildListener <- function (specs,app,dburi,defaultDB="Proc4",
                            ssl_options=mongolite::ssl_options(),
                            noMongo=!missing(dburi)&&length(dburi)>0L&&nchar(dburi)>0L) {
   name <- gsub("<app>",basename(app),as.character(specs$name),fixed=TRUE)
@@ -192,7 +207,7 @@ buildListener <- function (specs,app,dburi,defaultdb="Proc4",
   }
   ## dburi and ssl_options are set by the caller, not the config.json
   dbname <- as.character(specs$dbname)[1]
-  if (is.null(dbname)) dbname <- defaultdb
+  if (is.null(dbname)) dbname <- defaultDB
   colname <- as.character(specs$colname)[1]
   if (is.null(colname)) colname <- paste(name,"Messages",sep="")
   mongoverbose <- as.logical(specs$mongoverbose)[1]
@@ -230,6 +245,27 @@ buildListener <- function (specs,app,dburi,defaultdb="Proc4",
   do.call(type,args)
 
 }
+
+buildListenerSet <- function(sender,config,appid,
+                             lscol,dbname,dburi,sslops,
+                             registrycol,registrydbname,
+                             mongoverbose=FALSE) {
+  listeners <- lapply(config,buildListener,appid,
+                      dburi,dbname,sslops)
+  names(listeners) <- as.character(sapply(config,
+                                          function (lc) {
+                                            lc$name
+                                            }))
+  flog.info("Building Listener Set for %s.\n",sender)
+  ListenerSet(sender=sender,
+              db=mongo::MongoDB(lscol,dbname,dburi,verbose=mongoverbose,
+                                options=sslops),
+              registryDB=mongo::MongoDB(registrycol,registrydbname,
+                                        dburi,verbose=mongoverbose,
+                                        options=sslops),
+              listeners=listeners)
+}
+
 
 ## Used in both EA and EI.
 setClassUnion("NullListenerSet",c("ListenerSet","NULL"))

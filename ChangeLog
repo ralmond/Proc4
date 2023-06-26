@@ -1,3 +1,29 @@
+2023-06-23  Russell Almond  <ralmond@cherry>
+
+	* R/MessageQueue.R (MessageQueue,MongoQueue,ListQueue): New class
+	for a collection of messages.  `MongoQueue` is stored in a
+	database, and `ListQueue` is just a list of queues.
+	(fetchNextMessage): New generic function for fetching the next
+	method from a queue.
+	(markAsProcessed,markAsError): Added methods for message queue.
+	(importMessages): Imports messages into the database.
+	(cleanMessageQueue): Removes unneeded messages from the database.
+	(resetProcessedMessages): Resets `processed` field of selected
+	messages. 
+	(purgeMessageQueue_): Removes unneded messages form the database.
+
+	* R/InjectionListeners.R (listenerDataTable): -- Method which
+	extracts the 
+	contents of a message data table as a data frame.
+	* R/Listeners.R (registerOutput): Logs an output file as available
+	in the outputdatabase.
+	(buildListenerSet): wrapper for building whole
+	listener set from JSON description.
+
+	* DESCRIPTION (Version): Fairly major refactoring, moving a number
+	of things from EABN to here.
+	
+
 2023-05-25  Russell Almond  <ralmond@cherry>
 
 	* R/Listeners.R: ($notifyListeners):  Moved responsibility for setting `sender` field of message to here.

@@ -117,21 +117,39 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   ml
   })
 
-markAsProcessed <- function (col,mess) {
-  processed(mess) <- TRUE
-  mdbUpdate(col,paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-               '{"$set": {"processed":true}}')
-  mess
-}
+setGeneric("markAsProcessed",function(col,mess)
+  standardGeneric("markAsProcessed"))
+setMethod("markAsProcessed",c("JSONDB","P4Message"),
+          function (col,mess) {
+            processed(mess) <- TRUE
+            mdbUpdate(col,paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+                      '{"$set": {"processed":true}}')
+            mess
+          })
+setMethod("markAsProcessed",c("NULL","P4Message"),
+          function(col,mess) {
+            processed(mess) <- TRUE
+            mess
+            })
 
-markAsError <- function (col,mess, e) {
-  processingError(mess) <- e
-  mdbUpdate(col,paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
-            sprintf('{"$set": {"pError":%s}}',
-                           encodeString(toString(e),quote='"'))
-            )
-  mess
-}
+
+setGeneric("markAsError",function(col,mess,e) standardGeneric("markAsError"))
+setMethod("markAsError", c("JSONDB","P4Message"),
+           function (col,mess, e) {
+             processingError(mess) <- e
+             mdbUpdate(col,paste('{"_id":{"$oid":"',mess@"_id",'"}}',sep=""),
+                       sprintf('{"$set": {"pError":%s}}',
+                               encodeString(toString(e),quote='"'))
+                       )
+             mess
+           })
+
+setMethod("markAsError", c("NULL","P4Message"),
+           function (col,mess, e) {
+             processingError(mess) <- e
+             mess
+           })
+
 
 
 

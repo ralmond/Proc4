@@ -2,6 +2,7 @@
 \alias{RefListener-class}
 \alias{RefListener}
 \alias{Listener}
+\alias{Listener-class}
 \alias{receiveMessage}
 \alias{receiveMessage,RefListener-method}
 \alias{clearMessages}
