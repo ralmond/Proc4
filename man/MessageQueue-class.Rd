@@ -94,5 +94,6 @@ message queues, however, currently only the
 \section{Class-Based Methods }{
   \describe{
     \item{\code{$initialize(app, ...)}:}{ Constructor. }
+    \item{\code{$count()}:}{Returns the number of messages remaining in queue.}
   }
 }

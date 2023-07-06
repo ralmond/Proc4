@@ -6,7 +6,8 @@ MessageQueue <-
               c(app="character"),
               methods=list(
                   initialize = function(app=character(),...)
-                    callSuper(app=app,...)
+                    callSuper(app=app,...),
+                  count = function() {NA_integer_}
                   ))
 
 MongoQueue <-
@@ -36,6 +37,9 @@ setRefClass("MongoQueue",
                                      buildJQuery(list(app=1,
                                                       processed=1,
                                                       timestamp=1)))
+                },
+                count = function() {
+                  mdbCount(queue(),buildJQuery(app=app,processed=FALSE))
                 }
             ))
 
@@ -68,7 +72,9 @@ setRefClass("ListQueue",
                   pos <<- pos+1L
                   getCurrent()
                 },
-                reset=function() {
+                reset=function(newMessages=list()) {
+                  if (!missing(newMessages))
+                    messages <<- newMessages
                   pos <<- 1L
                 },
                 fetchNextMessage=function() {
@@ -77,6 +83,10 @@ setRefClass("ListQueue",
                     mes <- nextMessage()
                   }
                   mes
+                },
+                count=function() {
+                  if (pos > length(messages)) return (0L)
+                  length(messages)-pos+1L
                 }
             ))
 

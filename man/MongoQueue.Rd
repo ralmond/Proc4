@@ -85,6 +85,8 @@ showClass("MongoQueue")
       fetch method.}
     \item{\code{$buildIndex()}:}{This method builds an index in the
       collection.  Generally only needs to be done once.}
+    \item{\code{$count()}:}{Returns the number of unprocessed messages remaining in queue.}
+
   }
 
 }

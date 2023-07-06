@@ -19,7 +19,7 @@
 Class \code{"\linkS4class{MessageQueue}"}, directly.
 
 All reference classes extend and inherit methods from
-\code{"\linkS4class{envRefClass}"}. 
+\code{"\linkS4class{envRefClass}"}.
 
 }
 \details{
@@ -39,10 +39,10 @@ All reference classes extend and inherit methods from
     \item{\link{fetchNextMessage}}{\code{signature(queue = "MessageQueue")}:
       Returns the next unprocessed message from the Queue, or `NULL` if
       there are no processed messages in the queue.}
-    \item{\link{markAsError}}{\code{signature(col = "ListQueue", mess = "ANY")}: 
+    \item{\link{markAsError}}{\code{signature(col = "ListQueue", mess = "ANY")}:
       Marks a message as an error, and saves error message in
       queue.}
-    \item{\link{markAsProcessed}}{\code{signature(col = "ListQueue", mess = "ANY")}: 
+    \item{\link{markAsProcessed}}{\code{signature(col = "ListQueue", mess = "ANY")}:
       Marks a message as processed. }
     \item{\link{resetProcessedMessages}}{\code{signature(queue =
 	"MongoQueue")}: Clears the processed flag for messages matching
@@ -51,7 +51,7 @@ All reference classes extend and inherit methods from
 
   Note, that currently there is no implementing method for
   \code{\link{cleanMessageQueue}} or \code{\link{importMessages}}.
-  
+
 }
 \author{Russell Almond}
 \note{
@@ -70,7 +70,7 @@ All reference classes extend and inherit methods from
   \code{\link{resetProcessedMessages}()},
   \code{\link{buildMessage}()},
   \code{\link[mongo]{getOneRec}()}
-  
+
 
 }
 \examples{
@@ -101,6 +101,8 @@ showClass("ListQueue")
       message.  This is either the current message, if not processed, or
       the \code{$nextMessage()} method is called until the first
       unprocessed message is found.}
+    \item{\code{$count()}:}{Returns the number of messages remaining in queue. Note, count includes both processed and unprocessed messages.}
+
   }
 
 }
