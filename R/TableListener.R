@@ -83,4 +83,8 @@ TableListener <- function (name="ppData",
   new("TableListener",name=name,fieldlist=fieldlist,messSet=messSet,...)
 }
 
+setMethod("listenerDataTable","TableListener",
+          function(listener, appid=character())
+            listener$returnDF()
+)
 

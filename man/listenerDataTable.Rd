@@ -1,6 +1,6 @@
 \name{listenerDataTable}
 \alias{listenerDataTable}
-\alias{listenerDataTable,InjectionListener-method}
+\alias{listenerDataTable,RefListener-method}
 \title{Fetches a data frame containing information captured by listener}
 \description{
 
@@ -9,29 +9,25 @@
 
 }
 \usage{
-listenerDataTable(listener, fields = NULL, appid = character())
-\S4method{listenerDataTable}{InjectionListener}(listener, fields = NULL, appid = character())
+listenerDataTable(listener, appid = character())
+\S4method{listenerDataTable}{RefListener}(listener, appid = character())
 }
 \arguments{
   \item{listener}{A \code{\linkS4class{Listener}} subclass where the
     information was stored.}
-  \item{fields}{A list of fields to extract.  If this is \code{NULL}
-    (default), then all available feilds are extracted.}
   \item{appid}{The name of the application whose data is to be
     extracted.  (In case data from more than one application is stored
     in the same collection.)}
 }
 \value{
   A \code{data.frame} giving the requested data.
+
+  Note that this data frame could in fact contain columns which are
+  themselves data frames.  Consider calling
+  \code{jsonlite::\link[jsonlite]{flatten}} or
+  \code{Peanut::\link[Peanut]{flattenStats}} on the output.
 }
 \author{Russell Almond}
-\note{
-
-  Currently only implemented for the \code{\link{InjectionListener}},
-  which is saving raw \code{\linkS4class{P4Message}}s.  This method
-  links the selected data fields with header fields and builds a table.
-
-}
 \seealso{
   \code{\linkS4class{InjectionListener}}, \code{\link{registerOutput}}
 }

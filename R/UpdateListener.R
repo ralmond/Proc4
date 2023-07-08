@@ -14,7 +14,8 @@ UpdateListener <-
   setRefClass("UpdateListener",
               fields=c(qfields="character",
                        targetField="character",
-                       jsonEncoder="ANY"),
+                       jsonEncoder="ANY",
+                       jsonDecoder="ANY"),
               methods=list(
                   initialize=
                     function(name="Update",
@@ -22,6 +23,7 @@ UpdateListener <-
                              messSet=character(),
                              targetField="data",
                              jsonEncoder="serializeData",
+                             jsonDecoder="unserializeData",
                              qfields=c("app","uid"),
                              ...) {
                       callSuper(name=name,db=db,
@@ -77,12 +79,33 @@ UpdateListener <- function (name="Update",
                             targetField="data",
                             qfields=c("app","uid"),
                             jsonEncoder="unparseData",
+                            jsonDecoder="parseData",
                             messSet=character(),
                             ...) {
   new("UpdateListener",name=name,db=db,messSet=messSet,
-      targetField=targetField,jsonEncoder=jsonEncoder,
-      qfields=qfields,...)
+      targetField=targetField, jsonEncoder=jsonEncoder,
+      jsonDecoder=jsonDecoder, qfields=qfields,...)
 }
+
+## TODO: Fix this method.
+setMethod("listenerDataTable","UpdateListener",
+          function(listener,appid=character()) {
+            stat1 <- mdbFind(listener$messdb(),buildJQuery(app=appid))
+            if (isTRUE(nrow(stat1) > 0L)) {
+              if (nchar(listener$targetField) > 0L) {
+                fielddat <- t(sapply(stat1[[listener$targetField]],listener$jsonDecoder))
+                sdat <- data.frame(stat1[,c("app","uid","context","timestamp")],
+                                   fielddat)
+              } else {
+                sdat <- stat1
+              }
+              sdat$app <- basename(sdat$app)
+              return(sdat)
+            } else {
+              flog.warn("No records in statistics file.")
+              return(NULL)
+            }
+          })
 
 
 

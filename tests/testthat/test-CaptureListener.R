@@ -49,3 +49,12 @@ test_that("Capture Listener buildListener",{
   expect_s4_class(cl,"CaptureListener")
   expect_equal(listenerName(cl),"TestConnection")
 })
+
+test_that("RefListener listenerDataType",{
+
+})
+
+test_that("RefListener listenerDataFname",{
+
+})
+

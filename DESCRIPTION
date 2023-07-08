@@ -12,7 +12,7 @@ Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
 Depends: R (>= 3.0), methods,
 Imports: futile.logger, mongo, jsonlite
-Suggests: mongolite, knitr, rmarkdown, tidyr, CPTtools, rlang, bookdown, devtools, withr, testthat (>= 3.0.0)
+Suggests: utils, mongolite, knitr, rmarkdown, tidyr, CPTtools, rlang, bookdown, devtools, withr, testthat (>= 3.0.0), Peanut
 Description: Utilities for working with messages in the four four process architecture as json objects.
 Collate:  ErrorHandling.R Message.R MessageQueue.R Listeners.R CaptureListener.R InjectionListener.R TableListener.R UpdateListener.R UpsertListener.R
 License: Artistic-2.0 

@@ -128,3 +128,10 @@ test_that("ListenerSet registerOutput", {
 test_that("buildListnerSet", {
 })
 
+test_that("updateTable",{
+
+})
+
+test_that("generateListenerExports",{
+
+})

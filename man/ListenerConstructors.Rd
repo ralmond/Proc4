@@ -22,7 +22,8 @@ InjectionListener(name="Injection", db = mongo::MongoDB(noMongo=TRUE),
     messSet = character(), ...)
 UpdateListener(name="Update",db = mongo::MongoDB(noMongo=TRUE),
                targetField = "data", qfields = c("app", "uid"),
-               jsonEncoder = "unparseData", messSet=character(), ...)
+               jsonEncoder = "unparseData", jsonDecoder="parseData",
+               messSet=character(), ...)
 UpsertListener(name="Upsert", messSet = character(),
                db = mongo::MongoDB(noMongo=TRUE),
                qfields = c("app", "uid"), ...)
@@ -40,6 +41,9 @@ TableListener(name = "ppData",
     database by the \code{\linkS4class{UpdateListener}}. }
   \item{jsonEncoder}{A function that will be used to encode the data
     object as JSON before it is set.  See \code{\linkS4class{UpdateListener}}. }
+  \item{jsonDecoder}{A function that will be used to decode the data
+    object from JSON when building tables.  See
+    \code{\linkS4class{UpdateListener}}. } 
   \item{qfields}{The fields that will be used as a key when trying to
     find matching messages in the database for the
     \code{\linkS4class{UpsertListener}}. }

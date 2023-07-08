@@ -5,6 +5,7 @@
 \alias{isListener,TableListener-method}
 \alias{receiveMessage,TableListener-method}
 \alias{listenerName,TableListener-method}
+\alias{listenerDataTable,TableListener-method}
 
 \title{Class \code{"TableListener"}}
 \description{
@@ -30,6 +31,8 @@
     \item{listenerName}{\code{signature(x = "TableListener")}: returns the name
       of the table.  This is usually also the filename where the table
       will be stored. }
+    \item{listenerDataTable}{\code{signature(listener =
+	"TableListener", appid )}: Builds a data datable from the messages.}
   }
 }
 \references{
@@ -73,6 +76,12 @@
   \code{\link{timestamp}}, which return the value of the corresponding
   header fields of the message.  Note that
 
+
+}
+\section{Data Table}{
+
+  When the \code{\link{listenerDataTable}} method is called, the table
+  just returns the internal table.
 
 }
 \seealso{

@@ -27,6 +27,10 @@ CaptureListener <- function (name="Capture",messages=list(),messSet=character(),
   new("CaptureListener",name=name,messages=messages,messSet=messSet)
 }
 
+setMethod("listenerDataTable","TableListener",
+          function(listener, appid=character())
+            as.data.frame(sapply(messages,attributes))
+)
 
 
 

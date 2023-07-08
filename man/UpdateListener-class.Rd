@@ -5,6 +5,7 @@
 \alias{isListener,UpdateListener-method}
 \alias{receiveMessage,UpdateListener-method}
 \alias{listenerName,UpdateListener-method}
+\alias{listenerDataTable,UpdateListener-method}
 \title{Class \code{"UpdateListener"}}
 \description{
 
@@ -25,11 +26,14 @@
 \section{Methods}{
   \describe{
     \item{isListener}{\code{signature(x = "UpdateListener")}: TRUE }
-    \item{receiveMessage}{\code{signature(x = "UpdateListener")}: If
+    \item{receiveMessage}{\code{signature(x = "UpdateListener", message)}: If
       the message is in the \code{messSet}, it updates the record
       corresponding to \code{app(mess)} and \code{uid(mess)} in the
       database with the contents of \code{details(mess)}.  (See details.) }
-    \item{listenerName}{Returns the name assigned to the listener.}
+    \item{listenerName}{\code{signature(x = "UpdateListener")}: Returns
+      the name assigned to the listener.}
+    \item{listenerDataTable}{\code{signature(listener =
+	"UpdateListener", appid )}: Builds a data datable from the messages.}
   }
 }
 \details{
@@ -47,6 +51,20 @@
 
   If \code{targetField=""}, then the behavior is slightly different.  Instead the fields in
   \code{details(mess)} (labeled by their names) are updated.
+
+}
+\section{Data Table}{
+
+  When the \code{\link{listenerDataTable}} method is called, the table
+  is made by applying \code{\link[mongo]{mdbFind}} to the target column.
+  The behavior is different depending on whether or not a
+  \code{targetField} is specified.  If there is no target field, then
+  all fields of the column are returned.
+
+  If there is a \code{targetField}, then the \code{jsonDecoder} function
+  is applied to its value, and it is joined with the \code{app},
+  \code{uid}, \code{context}, \code{timestamp} fields from the header to
+  make the data table.
 
 }
 \references{
@@ -126,9 +144,14 @@ receiveMessage(upwind,mess2)
       messages.}
     \item{\code{targetField}:}{Object of class \code{character} naming
       the field which is to be set. }
-    \item{\code{jsonEncoder}:}{Object of class \code{character} naming a
-      function which will be used to encode \code{details(mess)} as a
-      JSON object.  The default is \code{\link{unparseData}}.}
+    \item{\code{jsonEncoder}:}{A \code{function} or a non-empty
+      \code{character} scalar naming a function which will be used to encode
+      \code{details(mess)} as a JSON object.  The default is
+      \code{\link{unparseData}}.} 
+    \item{\code{decoderEncoder}:}{A \code{function} or \code{character}
+      scalar naming a function which will be used to decode
+      the target field when building a data table.
+      The default is \code{\link{parseData}}.}
   }
 }
 \section{Class-Based Methods}{

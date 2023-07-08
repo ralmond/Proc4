@@ -54,6 +54,7 @@ buildListenerSet(sender, config, appid, lscol, dbname, dburi,
 }
 \examples{
 
+\dontrun{
 jspecs <- '{
      "listeners":[
 	{
@@ -82,8 +83,8 @@ lset <- buildListenerSet("TestEngine",speclist$listeners,
                          lscol="Messages",dbname="test",
                          dburi="", sslops=mongolite::ssl_options(),
                          registrycol="OutputFiles",
-                         registrydbname="Proc4")
-
+                         registrydbname="test")
+}
 }
 \keyword{ interface }
 \concept{ listener }

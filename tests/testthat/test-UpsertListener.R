@@ -89,3 +89,13 @@ test_that("Upsert Listener buildListener",{
   expect_true(any(grepl("New Observables",listeningFor(l2))))
 })
 
+test_that("Upsert Listener listenerDataTable", {
+})
+
+test_that("buildAppHist", {
+
+})
+
+test_that("buildHistMat", {
+
+})

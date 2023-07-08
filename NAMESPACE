@@ -34,7 +34,8 @@ export(receiveMessage,isListener,ListenerSet,notifyListeners,
        listeningFor, clearMessages,
        InjectionListener,UpdateListener,UpsertListener,CaptureListener,
        TableListener, buildListener, listenerName, resetListeners,
-       buildListenerSet, registerOutput, listenerDataTable)
+       buildListenerSet, registerOutput, listenerDataTable,
+       updateTable,generateListenerExports)
 exportClasses(ListenerSet,NullListenerSet,RefListener,
        CaptureListener,InjectionListener,
        UpdateListener,UpsertListener,TableListener)

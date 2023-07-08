@@ -13,8 +13,9 @@ setGeneric("notifyListeners",function(sender,message)
 setGeneric("listenerName", function (x) standardGeneric("listenerName"))
 setGeneric("listeningFor", function (x, newSet) standardGeneric("listeningFor"))
 
-setGeneric("listenerDataTable",function(listener,fields=NULL,appid=character())
+setGeneric("listenerDataTable",function(listener,appid=character())
   standardGeneric("listenerDataTable"))
+
 
 
 #############################################
@@ -24,7 +25,8 @@ RefListener <-
   setRefClass("RefListener",
               fields=c(name = "character",
                        messSet = "character",
-                       db="MongoDB"),
+                       db="MongoDB"
+                      ),
               methods=list(
                   initialize=
                     function(name="AbstractListener",
@@ -68,6 +70,10 @@ setMethod("listeningFor", "RefListener", function (x, newSet) {
   if (missing(newSet)) x$listeningFor()
   else x$listeningFor(newSet)
   })
+
+setMethod("listenerDataTable","RefListener",
+          function(listener,appid=character())
+            NULL)
 
 
 #############################################
@@ -176,7 +182,35 @@ setMethod("registerOutput","ListenerSet",
                     type="data", doc="")
             registrar$registerOutput(name, filename,
                                      app, process,
-                                     type="data", doc=""))
+                                     type=type, doc=doc))
+
+updateTable <- function(ls, which, type="data", appid, outdir,
+                        fname="<app>_<name>.csv",
+                        process=ls$sender,
+                        flattener=jsonlite::flatten,
+                        doc="",name=which) {
+  sappid <- basename(appid)
+  lis <- ls$listners[[which]]
+  dat <- listenerDataTable(lis,appid=appid)
+  if (!is.null(dat)) {
+    if (!is.null(flattener))
+      dat <- do.call(flattener,list(dat))
+    fname <- gsub("<app>",sappid,
+                  gsub("<name>",name,fname))
+    utils::write.csv(dat,file.path(outdir,fname))
+    ls$registerOutput(name, fname,file.path(outdir,fname),
+                      appid=appid,process=process,doc=doc)
+  }
+  invisible(dat)
+}
+
+generateListenerExports <- function(ls, exportlist, appid, outdir,
+                                    process=ls$sender) {
+  for (config in exportlist) {
+    do.call(updateTable,c(list(appid=appid, outdir=outdir, process=process),
+                          config))
+  }
+}
 
 ## Fields we may need to deal with:
 ## name

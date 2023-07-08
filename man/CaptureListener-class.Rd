@@ -5,6 +5,7 @@
 \alias{isListener,CaptureListener-method}
 \alias{receiveMessage,CaptureListener-method}
 \alias{listenerName,CaptureListener-method}
+\alias{listenerDataTable,CaptureListener-method}
 
 \title{Class \code{"CaptureListener"}}
 \description{
@@ -28,7 +29,9 @@ All reference classes extend and inherit methods from
     \item{receiveMessage}{\code{signature(x = "CaptureListener")}: If
       the message is in the \code{messSet}, it adds the message to the
       message list.  (See details) }
-    \item{listenerName}{Returns the name assigned to the listener.}
+    \item{listenerName}{\code{signature(x= "InjectionListener")}: Returns the name assigned to the listener.}
+    \item{listenerDataTable}{\code{signature(listener =
+	"CaptureListener", appid )}: Builds a data datable from the messages.}
   }
 }
 \details{
@@ -52,6 +55,15 @@ All reference classes extend and inherit methods from
   \code{\linkS4class{UpsertListener}},
   \code{\linkS4class{InjectionListener}},
   \code{\linkS4class{TableListener}},
+}
+\section{Data Table}{
+
+  When the \code{\link{listenerDataTable}} method is called, the table
+  is made by applying the \code{\link[base]{attributes}} function to the
+  \code{$messages} list.  As these are presumably
+  \code{\linkS4class{P4Message}} objects, this will expose the fields as
+  a database.
+
 }
 \examples{
 

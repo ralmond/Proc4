@@ -42,4 +42,20 @@ UpsertListener <- function (name="Upsert",messSet=character(),
       messSet=messSet,qfields=qfields,...)
 }
 
+## TODO Fix this method
+setMethod("listenerDataTable","UpsertListener",
+          function(listener, appid=character()) {
+            stat1 <- mdbFind(listener$messdb(),buildJQuery(app=appid))
+            if (isTRUE(nrow(stat1) > 0L)) {
+              stat1data <- t(sapply(stat1$data,parseData))
+              sdat <- data.frame(stat1[,c("app","uid","context","timestamp")],
+                                 stat1data)
+              sdat$app <- basename(sdat$app)
+              return(sdat)
+            } else {
+              flog.warn("No records in statistics file.")
+              return(NULL)
+            }
+          })
+
 

@@ -1,11 +1,9 @@
 * Think about how we get ssl_options into the configuration.
 
+
 * Add message set maintenance
 
-* Add database support for table listener
 
-*  Undocumented code objects:
-    buildListenerSet, listnerDataTable, registerOutput
-
-
+ Undocumented code objects:
+     ‘generateListenerExports’ ‘updateTable’
 
