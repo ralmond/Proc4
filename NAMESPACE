@@ -16,7 +16,7 @@ export(app,"app<-",uid,"uid<-",
        processed, markAsProcessed, processingError, markAsError,
        serializeData,fetchNextMessage,
        resetProcessedMessages,cleanMessageQueue,
-       importMessages,resetProcessedMessages)
+       importMessages)
 S3method(all.equal,P4Message,all.equal.P4Message)
 exportMethods(app,"app<-",uid,"uid<-",context,"context<-",
               timestamp,"timestamp<-",sender,"sender<-",
@@ -24,7 +24,7 @@ exportMethods(app,"app<-",uid,"uid<-",context,"context<-",
               toString,show, processed, processingError,
               markAsProcessed, markAsError,
               resetProcessedMessages,cleanMessageQueue,
-              importMessages,resetProcessedMessages)
+              importMessages)
 
 
 export(buildMessage, cleanMessageJlist)
