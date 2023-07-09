@@ -163,6 +163,7 @@ setMethod("markAsError", c("NULL","P4Message"),
 cleanMessageJlist <- function (rec) {
   rec$app <- as.character(ununboxer(rec$app))
   if (is.null(rec$app) || length(rec$app) == 0L) rec$app <- "default"
+  rec$uid <- as.character(ununboxer(rec$uid))
   rec$context <- as.character(ununboxer(rec$context))
   if (is.null(rec$context) || length(rec$context) == 0L) rec$context <-""
   rec$context <- trimws(as.character(rec$context))
