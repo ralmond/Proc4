@@ -1,16 +1,19 @@
 \name{P4Message}
 \alias{P4Message}
-\alias{m_id}
-\alias{m_id<-}
 \alias{app}
+\alias{app<-}
 \alias{uid}
+\alias{uid<-}
 \alias{mess}
+\alias{mess<-}
 \alias{context}
 \alias{context<-}
 \alias{sender}
+\alias{sender<-}
 \alias{timestamp}
 \alias{timestamp<-}
 \alias{details}
+\alias{details<-}
 \alias{toString,P4Message-method}
 \alias{show,P4Message-method}
 \alias{all.equal.P4Message}
@@ -23,19 +26,22 @@
 
 }
 \usage{
-P4Message(uid, context, sender, mess, timestamp = Sys.time(), details =
-list(), app = "default", processed=FALSE) 
-m_id(x)
-m_id(x) <- value
+P4Message(uid, context, sender, mess, timestamp = Sys.time(),
+          details = list(), app = "default", processed=FALSE)
 app(x)
+app(x) <- value
 uid(x)
+uid(x) <- value
 mess(x)
+mess(x) <- value
 context(x)
 context(x) <- value
 sender(x)
+sender(x) <- value
 timestamp(x)
 timestamp(x) <- value
 details(x)
+details(x) <- value
 \S4method{toString}{P4Message}(x,...)
 \S4method{show}{P4Message}(object)
 \S3method{all.equal}{P4Message}(target, current, ..., checkTimestamp = FALSE,
@@ -67,8 +73,8 @@ details(x)
   \item{check_ids}{Logical flag.  If true, the database ids are
     compared as part of the equality test.}
   \item{value}{A new value for the field, type varies, but usually
-    character.} 
-  
+    character.}
+
 }
 \details{
 
@@ -77,7 +83,7 @@ details(x)
   field which contains the body of the message.  It can be serielized in
   JSON format (using \code{\link{as.json}}
   in the Mongo database (using the
-  \code{\link[mongolite]{mongo}lite} package). 
+  \code{\link[mongolite]{mongo}lite} package).
 
   Using the public methods, the fields can be read but not set.  The
   generic functions are exported so that other object can extend the
@@ -110,14 +116,14 @@ details(x)
   the design and delivery of Assessment Systems:  A Four-Process
   Architecture.  \emph{Journal of Technology, Learning, and Assessment},
   \bold{1},
-  \url{http://ejournals.bc.edu/ojs/index.php/jtla/article/view/1671}. 
+  \url{http://ejournals.bc.edu/ojs/index.php/jtla/article/view/1671}.
 
 
 }
 \author{Russell G. Almond}
 \seealso{
   \code{\linkS4class{P4Message}} --- class
-  \code{\link{parseMessage}}, \code{\link{saveRec}},
+  \code{\link{buildMessage}}, \code{\link{saveRec}},
   \code{\link{getOneRec}}
 
 }

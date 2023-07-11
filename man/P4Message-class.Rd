@@ -2,19 +2,20 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{P4Message-class}
-\alias{m_id,ANY-method}
-\alias{m_id<-,ANY-method}
 \alias{app,P4Message-method}
-\alias{as.jlist,P4Message,list-method}
-\alias{as.json,P4Message-method}
+\alias{app<-,P4Message-method}
 \alias{context,P4Message-method}
 \alias{context<-,P4Message-method}
 \alias{details,P4Message-method}
+\alias{details<-,P4Message-method}
 \alias{mess,P4Message-method}
+\alias{mess<-,P4Message-method}
 \alias{sender,P4Message-method}
+\alias{sender<-,P4Message-method}
 \alias{timestamp,P4Message-method}
 \alias{timestamp<-,P4Message-method}
 \alias{uid,P4Message-method}
+\alias{uid<-,P4Message-method}
 \alias{processed,P4Message-method}
 \alias{processingError,P4Message-method}
 
@@ -121,8 +122,8 @@ function.
 
 \seealso{
   \code{\link{P4Message}()} --- constructor
-  \code{\link{parseMessage}}, \code{\link{saveRec}},
-  \code{\link{getOneRec}}
+  \code{\link{buildMessage}}, \code{\link[mongo]{saveRec}},
+  \code{\link[mongo]{getOneRec}}
 }
 \examples{
 showClass("P4Message")

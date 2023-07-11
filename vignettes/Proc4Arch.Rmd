@@ -1,0 +1,47 @@
+---
+title: "Four Process and Event Stream Architecture"
+author: Russell G. Almond
+output: rmarkdown::html_vignette
+bibliography: Proc4.bib
+link-citations: TRUE
+vignette: >
+  %\VignetteIndexEntry{Proc4 Arch}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r options, include=FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+# Two related architectures for scoring assessments
+
+## Proc4
+
+## EventStream
+
+
+# Proc4 Message Format
+
+## QTI
+
+## xAPI
+
+## XES
+
+# Listeners and Message Queues
+
+## Listeners and Listener Sets
+
+## Using database collections as queues
+
+# Management
+
+## Process Control
+
+## Persistent User Data
+
+## Managing Consent
+
+## Cataloging Data
+

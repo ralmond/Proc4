@@ -9,48 +9,44 @@
 
   These functions create objects of class
   \code{\linkS4class{CaptureListener}},  \code{\linkS4class{UpdateListener}},
-  \code{\linkS4class{UpsertListener}}, 
+  \code{\linkS4class{UpsertListener}},
   \code{\linkS4class{InjectionListener}}, and
   \code{\linkS4class{TableListener}}.
 
-  
+
 }
 \usage{
-CaptureListener(name="Capture",messages = list(), ...) 
-InjectionListener(name="Injection",sender = "sender", dbname = "test",
-    dburi = "mongodb://localhost", 
-    messSet = character(), colname = "Messages", ...)
-UpdateListener(name="Update",dbname = "test", dburi = "mongodb://localhost",
-    messSet = character(), colname = "Messages", targetField = "data",
-    qfields = c("app", "uid"), jsonEncoder = "unparseData", ...)
-UpsertListener(name="Upsert",sender = "sender", dbname = "test",
-    dburi = "mongodb://localhost", 
-    messSet = character(), colname = "Messages",
-    qfields = c("app", "uid"), ...)
+CaptureListener(name="Capture",messages = list(),
+                messSet=character(), ...)
+InjectionListener(name="Injection", db = mongo::MongoDB(noMongo=TRUE),
+    messSet = character(), ...)
+UpdateListener(name="Update",db = mongo::MongoDB(noMongo=TRUE),
+               targetField = "data", qfields = c("app", "uid"),
+               jsonEncoder = "unparseData", jsonDecoder="parseData",
+               messSet=character(), ...)
+UpsertListener(name="Upsert", messSet = character(),
+               db = mongo::MongoDB(noMongo=TRUE),
+               qfields = c("app", "uid"), ...)
 TableListener(name = "ppData",
-    fieldlist = c(uid = "character", context = "character"), 
+    fieldlist = c(uid = "character", context = "character"),
     messSet = character(), ...)
 }
 \arguments{
   \item{messages}{ A list into which to add the messages.}
-  \item{sender}{ A character value used as the \code{\link{sender}}
-    field of the message.}
-  \item{dbname}{A character value giving the name of the database in
-    which to put the message. See \code{\link[mongolite]{mongo}}. }
-  \item{dburi}{A character vector giving the URI for the database.  See
-    \code{\link[mongolite]{mongo}}. }
   \item{messSet}{A character vector giving the message values of the messages
     that will be processed.  Messages whose \code{\link{mess}} value are
     not in this list will be ignored by this listener.}
-  \item{colname}{The name of the database column into which the messages
-    will be sent.  See \code{\link[mongolite]{mongo}}.}
+  \item{db}{A \code{\link[mongo]{MongoDB}} object which provides reference to a database collection.}
   \item{targetField}{The name of the field that will be modified in the
     database by the \code{\linkS4class{UpdateListener}}. }
   \item{jsonEncoder}{A function that will be used to encode the data
     object as JSON before it is set.  See \code{\linkS4class{UpdateListener}}. }
+  \item{jsonDecoder}{A function that will be used to decode the data
+    object from JSON when building tables.  See
+    \code{\linkS4class{UpdateListener}}. } 
   \item{qfields}{The fields that will be used as a key when trying to
     find matching messages in the database for the
-    \code{\linkS4class{UpsertListener}}. } 
+    \code{\linkS4class{UpsertListener}}. }
   \item{name}{An object of class \code{character} naming the listener. }
   \item{fieldlist}{A named \code{character} vector giving the
       names and types of the columns of the output matrix.  See
@@ -67,13 +63,13 @@ TableListener(name = "ppData",
       a list.}
     \item{\code{InjectionListener}}{Creates an object of class
       \code{\linkS4class{InjectionListener}} which inserts the message into
-      the designated database.} 
+      the designated database.}
     \item{\code{UpdateListener}}{Creates an object of class
       \code{\linkS4class{UpdateListener}} which updates the designated
       field.}
     \item{\code{UpsertListener}}{Creates an object of class
       \code{\linkS4class{UpsertListener}} which insert or replaces the
-      message in the designated collection.} 
+      message in the designated collection.}
     \item{\code{TableListener}}{Creates an object of class
       \code{\linkS4class{TableListener}} which adds details from message
       to rows of a data frame.}
@@ -89,7 +85,7 @@ TableListener(name = "ppData",
 \references{
 
   This is an example of the observer design pattern.
-  \url{https://en.wikipedia.org/wiki/Observer_pattern}. 
+  \url{https://en.wikipedia.org/wiki/Observer_pattern}.
 
 }
 \author{Russell Almond}
@@ -107,14 +103,19 @@ TableListener(name = "ppData",
 
 cl <- CaptureListener()
 
-il <- InjectionListener(sender="EI_app",
-            dbname="EARecords",dburi="mongodb://localhost",
-            colname="EvidenceSets",messSet="New Observables")
+il <- InjectionListener("Evidence Collector",
+                        db=mongo::MongoDB(collection="EvidenceSets",
+                                          db="EARecords",
+                                          url = "mongodb://localhost",
+                                          noMongo=TRUE),
+                        messSet="New Observables")
 
-upsl <- UpsertListener(sender="EI_app",
-            dbname="EARecords",dburi="mongodb://localhost",
-            colname="LatestEvidence",messSet="New Observables",
-            qfields=c("app","uid"))
+upsl <- UpsertListener("Save Observables",
+                        db=mongo::MongoDB(collection="LatestEvidence",
+                                          db="EARecords",
+                                          url = "mongodb://localhost",
+                                          noMongo=TRUE),
+                       messSet="New Observables", qfields=c("app","uid"))
 
 trophy2json <- function(dat) {
   paste('{', '"trophyHall"', ':','[',
@@ -123,17 +124,21 @@ trophy2json <- function(dat) {
                   sep=""), collapse=", "), '],',
         '"bankBalance"', ':', dat$bankBalance, '}')
 }
-ul <- UpdateListener(dbname="Proc4",dburi="mongodb://localhost",
-            colname="Players",targetField="data",
-            messSet=c("Money Earned","Money Spent"),
-            jsonEncoder="trophy2json")
+ul <- UpdateListener("Player Data",
+                     db=mongo::MongoDB(collection="Players",
+                                       db="Proc4",
+                                       url = "mongodb://localhost",
+                                       noMongo=TRUE),
+                     targetField="data",
+                     messSet=c("Money Earned","Money Spent"),
+                     jsonEncoder="trophy2json")
 
 tabMaker <- TableListener(name="Trophy Table",
-                   messSet="New Observables",
-                   fieldlist=c(uid="character", context="character",
-                               timestamp="character",
-                               solvedtime="numeric",
-                               trophy="ordered(none,silver,gold)"))
+                          messSet="New Observables",
+                          fieldlist=c(uid="character", context="character",
+                                      timestamp="character",
+                                      solvedtime="numeric",
+                                      trophy="ordered(none,silver,gold)"))
 
 }
 \keyword{ interface }

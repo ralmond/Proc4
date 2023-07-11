@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Russell G. Almond" />
+
+
+<title>Dongle: A lightweight interface between EI, EA and AS processes and the Presentation Process</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Dongle: A lightweight interface between EI, EA and AS processes and the Presentation Process</h1>
+<h4 class="author">Russell G. Almond</h4>
+
+
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>In the four process architecture <span class="citation">(<a href="#ref-Proc4" role="doc-biblioref">Almond, Steinberg, and Mislevy 2002</a>)</span>, the presentation process often
+has real-time constraints. In an adaptive system, it is unacceptable for
+the subject to wait for more than a few moments for the presentation
+process to load the next task. Similarly, information about subject
+performance should be returned quickly to the presentation process to
+avoid annoying delays. However, there is considerable uncertainty about
+how long the evidence identification (EI), evidence accumulation (EA)
+and activity selection (AS) will take to run.</p>
+<p>The <em>Dongle</em> is a lightweight adapter between the presentation process
+and the other three processes consisting of a database, a web server and
+a number of PHP scripts. When the presentation process needs information
+from one of the other processes, it sends an HTTP POST message to the
+appropriate script. The script fetches the appropriate record for the
+given user and application from the database and returns it as a JSON
+document. The other processes, when they complete their work, update the
+records in the database. If the EI, EA or AS processing is not completed
+when the presentation process requests the information, the most recent
+available information from the database is provided. This might be
+slightly out of date, but this is often better than waiting. If no
+record is a available for a given user, a default record for that
+application is returned. In this way the dongle process is as fast as
+the load on the web server and network latency allows.</p>
+<p>Figure <a href="#fig:P4Lamp">1</a> shows the basic architecture. At its heart, it is
+a modified LAMP (Linux, Apache, Mongo,<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> PHP stack. The game engine
+communicates to the other processes through HTTP requests to the web
+server, and the other three processes (EI—evidence identification,
+EA—evidence accumulation, and AS—activity selection) communicate through
+the database.</p>
+<div class="figure"><span style="display:block;" id="fig:P4Lamp"></span>
+<img src="data:image/png;base64,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" alt="Proc4 Dongle Architecture" width="606" height="25%" />
+<p class="caption">
+Figure 1: Proc4 Dongle Architecture
+</p>
+</div>
+</div>
+<div id="sect:P4Messages" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Proc4 Message Format</h1>
+<p>The Proc4 message is an object consisting of two parts: a header and a
+body. The header is a series of mandatory and optional fields which are
+used to route and prioritize the message. The data portion is a
+container object which can hold anything. In general, its value will be
+determined by the message. Example <a href="#exm:P4">1</a> shows the data structure
+in JSON format.</p>
+<div class="example">
+<p><span id="exm:P4" class="example"><strong>Example 1  </strong></span>Sample Message in P4 format</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">app</span><span class="op">:</span> <span class="st">&quot;ecd://epls.coe.fsu.edu/PP&quot;</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uid</span><span class="op">:</span> <span class="st">&quot;Student 1&quot;</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">context</span><span class="op">:</span> <span class="st">&quot;SpiderWeb&quot;</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">sender</span><span class="op">:</span> <span class="st">&quot;Evidence Identification&quot;</span><span class="op">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">mess</span><span class="op">:</span> <span class="st">&quot;Task Observables&quot;</span><span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">timestamp</span><span class="op">:</span> <span class="st">&quot;2018-10-22 18:30:43 EDT&quot;</span><span class="op">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">processed</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">data</span><span class="op">:</span>{</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">trophy</span><span class="op">:</span> <span class="st">&quot;gold&quot;</span><span class="op">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">solved</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">objects</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">agents</span><span class="op">:</span> [<span class="st">&quot;ramp&quot;</span><span class="op">,</span><span class="st">&quot;ramp&quot;</span><span class="op">,</span><span class="st">&quot;springboard&quot;</span>]<span class="op">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">solutionTime</span><span class="op">:</span> {<span class="dt">time</span><span class="op">:</span><span class="fl">62.25</span><span class="op">,</span> <span class="dt">units</span><span class="op">:</span><span class="st">&quot;secs&quot;</span>}</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<p>The fields have the following definition</p>
+<ul>
+<li><p><code>app</code>: (String, Required). A globally unique identifier (guid) for the
+assessment application. This should have a URL-like syntax with the
+first header corresponding to the domain of the organization issuing
+the ID.</p></li>
+<li><p><code>uid</code>: (String, Required). A unique identifier for the student or player.
+Note that administrative messages which correspond to all players
+could have an empty string as a value.</p></li>
+<li><p><code>context</code>: (String, Required) A unique identifier for the context in
+which the message was generated. In <em>Physics Playground</em> this
+corresponds to game levels, but it might have other meanings in
+other applications.</p></li>
+<li><p><code>sender</code>: (String, Optional). An identifier for the process which generated
+the message.</p></li>
+<li><p><code>mess</code>: (String, Required). An identifier for the contents of the
+message.</p></li>
+<li><p><code>timestamp</code>: (String in POSIX format, Required). A timestamp for the
+message. Generally, messages for the same <code>uid</code> need to be processed in
+chronological order.</p></li>
+<li><p><code>processed</code>: (Boolean, Optional). A flag that can be set after the
+message has been processed.</p></li>
+<li><p><code>error</code>:(Any, Optional). If an error occurs during the processing of the
+message, details can be placed here.</p></li>
+<li><p><code>data</code>: (Any, Required). The contents of the message. The expected content
+and format is controlled by the application and vocabulary.</p></li>
+</ul>
+<p>Note that this P4 Message class can be extended with additional header
+fields. For example, Evidence Identification messages add <code>object</code> and
+<code>verb</code> fields.</p>
+<p>The <code>app</code> field plays a special role in defining the <em>vocabulary</em> for the
+assessment. In particular, the application defines the legal values for
+the <code>context</code>, <code>mess</code> and <code>sender</code> can take, as well as the expected
+structure of the for various values of <code>data</code>.</p>
+<p>The dongle process uses a document-orient database Mongo (R)
+<span class="citation">(<a href="#ref-Mongo" role="doc-biblioref"><em>The MongoDB 4.0 Manual</em> 2018</a>)</span>. This allows indexes to be built for the header fields, while
+allowing the data fields to be
+unrestricted. The database serves as a buffer between the game process,
+communicating through the web server, and EI, EA and AS processes
+communicating directly with the database.</p>
+</div>
+<div id="sect:Mongo" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Mongo Database Schemas</h1>
+<p>There are four database collections in the Proc4 database:
+<code>AuthorizedApps</code>, <code>Players</code>, <code>Statistics</code>, and <code>Activities</code>.
+The latter three provide mechanisms for the EI, EA and AS processes
+respectively to communicate with the game engines. When queried, all
+three will return the record (or the latest record) matching the
+provided <code>app</code> and <code>uid</code>. If no record is available with those ids,
+then a special default record for that application, with
+<code>uid=&quot;DEFAULT&quot;</code>, will be returned.</p>
+<p>The configuration resides in two places. The file
+<code>/usr/local/share/Proc4/Proc4.js</code> contains
+initialization codes (note, the instructions assume that the system is
+Unix or Linux; on a Windows machine, a suitable replacement for the
+<code>/usr/local/share/Proc4</code> configuration directory should be chosen). In
+particular, it contains both the definition of
+the authorized applications, and the credentials for the various
+databases (if secure login is enabled). The script file
+<code>setupDatabases.js</code> sets up the security for the four processes (in
+the <code>Proc4</code>, <code>EIRecords</code>, <code>EARecords</code> and <code>ASRecords</code> databases), and
+sets up the collections and indexes in the <code>Proc4</code> database. Most of
+the code in is described below. These files are located in the <code>r system.file(&quot;config&quot;,package=&quot;Proc4&quot;)</code> directory (or <code>inst/config</code> in
+the source package) of the R package. They can be run with the shell
+command <code>mongo</code> <em>script</em><code>.jpg</code>.</p>
+<div id="authorizedapps-collection" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> AuthorizedApps Collection</h2>
+<p>The <code>AuthorizedApps</code> collection has two purposes: to provide as a
+first line security and to provide for a graceful shutdown of the EI,
+EA and AS processes. The security is somewhat minimal, it is just that
+a message with an <code>app</code> field that does not match one of the
+<code>AuthorizedApps</code> records will return an error. While this
+will not stop a determined attacker, it will make it harder for a hacker
+randomly looking for open ports to get data from the database. The
+second is related to the field of the record. The EI, EA, and AS
+processes periodically check this, and if it is false, then they shut
+down gracefully.</p>
+<p>This collection was never give an formal schema.
+Example <a href="#exm:AuthorizedApps">2</a> shows the code that creates it. The
+<code>app</code> and <code>active</code> fields should be counted as required and as
+recommended.</p>
+<div class="example">
+<p><span id="exm:AuthorizedApps" class="example"><strong>Example 2  </strong></span>Mongo script to create AuthorizedApps collection.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// In Proc4.js configuration file.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> apps <span class="op">=</span> [</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;app&quot;</span><span class="op">:</span><span class="st">&quot;ecd://epls.coe.fsu.edu/P4test&quot;</span><span class="op">,</span><span class="st">&quot;doc&quot;</span><span class="op">:</span><span class="st">&quot;Testing&quot;</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="st">&quot;active&quot;</span><span class="op">:</span><span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;app&quot;</span><span class="op">:</span><span class="st">&quot;ecd://epls.coe.fsu.edu/PhysicsPlayground/userControl&quot;</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>     <span class="st">&quot;doc&quot;</span><span class="op">:</span><span class="st">&quot;User Controlled (Spring 2019)&quot;</span><span class="op">,</span><span class="st">&quot;active&quot;</span><span class="op">:</span><span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;app&quot;</span><span class="op">:</span><span class="st">&quot;ecd://epls.coe.fsu.edu/PhysicsPlayground/linear&quot;</span><span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>     <span class="st">&quot;doc&quot;</span><span class="op">:</span><span class="st">&quot;linear (Spring 2019)&quot;</span><span class="op">,</span><span class="st">&quot;active&quot;</span><span class="op">:</span><span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;app&quot;</span><span class="op">:</span><span class="st">&quot;ecd://epls.coe.fsu.edu/PhysicsPlayground/adaptive&quot;</span><span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>     <span class="st">&quot;doc&quot;</span><span class="op">:</span><span class="st">&quot;adaptive (Spring 2019)&quot;</span><span class="op">,</span><span class="st">&quot;active&quot;</span><span class="op">:</span><span class="kw">true</span>}</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>]<span class="op">;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">// In setupProc4.js setup file.</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>apps<span class="op">.</span><span class="fu">forEach</span>(<span class="kw">function</span> (row) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    db<span class="op">.</span><span class="at">AuthorizedApps</span><span class="op">.</span><span class="fu">replaceOne</span>({<span class="st">&quot;app&quot;</span><span class="op">:</span>row<span class="op">.</span><span class="at">app</span>}<span class="op">,</span>row<span class="op">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                                 {<span class="st">&quot;upsert&quot;</span><span class="op">:</span><span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+</div>
+<p>This fields is mostly manipulated with raw database commands setting the
+<code>active</code> field. The launch scripts for the EI and EA processes both
+set the field <code>active</code> to true. (They will also, if necessary, add a
+record for the application.) To signal a graceful shutdown, simply set
+the field to false. Example <a href="#exm:shutdown">3</a> gives some example
+syntaxes (to run from the mongo command shell).</p>
+<div class="example">
+<p><span id="exm:shutdown" class="example"><strong>Example 3  </strong></span>Mongo scripts to signal processes to shutdown</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Shutdown just the P4test engine</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">AuthorizedApps</span><span class="op">.</span><span class="fu">update</span>({<span class="dt">app</span><span class="op">:</span>{<span class="st">&quot;$regex&quot;</span><span class="op">:</span><span class="st">&quot;P4test&quot;</span>}}<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                         {<span class="st">&quot;$set&quot;</span><span class="op">:</span>{<span class="dt">active</span><span class="op">:</span><span class="kw">false</span>}})<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Shutdown all active apps</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">AuthorizedApps</span><span class="op">.</span><span class="fu">update</span>({<span class="dt">active</span><span class="op">:</span><span class="kw">true</span>}<span class="op">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                         {<span class="st">&quot;$set&quot;</span><span class="op">:</span>{<span class="dt">active</span><span class="op">:</span><span class="kw">false</span>}})<span class="op">;</span></span></code></pre></div>
+</div>
+<p>The graceful shutdown causes the process to process all remaining events
+in the queue and then stop. It became obvious that there was a need of a
+rapid shutdown as well. In particular, there were cases where the
+processes should be shut down after finishing processing the current
+event so that repairs could take place before continuing. A future
+version of the code should have this.</p>
+</div>
+<div id="players-collection" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Players Collection</h2>
+<p>The original purpose of the <code>Players</code> collection was to notify the
+other processes about which players were currently active in the game,
+and which were not. As the game engine would send a message to the
+scoring server when the players logged in, the <code>data</code> field of the
+collection was used to store information about the player which needed
+to persist between game sessions; in particular, the player’s bank
+balance and the , a list of completed levels with the coin awarded for
+each. Example <a href="#exm:Players">4</a> gives the schema for this collection.</p>
+<div class="example">
+<p><span id="exm:Players" class="example"><strong>Example 4  </strong></span>Players collection schema definition</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="fu">createCollection</span>(<span class="st">&quot;Players&quot;</span><span class="op">,</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">validator</span><span class="op">:</span> {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        \<span class="dt">$jsonSchema</span><span class="op">:</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="dt">required</span><span class="op">:</span> [<span class="st">&quot;app&quot;</span><span class="op">,</span><span class="st">&quot;uid&quot;</span><span class="op">,</span><span class="st">&quot;active&quot;</span><span class="op">,</span><span class="st">&quot;timestamp&quot;</span>]<span class="op">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="dt">properties</span><span class="op">:</span> {</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">app</span><span class="op">:</span> {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Application ID (string)&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                <span class="dt">uid</span><span class="op">:</span> {</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;User (student) ID (string)&quot;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                <span class="dt">active</span><span class="op">:</span> {</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;bool&quot;</span><span class="op">,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Is the player currently active?&quot;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                <span class="dt">context</span><span class="op">:</span> {</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Context (task) ID (string)&quot;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                <span class="dt">timestamp</span><span class="op">:</span> {</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;date&quot;</span><span class="op">,</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Timestamp&quot;</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>                <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Player State information passed to game engine at login.&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                }</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">validationAction</span><span class="op">:</span> <span class="st">&quot;warn&quot;</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">Players</span><span class="op">.</span><span class="fu">createIndex</span>( { <span class="dt">app</span><span class="op">:</span><span class="dv">1</span><span class="op">,</span> <span class="dt">uid</span><span class="op">:</span> <span class="dv">1</span>})<span class="op">;</span></span></code></pre></div>
+</div>
+<p>Note that this is a subset of the basic <code>Proc4</code> message
+format. The <code>active</code> field should be set to true when the player
+starts play, and to false when the player stops.
+The PHP scripts <code>PlayerStart.php</code> and <code>PlayerStop.php</code> start and stop
+the player. Note that current the
+game may or may not post a message to the script. Currently, the other
+processes are not relying on this, but this needs to be revisited later
+if it becomes important.</p>
+<p>In addition to setting the active field, the <code>PlayerStart.php</code> script
+returns the current value of the <code>data</code> field as part of a
+message. For the <em>Physics Playground</em> implementation, <code>data</code> is a
+named list (or dictionary) with two elements: <code>backBalance</code> and
+<code>trophyHall</code>. The first in an integer value giving the players’ bank
+balance (as of the last event processed), and <code>trophyHall</code> is a named
+list with the names corresponding to levels and the values
+corresponding to coins (“gold” or “silver”). Levels for which a coin was
+not awarded do not appear in the list.</p>
+<p>The EI process is responsible for keeping the <code>Players</code> collection up
+to date. There is a special collection of rules called
+<code>TrophyHallRule.json</code> which contain the logic
+for doing the update. These include special trigger rules which run to
+update the <code>Players</code> collection; and a special listener which listens
+for those messages.</p>
+</div>
+<div id="statistics-collection" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Statistics Collection</h2>
+<p>The EA process, in response to each release of observables from the EI
+process, performs the following actions: (1) it fetches the student
+model for the reference <code>uid</code>, (2) it updates the student model using the new
+evidence, (3) it updates a list of <code>statistics</code> for the updated
+student model, (4) it posts the updated statistics so they can be
+viewed both other processes.
+One of the places it posts the updated statistics is in the
+<code>Statistics</code> collection in the database. Example <a href="#exm:Statistics">5</a>
+provides the schema for that collection.</p>
+<div class="example">
+<p><span id="exm:Statistics" class="example"><strong>Example 5  </strong></span>Mongo script to create Statistics collection and indexes.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="fu">createCollection</span>(<span class="st">&quot;Statistics&quot;</span><span class="op">,</span> {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">validator</span><span class="op">:</span> {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        \<span class="dt">$jsonSchema</span><span class="op">:</span> {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            <span class="dt">required</span><span class="op">:</span> [<span class="st">&quot;app&quot;</span><span class="op">,</span><span class="st">&quot;uid&quot;</span><span class="op">,</span><span class="st">&quot;timestamp&quot;</span>]<span class="op">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            <span class="dt">properties</span><span class="op">:</span> {</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">app</span><span class="op">:</span> {</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Application ID (string)&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                <span class="dt">uid</span><span class="op">:</span> {</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;User (student) ID (string)&quot;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                <span class="dt">context</span><span class="op">:</span> {</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Context (task) ID (string)&quot;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                <span class="dt">sender</span><span class="op">:</span> {</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Who posted this message.&quot;</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>                <span class="dt">mess</span><span class="op">:</span> {</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Topic of message&quot;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                <span class="dt">timestamp</span><span class="op">:</span> {</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;date&quot;</span><span class="op">,</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Timestamp&quot;</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>                <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Named list of statistics.&quot;</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>                }</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="dt">validationAction</span><span class="op">:</span> <span class="st">&quot;warn&quot;</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">Statistics</span><span class="op">.</span><span class="fu">createIndex</span>( { <span class="dt">app</span><span class="op">:</span><span class="dv">1</span><span class="op">,</span> <span class="dt">uid</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">timestamp</span><span class="op">:</span> <span class="op">-</span><span class="dv">1</span>})<span class="op">;</span></span></code></pre></div>
+</div>
+<p>The EA process updates the <code>data</code> field of the record for the just processed
+student. The value of the <code>data</code> field is a named list of statistics. The value
+of the statistic depends on the specifications given to the EA process.
+There are three common kinds of statistics that are used: real-valued
+statistics (for example the expected a posteriori or EAP statistic),
+string valued statistics (for example, the mode or median of a Bayes net
+node), and vector valued statistics (for example, the probability
+distribution for a node).</p>
+<p>The script <code>PlayerStats.php</code> returns the current record in the
+<code>Statistics</code> collection for the player.</p>
+</div>
+<div id="activities-collection" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Activities Collection</h2>
+<p>The last collection was never actually implemented, but it was created
+for future expansion. Example <a href="#exm:Activities"><strong>??</strong></a> provides its draft
+schema. Its purpose was to provide a place the AS could post messages
+about which level to provide next. The script <code>PlayerLevel.php</code> would
+return its current value.</p>
+<div class="example">
+<p><span id="exm:Activites" class="example"><strong>Example 6  </strong></span>Mongo script to create Activities collection and indexes.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="fu">createCollection</span>(<span class="st">&quot;Activities&quot;</span><span class="op">,</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">validator</span><span class="op">:</span> {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        \<span class="dt">$jsonSchema</span><span class="op">:</span> {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="dt">required</span><span class="op">:</span> [<span class="st">&quot;app&quot;</span><span class="op">,</span><span class="st">&quot;uid&quot;</span><span class="op">,</span><span class="st">&quot;timestamp&quot;</span>]<span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            <span class="dt">properties</span><span class="op">:</span> {</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">app</span><span class="op">:</span> {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Application ID (string)&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                <span class="dt">uid</span><span class="op">:</span> {</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;User (student) ID (string)&quot;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                <span class="dt">context</span><span class="op">:</span> {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Context (task) ID (string)&quot;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                <span class="dt">sender</span><span class="op">:</span> {</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Who posted this message.&quot;</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                <span class="dt">mess</span><span class="op">:</span> {</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;string&quot;</span><span class="op">,</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Topic of Message&quot;</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>                <span class="dt">timestamp</span><span class="op">:</span> {</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;date&quot;</span><span class="op">,</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Timestamp&quot;</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                }<span class="op">,</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                <span class="dt">data</span><span class="op">:</span> {</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">bsonType</span><span class="op">:</span> <span class="st">&quot;object&quot;</span><span class="op">,</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">description</span><span class="op">:</span> <span class="st">&quot;Data about Activity Selection.&quot;</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>                }</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="dt">validationAction</span><span class="op">:</span> <span class="st">&quot;warn&quot;</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>db<span class="op">.</span><span class="at">Activity</span><span class="op">.</span><span class="fu">createIndex</span>( { <span class="dt">app</span><span class="op">:</span><span class="dv">1</span><span class="op">,</span> <span class="dt">uid</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">timestamp</span><span class="op">:</span> <span class="op">-</span><span class="dv">1</span>})<span class="op">;</span></span></code></pre></div>
+</div>
+<p>Although this was not implemented, the following notes describe the
+planned design. The data field would contain four components: <code>topic</code>,
+<code>completeLevels</code>, <code>availableLevels</code>, and <code>supportMode</code>. Topic is
+intended as a string valued field. The game levels would be
+divided into a number of <em>topics</em>. When the internal criteria in the AS
+algorithm were met, the player would “graduate” from the topic, and the
+value of the topic field would change. The components
+<code>completedLevels</code> and <code>availableLevels</code> would list all
+of the levels in the topic. The <code>availableLevels</code> would be sorted into
+the desired order. As levels were completed, they would be moved to
+the <code>completedLevels</code> field. The <code>supportMode</code> component is a logical
+variable that would be set if the player should
+be placed into a learning support rather than the game at the start of a
+new level.</p>
+<p>The design of the <code>Activities</code> collection is designed to be robust
+against latency problems with the EI, EA and AS processes. In order to
+for the algorithm to be completely adaptive, then all three processes
+must complete between the time the player finishes the game level and
+the system requests a new game level. If this condition does not hold,
+the database can return the sorted list of levels, taking the just
+completed level from the list of available levels and putting it on
+the completed list. So although the next level played may not be
+completely optimal, as long as the EI, EA and AS processes don’t fall
+too far behind it will be at least close to optimal.</p>
+</div>
+</div>
+<div id="sect:PHP" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> PHP communication Layer</h1>
+<p>A number of PHP scripts are provided to allow the game engine (or other
+process) to access the information in the database. The PHP scripts
+always return the most recent information available for the player, or
+if no information is available for the player, a default record is
+returned. In particular, this means that the processes should never
+block, but they might not return the most recent information if there
+are still unprocessed events working their way through the EI, EA and AS
+processes.</p>
+<p>All of the PHP scripts expect the headers in the basic P4 Message format
+using fields of an HTTP POST request. In particular, it is looking for
+fields of with the names “app”, “uid”, “context”, “sender”, “mess”,
+“timestamp”, and “data”. If accessed using the post method, all of the
+pages should return a file of type ’application/json’ in utf-8 encoding.
+If the php scripts are accessed using a GET rather than a POST request,
+then a HTML form with these fields is returned (to be used for testing).</p>
+<p>There are four primary files which are used for the communication:</p>
+<ul>
+<li><p><code>PlayerStart.php</code>: Called when player logs in on a given day. As
+data returns information needed to restore gaming session
+(currently bank balance and list of trophies earned). Note that
+player details are updated by the EI process.</p></li>
+<li><p><code>PlayerStop.php</code>: Called when player logs out. Currently not
+used. It is designed to help automatically shut down unneeded
+processed.</p></li>
+<li><p><code>PlayerStats.php</code>: Called when current player competency estimates
+are required, e.g., when displaying player scores. It returns a
+list of statistics and their values in the data field; the exact
+statistics returned depend on the configuration of the EA
+process. This database collection is updated by the EA process
+after each game level is processed.</p></li>
+<li><p><code>PlayerLevels.php</code>: Called when the game wants the next level. The
+message data should contain information about what topic the
+player is currently addressing and a list of played and unplayed
+levels, with the unplayed levels sorted so the next level
+according to protocol is first on the list. The complete list of
+levels should be returned so that if levels on the list have
+already been completed, a new level would be entered. Although the
+PHP script has been built, the AS process to feed it has not.</p></li>
+</ul>
+<p>In addition to the primary files there are some auxiliary files that are
+available as well.</p>
+<ul>
+<li><p><code>P4echo.php</code>: This script simply repeats back the message that was
+sent as a json object. Intended for testing.</p></li>
+<li><p><code>Proc4.ini</code>: This contains configuration information used by the
+other processes, particularly, database credentials and a list of
+supported application names. A template file is provided in the
+directory. It should be edited and moved to (or other designated
+configuration directory).</p></li>
+<li><p><code>config.php</code>: This script is called by the others, it is mainly
+calls the script, so this file can be modified if that script is
+in a non-standard location.</p></li>
+<li><p><code>composer.json</code>: This file is generated by composer to get mongo to
+install.</p></li>
+</ul>
+<p>The configuration file contains a list of application IDs and the
+passwords for the databases. The file is shown in
+Example <a href="#exm:Proc4ini">7</a>. The applications are particularly important
+as they serve as a password for systems that use this facility. In
+particular, unless the <code>app</code> field of the POST request is one of the
+applications listed in the ini file, then the scripts will return an
+error. This should prevent random hacking, but more serious security
+might be needed if there is a more substantial risk.</p>
+<div class="example">
+<p><span id="exm:Proc4ini" class="example"><strong>Example 7  </strong></span>Proc4.ini – PHP-style parameter file.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode php"><code class="sourceCode php"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> <span class="st">&quot;ecd://epls.coe.fsu.edu/P4test&quot;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>userControl <span class="op">=</span> <span class="st">&quot;ecd://epls.coe.fsu.edu/PhysicsPlayground/userControl&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>linear <span class="op">=</span> <span class="st">&quot;ecd://epls.coe.fsu.edu/PhysicsPlayground/linear&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>adaptive <span class="op">=</span> <span class="st">&quot;ecd://epls.coe.fsu.edu/PhysicsPlayground/adaptive&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>[users]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cn">EIP</span> <span class="op">=</span> <span class="st">&quot;secret&quot;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cn">EAP</span> <span class="op">=</span> <span class="st">&quot;secret&quot;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cn">ASP</span> <span class="op">=</span> <span class="st">&quot;secret&quot;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="cn">C4</span> <span class="op">=</span> <span class="st">&quot;secret&quot;</span></span></code></pre></div>
+</div>
+<p>Installation requires the following steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>Edit the <code>Proc4.ini</code> file (in the <code>config</code> subdirectory of the
+package) and move it to the configuration directory, by default
+<code>/usr/local/share/Proc4</code>.</p></li>
+<li><p>Edit the <code>config.php</code> file if necessary and copy the php scripts
+to a directory exposed by the web server.</p></li>
+<li><p>Install the mongo PHP drivers using PECL and composer. See the
+instructions at <a href="https://docs.mongodb.com/ecosystem/drivers/php/" class="uri">https://docs.mongodb.com/ecosystem/drivers/php/</a>.
+(Note for RHEL. Because RHEL 7.5 is behind the curve on a large
+number of packages, the available drivers for RHEL have lower
+version numbers. You may need to remove the file. The dongle appears
+to work fine with version 1.1 of mongodb, which is what I get with
+RHEL 7.5.)</p></li>
+</ol>
+</div>
+<div id="sect:Loop" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Pulling statements from the learning record store.</h1>
+<p>Learning Locker stores events as <code>xAPI</code> <span class="citation">(<a href="#ref-xAPI" role="doc-biblioref">Betts and Smith 2018</a>)</span> formatted JSON in a
+collection called <code>statements</code> in a database called <code>gameLRS</code> (or at
+least that is the setup for <em>Physics Playground</em>). All of the
+statements have a timestamp, so the extraction loop can get only new
+messages after the first extraction. The scripts <code>extractEvidence.sh</code>
+and <code>importEvidence.sh</code> facilitate the extraction from learning locker
+and the upload into the <code>EIRecords</code> database.</p>
+<p>Between extraction and importation, the messages must be converted
+from xAPI (actually a wrapped xAPI format) to P4 format. This is done
+by the bash script <code>LLtoP4</code> (Example <a href="#exm:LLtoP4">8</a>). The translation
+is done in three steps. The first step, using the program <code>jq</code>
+(<a href="https://stedolan.github.io/jq/" class="uri">https://stedolan.github.io/jq/</a>), extracts the fields relevant for
+the P4 messages from the unused information in the wrapped xAPI
+schema. Note that much of the useful information as defined in is in
+the extension for the object element of the statement. The second step
+uses standard GNU tool sed (Windows users, see
+<a href="http://gnuwin32.sourceforge.net/packages/sed.htm" class="uri">http://gnuwin32.sourceforge.net/packages/sed.htm</a>) to shorten long
+URL-like guids to shorter keywords. The third step promotes some
+information (in particular, the <code>app</code> and <code>context</code> fields) which are in the
+extensions to the header.</p>
+<div class="example">
+<p><span id="exm:LLtoP4" class="example"><strong>Example 8  </strong></span>Learning Locker to P4 JSON conversion script.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">jq</span> <span class="at">-f</span> filter1.jq <span class="kw">|</span> <span class="fu">sed</span> <span class="at">-f</span> filter2.sed <span class="kw">|</span> <span class="ex">jq</span> <span class="at">-f</span> filter3.jq</span></code></pre></div>
+</div>
+<p>In theory, simply looping the shell command, <code>extractEvidence.sh</code><em>date</em><code>| LLtoP4 | importEvidence.sh</code>, is all that is necessary.
+In practice, two additional steps are needed. First, it is necessary to
+extract the most recent timestamp from the downloaded file. The next
+extraction will be for all events after that timestamp. Second, it is
+often useful to filter the events before uploading them to the database.</p>
+<p>Adding an extra filtering step to the extraction loop is a big time
+saver, as events which will not trigger any evidence rules can simply be
+discarded. The filter <code>jq -f coreEvents.jq</code> is used to delete events
+which will not trigger rules. The result was about a 500-fold
+reduction in work required for the operational version of <em>Physics
+Playground</em>.</p>
+<p>To allow for a graceful shutdown, the loop is given a name (the first
+argument to the shell script) and a file
+<code>/usr/local/share/Proc4/log/</code><em>name</em><code>.running</code> is created when the script
+starts. In every loop, that file is checked. If it no longer exists, the
+script exits. So the loop can be shut down by removing the file. (The
+script is typically started using so that it runs as background
+process.) Example <a href="#exm:LLtoP4Loop">9</a> shows the listing.</p>
+<div class="example">
+<p><span id="exm:LLtoP4Loop" class="example"><strong>Example 9  </strong></span>Shell process for transfering LL events to EI input queue.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="va">IP</span><span class="op">=</span>127.0.0.1</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="va">name</span><span class="op">=</span><span class="va">$1</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="va">starttime</span><span class="op">=</span><span class="va">$2</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Learning Locker to P4 extraction loop, </span><span class="va">$1</span><span class="st">, starting: </span><span class="va">$2</span><span class="st">&quot;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">## Create a running file, when this file is deleted, </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">## the process will stop.</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/local/share/Proc4/bin</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> ../logs/<span class="va">$name</span>.running</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="va">cache1</span><span class="op">=</span><span class="va">$(</span><span class="fu">mktemp</span> <span class="at">--tmpdir</span> <span class="va">${name}</span>.XXXXXXXXXX<span class="va">)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="va">cache2</span><span class="op">=</span><span class="va">$(</span><span class="fu">mktemp</span> <span class="at">--tmpdir</span> <span class="va">${name}</span>.XXXXXXXXXX<span class="va">)</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">[</span> <span class="ot">-f</span> ../logs/<span class="va">$name</span>.running <span class="bu">]</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ssh</span> <span class="va">$IP</span> ./extractEvidence.sh <span class="va">$starttime</span> <span class="op">&gt;</span><span class="va">$cache1</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">[</span> <span class="va">$(</span><span class="fu">tail</span> <span class="at">-n</span> +2 <span class="va">$cache1</span> <span class="kw">|</span> <span class="ex">jq</span> <span class="st">&#39;length&#39;</span><span class="va">)</span> <span class="ot">-gt</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">tail</span> <span class="at">-n</span> +2 <span class="op">&lt;</span><span class="va">$cache1</span> <span class="kw">|</span> <span class="ex">./LLtoP4</span> <span class="kw">|</span> <span class="ex">jq</span> <span class="at">-f</span> coreEvents.jq <span class="op">&gt;</span><span class="va">$cache2</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="ex">./importEvidence.sh</span> <span class="op">&lt;</span><span class="va">$cache2</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">starttime</span><span class="op">=</span><span class="va">$(</span><span class="ex">jq</span> <span class="st">&#39;[.[]|.timestamp.&quot;$date&quot;]|max&#39;</span> <span class="va">$cache2)</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;Next extraction at </span><span class="va">$starttime</span><span class="st">&quot;</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sleep</span> 10s</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+</div>
+<div id="sect:config" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Configuration</h2>
+<p>This manual assumes that a modify LAMP (Linux, Apache, Mongo, PHP) stack
+is configured on the target machine. (Sorry, Windows users, a fair
+amount of adaptation will be needed to run under Windows.) Refer to the
+help files for your Linux distribution and Mongo to accomplish this
+task. Also, for the Proc4 for R library will need to be
+installed on the target system.</p>
+</div>
+<div id="configuration-files" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Configuration Files</h2>
+<p>The first step is to pick a configuration directory for Proc4. The
+current system assumes that the configuration directory is
+<code>/usr/local/share/Proc4</code>, but this could be changed depending on local
+preferences. This directory will need to be created with root
+privileges, but can then be set as writable by a normal user
+account. For brevity, this configuration directory will be simply
+called <code>Proc4</code> in the sequel. Note that the location of the directory
+is hard coded into a number of files, and they will need to be
+manually edited if a different location is chosen.</p>
+<p>Create two subdirectories <code>bin</code> and <code>logs</code> underneath the
+<code>Proc4</code> configuration directory. (The log directory could be a symlink to a
+directory on another partition if space on the root partition is at a
+premium).</p>
+<p>Note that in the current implementation, two other directories are
+placed in the <code>Proc4</code> directory, <code>PP-EI</code> and <code>PP-EA</code>
+which contain the scoring models for the <code>EIEvent</code> (EI) and <code>EABN</code> (EA)
+processes. These are tied to github repositories, so that the scoring
+models can be updated by checking the updated models into the proper
+github branch. In particular, different branches can be used for
+variations in the basic scoring model.</p>
+<p>Finally, there are a number of configuration files that are stored in
+the R package tarball. These can be accessed in one of two
+ways. First, install the R package, then use the command
+<code>library(help=</code>Proc4<code>)\$path</code> to determine the install location for
+the R package. The <code>config</code> and <code>dongle</code> subdirectories are in that
+location. The alternative is to simply unpack the Proc4 tarball in
+some known location (equivalently, one could download from github in a
+given location). The subdirectories <code>inst/config</code> and <code>inst/dongle</code>
+contain the relevant files.</p>
+<p>Copy the files <code>config/Proc4.js</code> and <code>config/Proc4.ini</code> to the
+<code>Proc4</code> directory. These files will need to be edited
+to reflect the local configuration. In particular, if database
+passwords are used, then they will need to be set in this file. Also,
+<code>Proc4.ini</code> has a list of valid applications. The EI, EA and AS
+processes will also store their initialization files in this
+directory.</p>
+</div>
+</div>
+<div id="mongo-configuration" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Mongo Configuration</h1>
+<p>Using the mongo database, both security (user IDs and passwords) is
+optional. Running mongo without security turned on is probably okay as
+long as the installation is (a) behind a firewall, and (b) the firewall
+is configured to not allow connections on the mongo port except from
+localhost. However, other users may want to turn on security.</p>
+<p>The recommended security setup is to create four users, “EIP”, “EAP”,
+“ASP”, and “C4” for the four processes and to assign a password to each.
+The URI’s of the database connections then need to be modified to
+include the username and passwords. Each process would have an file
+which contains its password which is stored in an appropriate
+configuration directory.</p>
+<p>The files <code>Proc4/Proc4.ini</code> (PHP format) and <code>Proc4/Proc4.js</code>
+(javascript format) are used for saving the
+key usernames and passwords. Note that the mongo configuration files
+read the usernames and passwords from <code>Proc4/Proc4.js</code>, so this file
+needs to be configured before the running the database setup scripts
+below.</p>
+<p>The file <code>setupDatabases.js</code> in the <code>config</code> directory creates
+databases for each of the processes and stores the appropriate login
+credentials. This is a javascript file designed to be run directly in
+mongo, i.e., <code>mongo setupDatabases.js</code>. Note that it must be run
+by a user which has the appropriate privileges to create databases and
+modify their security (a “root” user). This step is required if security
+is turned on in the database, and optional if it is turned off.</p>
+<p>The file <code>config/setupProc4.js</code> sets up schemas and indexes for
+collections in the <code>Proc4</code> database which are used by the dongle
+process. Schemas are optional in mongo, but the indexes should speed
+up operations.</p>
+</div>
+<div id="php-dongle-configuration" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> PHP Dongle Configuration</h1>
+<p>To create the dongle process, pick a directory under apache control
+(e.g., a subdirectory of <code>http_docs</code>) in which to install the
+Dongle. This will determine the URL base for the dongle scripts. Next,
+copy all of the PHP files and the file <code>composer.json</code> from the <code>dongle</code>
+directory to the web directory. If the <code>Proc4</code> directory is not at
+‘/usr/local/share/Proc4’, then file <code>config.php</code> should be edited to
+reflect the proper path.</p>
+<p>The file <code>Proc4/Proc4.ini</code> will need to be edited (a) to ensure the
+proper passwords are in place for the processes and (b) to list all of
+the legal applications in the section. Note that the scripts use the
+field to verify that the requester is actually associated with the project.</p>
+<p>Ensure that the mongodb extensions for PHP have been installed
+(<a href="https://docs.mongodb.com/ecosystem/drivers/php/" class="uri">https://docs.mongodb.com/ecosystem/drivers/php/</a>). Note that the last
+step is to run <code>composer</code> in the URL base directory for the
+dongle. (The supplied <code>composer.json</code> file was generated using Ubuntu
+18.04. Under RHEL 7.5, an earlier version of the mongodb extension is
+needed. To install under RHEL, delete <code>composer.json</code> and install
+using <code>composer require mongodb/mongodb</code>.</p>
+<p>The file <code>P4echo.php</code> can be used for testing the
+configuration. Simply point the browser at the file, and it will give
+you a form for sending a test message, which it will echo back. The
+other scripts work in a similar way, issuing a GET request (i.e.,
+pointing a browser at the page) will return a form that can be used to
+POST a test message and return the JSON message. This may not be
+particularly useful until the databases have been populated though.</p>
+<div id="event-loop-configuration" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Event Loop Configuration</h2>
+<p>The remaining files (i.e., everything but the <code>php</code> files) in the
+<code>dongle</code> directory are for the event loop. These should be copied to
+<code>Proc4/bin</code>. Many of the shell scripts assume the location of the
+filter files (with <code>.jq</code> and <code>.sed</code> extensions) in the local
+directory, so the <code>LLtoP4Loop</code> command needs to be edited to run in this
+directory.</p>
+<p>In the <em>Physics Playground</em> implementation learning locker and <code>Proc4</code>
+were run on different servers. To implement this, the IP address in
+<code>LLtoP4loop</code> needs to be updated to the name or IP address of the
+learning locker server. The file <code>extractEvidence.sh</code> also needs to be
+copied to the learning locker server and put in the login
+directory. The script uses an ssh tunnel to do
+the extraction; so this connection (both firewalls and ssh keys) needs
+to be properly configured.</p>
+<p>Finally, the file <code>Proc4/bin/coreEvent.jq</code> determines which events are
+imported into the EI process queue. This will need editing depending
+on the rule set used by the EI process.</p>
+</div>
+</div>
+<div id="acknowledgements" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Acknowledgements</h1>
+<p>Work on the Proc4, EIEvent and EABN packages has been supported by the
+National Science foundation grants <em>DIP: Game-based Assessment and
+Support of STEM-related Competencies</em> (#1628937, Val Shute, PI) and
+<em>Mathematical Learning via Architectual Design and Modeling Using
+E-Rebuild.</em> (#1720533, Fengfeng Ke, PI).</p>
+<p>The Proc4 package developement was led by Russell Almond (Co-PI).</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Proc4" class="csl-entry">
+Almond, Russell G., Linda S. Steinberg, and Robert J. Mislevy. 2002. <span>“Enhancing the Design and Delivery of Assessment Systems: A Four-Process Architecture.”</span> <em>Journal of Technology , Learning, and Assessment</em> 1: (online). <a href="http://www.jtla.org/">http://www.jtla.org/</a>.
+</div>
+<div id="ref-xAPI" class="csl-entry">
+Betts, Ben, and Ryan Smith. 2018. <em>The Leraning Technology Manager’s Guid to <span class="nocase">xAPI</span></em>. 2nd ed. H2Labs. <a href="https://www.ht2labs.com/resources/the-learning-technology-managers-guide-to-the-xapi/#gf_26">https://www.ht2labs.com/resources/the-learning-technology-managers-guide-to-the-xapi/#gf_26</a>.
+</div>
+<div id="ref-Mongo" class="csl-entry">
+<em>The MongoDB 4.0 Manual</em>. 2018. 4.0 ed. MongoDB, Inc. <a href="https://docs.mongodb.com/manual/">https://docs.mongodb.com/manual/</a>.
+</div>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>The modification is that the Mongo database is substituted for the
+MySQL database used in many web applications.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

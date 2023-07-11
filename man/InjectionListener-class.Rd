@@ -5,6 +5,7 @@
 \alias{isListener,InjectionListener-method}
 \alias{receiveMessage,InjectionListener-method}
 \alias{listenerName,InjectionListener-method}
+\alias{listenerDataTable,InjectionListener-method}
 \title{Class \code{"InjectionListener"}}
 \description{
 
@@ -24,10 +25,12 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   \describe{
     \item{isListener}{\code{signature(x = "InjectionListener")}: returns
     true.}
-    \item{receiveMessage}{\code{signature(x = "InjectionListener")}: If
+    \item{receiveMessage}{\code{signature(x = "InjectionListener", message)}: If
       the message is in the \code{messSet}, it saves the message to the
       database.  (See details) }
-    \item{listenerName}{Returns the name assigned to the listener.}
+    \item{listenerName}{\code{signature(x= "InjectionListener")}: Returns the name assigned to the listener.}
+    \item{listenerDataTable}{\code{signature(listener =
+	"InjectionListener", appid )}: Builds a data datable from the messages.}
   }
 }
 \details{
@@ -37,6 +40,15 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   the database).  The \code{mess} field of the \code{\link{P4Message}}
   is checked against the applicable messages in \code{messSet}.  If it
   is there, then the message is inserted into the collection.
+
+}
+\section{Data Table}{
+
+  When the \code{\link{listenerDataTable}} method is called, 
+  a general find query (\code{\link[mongo]{mdbFind}} on the backing
+  collection.  The \code{app}, \code{uid}, \code{context},
+  \code{timestamp} fields are selected, and the \code{data} (details)
+  field is unpackaged and added as additional columns.
 
 }
 \references{
@@ -80,7 +92,7 @@ receiveMessage(ilwind,mess1)
       column of the Mongo database. }
     \item{\code{messSet}:}{A vector of class \code{character} giving the
       name of messages which are sent to the database.  Only messages
-      for which \code{mess(mess)} is an element of \code{messSet} will
+      for which \code{mess(message)} is an element of \code{messSet} will
       be inserted.}
     \item{\code{db}:}{Object of class \code{MongoDB} giving the
       database.  Use \code{messdb()} to access this field to makes sure
@@ -91,7 +103,7 @@ receiveMessage(ilwind,mess1)
   \describe{
     \item{\code{messdb()}:}{Accessor for the database collection.
       Initializes the connection if it has not been set up.}
-    \item{\code{receiveMessage(mess)}:}{ Does the work of inserting the
+    \item{\code{receiveMessage(message)}:}{ Does the work of inserting the
       message.  See Details. }
     \item{\code{reset(app)}:}{ Empties the database collection of
       messages with this app id.}

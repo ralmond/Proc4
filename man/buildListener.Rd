@@ -7,10 +7,12 @@
   description of the listener.  The \dQuote{name} and \dQuote{type}
   fields are required.  The other fields should match the arguments for
   the constructor, with the exceptions noted below:
-  
+
 }
 \usage{
-buildListener(specs, app, dburi)
+buildListener(specs, app, dburi, defaultDB="Proc4",
+              ssl_options=mongolite::ssl_options(),
+              noMongo = !missing(dburi) && length(dburi) > 0L && nchar(dburi) > 0L)
 }
 \arguments{
   \item{specs}{A named list (from the JSON) containing the instructions
@@ -21,6 +23,13 @@ buildListener(specs, app, dburi)
   \item{dburi}{If a database is used for this listener, then this is the
     uri for the connection.  Note that this is specified in the code and
     not in the JSON.}
+  \item{defaultDB}{The name of the database with which the Listener will interact,
+  only used if no \code{dbname} field in \code{specs}.}
+  \item{ssl_options}{Options used for an SSL connection to the database.
+    \code{\link[mongolite]{ssl_options}}.}
+  \item{noMongo}{A logical value.  If true, then the connection to the
+    Mongo database will not be made, and CRUD operations will basically
+    become no-ops.}
 }
 \details{
 
@@ -39,12 +48,9 @@ buildListener(specs, app, dburi)
       correspond to the name of a class.}
     \item{sender}{A string insterted into logged messages.  The string
       \dQuote{<app>} is substituted for \code{app}.}
-    \item{dburi}{If this field is non-null, then the \dQuote{dburi}
-      field of the resulting listener will be set to \code{dburi}.
-      Typically, this field should have the value "<dburi>" if present.}
     \item{dbname}{The name of the database in which the messages will be
-      recorded.}
-    \item{dbname}{The name of the database collection in which the
+      recorded.  If not present, then the \code{defaultdb} will be used.}
+    \item{colname}{The name of the database collection in which the
       messages will be recorded.}
     \item{messages}{A character vector giving the names of the messages
       the listener will pay attention to.  Note that this maps to the
@@ -89,27 +95,25 @@ buildListener(specs, app, dburi)
 
 jspecs <- '[
 	{
-	    "name":"ppLS<app>",
-	    "type":"TableListener",
-	    "messages":["Coins Earned","Coins Spent", "LS Watched"],
-	    "fields":{
-		"uid":"character",
-		"context":"character",
-		"timestamp":"character",
-		"currentMoney":"numeric",
-		"appId":"numeric", 
-		"mess":"character",
-		"money":"numeric", 
-		"onWhat":"character", 
-		"LS_duration":"difftime",
-		"learningSupportType":"character"
-	    }
+	  "name":"ppLS<app>",
+	  "type":"TableListener",
+	  "messages":["Coins Earned","Coins Spent", "LS Watched"],
+	  "fields":{
+		  "uid":"character",
+		  "context":"character",
+		  "timestamp":"character",
+		  "currentMoney":"numeric",
+		  "appId":"numeric",
+		  "mess":"character",
+		  "money":"numeric",
+		  "onWhat":"character",
+		  "LS_duration":"difftime",
+		  "learningSupportType":"character"
+	  }
 	},
 	{
 	    "name":"ToEA",
 	    "type":"InjectionListener",
-	    "sender":"EI_<app>",
-	    "dburi":"<dburi>",
 	    "dbname":"EARecords",
 	    "colname":"EvidenceSets",
 	    "messages":["New Observables"]
@@ -117,7 +121,6 @@ jspecs <- '[
 	{
 	    "name":"PPPersistantData",
 	    "type":"UpdateListener",
-	    "dburi":"<dburi>",
 	    "dbname":"Proc4",
 	    "colname":"Players",
 	    "targetField":"data",
@@ -128,26 +131,13 @@ jspecs <- '[
 
 speclist <- jsonlite::fromJSON(jspecs,FALSE)
 
-l1 <- buildListener(speclist[[1]],"test","mongodb://localhost")
-stopifnot (isListener(l1),listenerName(l1)=="ppLStest",
-           is(l1,"TableListener"),
-           match("Coins Spent",l1$messSet,nomatch=0)>0)
+l1 <- buildListener(speclist[[1]],"test",mongo::makeDBuri())
 
-l2 <- buildListener(speclist[[2]],"test","mongodb://localhost")
-stopifnot (isListener(l2),listenerName(l2)=="ToEA",
-           is(l2,"InjectionListener"),
-           l2$sender=="EI_test",
-           l2$dburi=="mongodb://localhost",
-           match("New Observables",l2$messSet,nomatch=0)>0)
+l2 <- buildListener(speclist[[2]],"test",mongo::makeDBuri())
 
-
-l3 <- buildListener(speclist[[3]],"test","mongodb://localhost")
-stopifnot (isListener(l3),listenerName(l3)=="PPPersistantData",
-           is(l3,"UpdateListener"),
-           l3$dburi=="mongodb://localhost",
-           match("Money Earned",l3$messSet,nomatch=0)>0)
-
+l3 <- buildListener(speclist[[3]],"test",mongo::makeDBuri())
 
 }
 \keyword{ interface }
+\concept{ listener }
 

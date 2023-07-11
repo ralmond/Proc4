@@ -2,7 +2,15 @@
 \alias{processed}
 \alias{processingError}
 \alias{markAsProcessed}
+\alias{markAsProcessed,JSONDB,P4Message-method}
+\alias{markAsProcessed,ListQueue-method}
+\alias{markAsProcessed,MongoQueue,ANY-method}
+\alias{markAsProcessed,NULL,P4Message-method}
 \alias{markAsError}
+\alias{markAsError,JSONDB,P4Message-method}
+\alias{markAsError,ListQueue-method}
+\alias{markAsError,MongoQueue,ANY-method}
+\alias{markAsError,NULL,P4Message-method}
 \title{Functions for manipulating entries in a message queue.}
 \description{
 
@@ -18,16 +26,25 @@
 
 }
 \usage{
-markAsProcessed(mess, col)
-markAsError(mess, col, e)
+markAsProcessed(col, mess)
+\S4method{markAsProcessed}{JSONDB,P4Message}(col, mess)
+\S4method{markAsProcessed}{ListQueue}(col, mess)
+\S4method{markAsProcessed}{MongoQueue,ANY}(col, mess)
+\S4method{markAsProcessed}{NULL,P4Message}(col, mess)
+markAsError(col, mess, e)
+\S4method{markAsError}{JSONDB,P4Message}(col, mess, e)
+\S4method{markAsError}{ListQueue}(col, mess, e)
+\S4method{markAsError}{MongoQueue,ANY}(col, mess, e)
+\S4method{markAsError}{NULL,P4Message}(col, mess, e)
 processed(x)
 processingError(x)
 }
 \arguments{
   \item{mess}{An object of class \code{\linkS4class{P4Message}} to be
     modified. }
-  \item{col}{A \code{\link[mongolite]{mongo}} collection where the
-    message queue is stored.  This can also be \code{NULL} in which case
+  \item{col}{A \code{\link[mongo]{MongoDB}} collection where the
+    message queue is stored (or an object which wraps sucha collection).
+    This can also be \code{NULL} in which case
     the message will not be saved to the database.
   }
   \item{e}{An object indicating the error occurred.  Note this could be
@@ -40,39 +57,28 @@ processingError(x)
 }
 \details{
 
-  A \code{\link[mongolite]{mongo}} collection of messages can serve as a
-  queue.  As messages are added into the queue, the \code{processed}
+  A \code{\link[mongo]{MongoDB}} collection of messages can serve as a
+  queue (see \code{\linkS4class{MongoQueue}}).
+  As messages are added into the queue, the \code{processed}
   flag is set to false.  The handler then fetches them one at a time
   (sorting by the timestamp).  It then does whatever action is required
   to handle the message.  Then the function \code{markAsProcessed} is
   called to set the \code{processed} flag to true and update the entry
-  in the database.  
+  in the database.
 
-  A typical query (this example is taken from the
-  \code{\link[EIEvent]{EIEvent-package}}) is 
-  \code{getOneRec(buildJQuery(app=app, processed=FALSE),
-    eventdb(), parseEvent, sort = c(timestamp = 1))}.  Here the
-  \code{\link{buildJQuery}} call searches for unprocessed events
-  corresponding to a particular \code{\link{app}}.  The \code{sort}
-  argument ensures that the records will be sorted in ascending order
-  according to \code{\link{timestamp}}.  In this example
-  \code{eventdb()} in an internal method which returns the event
-  collection, and \code{\link[EIEvent]{parseEvent}} create event objects
-  (which are a subclass of \code{\linkS4class{P4Message}}.
-
-  Some thought needs to be given as to how to handle errors.  The
+    Some thought needs to be given as to how to handle errors.  The
   function \code{markAsError} attaches an error object to the message
   and then updates it in the collection.  The error object is turned
   into a string (using \code{\link[base]{toString}}) before saving, so
   it can be any type of R object (in particular, it could be either the
   error message or the actual error object thrown by the function).
-  
+
 }
 \value{
 
   The functions \code{markAsProcessed} and \code{markAsError} both
   return the modified message.
-  
+
   The function \code{processed} returns a logical value indicating
   whether or not the message has been processed.
 
@@ -86,8 +92,8 @@ processingError(x)
 
   The functions \code{markAsProcessed} and \code{markAsError} do not
   save the complete record, they just update the processed or error
-  field. 
-  
+  field.
+
   There was a bug in early version of this function, which caused the
   error to be put into a list when it was saved.  This needs to be
   carefully checked.
@@ -95,7 +101,8 @@ processingError(x)
 \seealso{
 
   \code{\linkS4class{P4Message}}, \code{\link{getOneRec}},
-  \code{\link{buildJQuery}}, \code{\link{timestamp}}
+  \code{\link{buildJQuery}}, \code{\link{timestamp}}, \code{\linkS4class{MessageQueue}},
+  \code{\link{resetProcessedMessages}}
 
 }
 \examples{
@@ -137,3 +144,4 @@ stopifnot(processed(mess1a),processed(mess2a),
 }
 \keyword{ interface }
 \keyword{ database }
+\concept{ Message-Queue}

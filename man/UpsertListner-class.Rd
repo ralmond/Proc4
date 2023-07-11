@@ -5,6 +5,7 @@
 \alias{isListener,UpsertListener-method}
 \alias{receiveMessage,UpsertListener-method}
 \alias{listenerName,UpsertListener-method}
+\alias{listenerDataTable,UpsertListener-method}
 \title{Class \code{"UpsertListener"}}
 \description{
 
@@ -25,10 +26,13 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   \describe{
     \item{isListener}{\code{signature(x = "UpsertListener")}: returns
     true.}
-    \item{receiveMessage}{\code{signature(x = "UpsertListener")}: If
+    \item{receiveMessage}{\code{signature(x = "UpsertListener", message)}: If
       the message is in the \code{messSet}, it saves or replaces the
       message inthe database.  (See details) }
-    \item{listenerName}{Returns the name assigned to the listener.}
+    \item{listenerName}{\code{signature(x = "UpsertListener")}: Returns
+      the name assigned to the listener.}
+    \item{listenerDataTable}{\code{signature(listener =
+	"UpsertListener", appid )}: Builds a data datable from the messages.}
   }
 }
 \details{
@@ -43,6 +47,15 @@ All reference classes extend and inherit methods from \code{"\linkS4class{envRef
   another message exits which matches on the fields listed in
   \code{qfields}.  If this is true, the message in the database is
   replaced.  If not, the message is inserted.  
+
+}
+\section{Data Table}{
+
+  When the \code{\link{listenerDataTable}} method is called, 
+  a general find query (\code{\link[mongo]{mdbFind}} on the backing
+  collection.  The \code{app}, \code{uid}, \code{context},
+  \code{timestamp} fields are selected, and the \code{data} (details)
+  field is unpackaged and added as additional columns.
 
 }
 \references{

@@ -122,6 +122,47 @@ withFlogging <- function(expr,...,context=deparse(substitute(expr)),
           invisible(structure(msg, class = "try-error", condition = obj)))
 }
 
+## Breaks futile.logger line into its parts.
+parseline <- function(line) {
+  bracket1 <- regexpr("[",line,fixed=TRUE)
+  bracket2 <- regexpr("]",line,fixed=TRUE)
+  list(level=trimws(substr(line,1,bracket1-1)),
+       time=strptime(substr(line,bracket1+1,bracket2-1),format="%Y-%m-%d %H:%M:%S"),
+       message=trimws(substring(line,bracket2+1)))
+}
+
+## Forces Date into Mongo Format.
+mongoDate <- function (dtime) {
+  jsonlite::fromJSON(jsonlite::toJSON(mongo::unboxer(dtime),POSIXt="mongo"),FALSE)
+}
+
+mongoAppender <-
+  setRefClass("mongoAppender",
+              fields=c(db="JSONDB",
+                       app="character",
+                       engine="character",
+                       tee="character"),
+              methods=c(
+                initialize = function(app="default",
+                                      engine="Unspecified",
+                                      db=mongo::MongoDB("Log",noMongo=TRUE),
+                                      tee=character()) {
+                  callSuper(db=db,app=app,engine=engine,tee=tee)
+                },
+                logit = function(line) {
+                  pline <- parseline(line)
+                  entry <- buildJQuery(app=app,engine=engine,level=pline$level,
+                                       timestamp=pline$time,
+                                       message=pline$message)
+                  mdbInsert(db,entry)
+                  if (length(tee) > 0L) {
+                    cat(line,file=tee,append=TRUE,sep="")
+                  }
+                },
+                logger = function() {
+                  function(line) {.self$logit(line)}
+                }))
+
 
 shinyAppender <-
   setRefClass("shinyAppender",
@@ -136,14 +177,22 @@ shinyAppender <-
                     callSuper(file=file, field=field, steps=steps,
                               messages=messages)
                   },
-                  update = function (line)
+                  update = function (line, output, renderer=function(tab) shiny::renderTable(tab,colname=FALSE))
                   {
                     if (length(file) == 1L && nchar(file)>0L) {
                       cat(line, file = file, append = TRUE, sep = "")
                     }
                     messages$Messages <<- c(messages$Messages,line)
                     if (length(field)==1L && nchar(field)>0L) {
-                      output[[field]] <- renderTable(messages,colnames=FALSE)
+                      # Call the render for a test case.
+                      if (is.null(output)) do.call(renderer,list(messages))
+                    } else {
+                      output[[field]] <- do.call(renderer,list(messages))
+                    }
+                  },
+                  logger = function() {
+                    function (line) {
+                      .self$update(line)
                     }
                   }
               ))
