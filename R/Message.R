@@ -177,7 +177,7 @@ cleanMessageJlist <- function (rec) {
   rec$timestamp <- ununboxer(rec$timestamp)
   if (is.null(rec$timestamp)) rec$timestamp <- Sys.time()
   if (is.list(rec$timestamp)) rec$timestamp <- rec$timestamp$`$date`
-  rec$timestamp <- as.POSIXlt(rec$timestamp)
+  rec$timestamp <- as.POSIXct(rec$timestamp, origin="1970-01-01")
   rec$pError <- as.character(ununboxer(rec$pError))
   rec
 }
