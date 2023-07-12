@@ -116,7 +116,7 @@ test_that("withFlogging trace", {
 
 test_that("mongoAppender",{
   fm <- mongo::fake_mongo()
-  tmpfile <- tempfile("testlog","/tmp",fileext=".log")
+  tmpfile <- tempfile("testlog",fileext=".log")
   print(tmpfile)
   apnd <- mongoAppender(db=fm,app="p4test",engine="Tester",tee=tmpfile)
   futile.logger::flog.appender(apnd$logger(),"TEST")
