@@ -229,11 +229,13 @@ buildListener <- function (specs,app,dburi,defaultDB="Proc4",
                            noMongo=!missing(dburi)&&length(dburi)>0L&&nchar(dburi)>0L) {
   name <- gsub("<app>",basename(app),as.character(specs$name),fixed=TRUE)
   type <- specs$type
+  flog.info("Building %s with type %s.\n",name,type)
+  flog.debug("Specs=",specs,capture=TRUE)
   class <- findClass(type)
-  if (length(class)==0)
+  if (length(class)==0L)
     stop("Cannot find class ",type, "for listener ",name)
   args <- list(name=name)
-
+  
   ## Substitute for <app> in sender field
   if (!is.null(specs$sender)) {
     args <- c(args,
@@ -241,40 +243,56 @@ buildListener <- function (specs,app,dburi,defaultDB="Proc4",
   }
   ## dburi and ssl_options are set by the caller, not the config.json
   dbname <- as.character(specs$dbname)[1]
+  flog.trace("dbname=",dbname,capture=TRUE)
   if (is.null(dbname)) dbname <- defaultDB
   colname <- as.character(specs$colname)[1]
+  flog.trace("colname=",colname,capture=TRUE)
   if (is.null(colname)) colname <- paste(name,"Messages",sep="")
   mongoverbose <- as.logical(specs$mongoverbose)[1]
+  flog.trace("mongoverbose",mongoverbose,capture=TRUE)
+  flog.trace("dburi",dburi,capture=TRUE)
+  flog.trace("length(dburi)",length(dburi),capture=TRUE)
+  flog.trace("nchar(dburi)",nchar(dburi),capture=TRUE)
+  
   if (is.null(mongoverbose) || is.na(mongoverbose) || length(mongoverbose)==0L)
-    mongoverbose <- length(dburi)>0L && nchar(dburi)
+    mongoverbose <- length(dburi)>0L && nchar(dburi) >0L
   ## Note name change here.
+
+  flog.trace("Connecting to database %s:%s:%s, verbose=%s, noMongo=%s",
+             dburi,dbname,colname,verbose,noMongo)
+  flog.trace("SSL options: ",ssl_options,capture=TRUE)
   messDB <- mongo::MongoDB(colname,dbname,dburi,
                            verbose=mongoverbose,
                            noMongo=noMongo,
                            options=ssl_options)
   args <- c(args, db=messDB)
+  flog.trace("Args:",args,capture=TRUE)
   ##
+  flog.trace("messages=",specs$messages,capture=TRUE)
   if (!is.null(specs$messages)) {
     args <- c(args, messSet = list(as.character(specs$messages)))
   }
+  flog.trace("targetField=",specs$targetField,capture=TRUE)
   if (!is.null(specs$targetField)) {
     args <- c(args, targetField = list(as.character(specs$targetField)))
   }
+  flog.trace("jsonEncoder=",specs$jsonEncoder,capture=TRUE)
   if (!is.null(specs$jsonEncoder)) {
     args <- c(args, jsonEncoder = list(as.character(specs$jsonEncoder)))
   }
   ## qfields
+  flog.trace("qfields=",specs$qfields,capture=TRUE)
   if (!is.null(specs$qfields)) {
     args <- c(args, qfields = list(as.character(specs$qfields)))
   }
   ## feildList
+  flog.trace("fields=",specs$fields,capture=TRUE)
   if (!is.null(specs$fields)) {
     fieldlist <- as.character(specs$fields)
     names(fieldlist) <- names(specs$fields)
     args <- c(args,fieldlist=list(fieldlist))
   }
 
-  flog.info("Building %s with name %s.\n",name,type)
   flog.info("Args:",args,capture=TRUE)
   do.call(type,args)
 
