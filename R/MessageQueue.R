@@ -29,7 +29,7 @@ setRefClass("MongoQueue",
                   getOneRec(messDB,
                             buildJQuery(app=app,processed=FALSE),
                             builder,
-                            sort = c(timestamp = 1))
+                            sort = buildJQuery(timestamp = 1))
 
                 },
                 buildIndex = function() {
@@ -126,10 +126,10 @@ setMethod("markAsError","ListQueue",
 
 cleanMessageQueue_ <- function() {}
 setGeneric("cleanMessageQueue",
-           function (queue,query,appid) StandardGeneric("cleanMessageQueue"))
+           function (queue,query) StandardGeneric("cleanMessageQueue"))
 
 setMethod("cleanMessageQueue", "MongoQueue",
-          function (queue,query,appid){
+          function (queue,query){
             flog.debug("Removing old messages.")
             status <- withFlogging({
               if (!is.null(names(query))) {
@@ -138,7 +138,7 @@ setMethod("cleanMessageQueue", "MongoQueue",
               }
               for (rq in query) {
                 flog.trace("RQ %s: %s",names(rq),rq)
-                rquery <- do.call(buildJQuery,c(list(app=appid),rq))
+                rquery <- do.call(buildJQuery,c(list(app=queue$app),rq))
                 flog.trace("Removing %s",rquery)
                 mdbRemove(queue$queue(),rquery)
               }
@@ -160,9 +160,9 @@ setGeneric("importMessages",
 
 setMethod("importMessages","MongoQueue",
            function(queue,filelist,data.dir) {
-             colname <- queue$queue()$collection
+             colname <- queue$queue()$colname
              dbname <- queue$queue()$db
-             dburi <- queue$queue()$url
+             dburi <- queue$queue()$uri
              for (fil in filelist) {
                impf <- file.path(data.dir,fil)
                if (!file.exists(impf)) {
@@ -200,7 +200,7 @@ setMethod("resetProcessedMessages", "MongoQueue",
                 repquery <- list(repquery)
               }
               for (rq in repquery) {
-                rquery <- do.call(buildJQuery, c(list(app=queue$appid),rq))
+                rquery <- do.call(buildJQuery, c(list(app=queue$app),rq))
                 flog.trace("Reprocessing %s",rquery)
                 mdbUpdate(queue$queue(),rquery,
                           '{"$set":{"processed":false}}',
