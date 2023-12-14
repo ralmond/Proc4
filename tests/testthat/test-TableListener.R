@@ -104,15 +104,15 @@ jsonlite::fromJSON('{
  "messages":["Coins Earned","Coins Spent", "LS Watched"],
  "fields":{
     "uid":"character",
-     "context":"character",
-	   "timestamp":"character",
-	   "currentMoney":"numeric",
-	   "appId":"numeric",
-	   "mess":"character",
-	   "money":"numeric",
-	   "onWhat":"character",
-	   "LS_duration":"difftime",
-	   "learningSupportType":"character"
+    "context":"character",
+    "timestamp":"character",
+    "currentMoney":"numeric",
+    "appId":"numeric",
+    "mess":"character",
+    "money":"numeric",
+    "onWhat":"character",
+    "LS_duration":"difftime",
+    "learningSupportType":"character"
  }
 }',FALSE)
 
