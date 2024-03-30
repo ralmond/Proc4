@@ -8,7 +8,7 @@ setClass("P4Message",
                  mess="character",      #Action Identifier
                  timestamp="POSIXt",      #When action took place.
                  processed="logical",     #Has this message been processed by the reciever.
-                 pError="ANY",     #Error occured while processing.
+                 pError="ANY",     #Error occurred while processing.
                  data="list"              #More details.
                  ),
          contains="MongoRec")
