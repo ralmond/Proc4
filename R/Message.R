@@ -76,7 +76,7 @@ P4Message <- function(uid="",context="",sender="",mess="",timestamp=Sys.time(),
                         details=list(),app="default", processed=FALSE) {
   new("P4Message",app=app,uid=uid,context=context,sender=sender,
       mess=mess, timestamp=timestamp,data=details,processed=processed,
-      pError=character(),
+      pError="",
       "_id"=c(oid=NA_character_))
 }
 

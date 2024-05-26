@@ -14,7 +14,7 @@ test_that("P4Message constructor", {
   expect_equal(details(mess1)$correct,TRUE)
   expect_equal(details(mess1)$selection,"D")
   expect_false(processed(mess1))
-  expect_equal(processingError(mess1),character())
+  expect_equal(processingError(mess1),"")
 })
 
 test_that("all.equal.P4Message",{
