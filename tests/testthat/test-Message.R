@@ -14,7 +14,7 @@ test_that("P4Message constructor", {
   expect_equal(details(mess1)$correct,TRUE)
   expect_equal(details(mess1)$selection,"D")
   expect_false(processed(mess1))
-  expect_null(processingError(mess1))
+  expect_equal(processingError(mess1),character())
 })
 
 test_that("all.equal.P4Message",{
@@ -71,7 +71,7 @@ test_that("P4Message fields", {
   expect_true(processed(mess1))
   e <- simpleCondition("Test message")
   processingError(mess1) <- e
-  expect_equal(processingError(mess1),e)
+  expect_equal(processingError(mess1),toString(e))
 
 })
 
@@ -170,13 +170,15 @@ test_that("markAsError DB", {
   mess1a <- saveRec(mon,mess1)
   id <- m_id(mess1a)
   expect_false(is.na(id))
-  expect_equal(mdbCount(mon,'{"pError":{"$exists":true}}'),0L)
-
+  ## Test for at least one entry in error list.
+  ## https://stackoverflow.com/questions/7811163/query-for-documents-where-array-size-is-greater-than-1
+  ##expect_equal(mdbCount(mon,'{"pError.0":{"$exists":true}}'),0L)
+  expect_equal(mdbCount(mon,'{"pError":{"$ne":""}}'),0L)
   err <- simpleError("Test Condition, don't \"worry\"")
 
   mess1b <- markAsError(mon,mess1a,err)
   expect_false(is.null(processingError(mess1b)))
-  expect_equal(mdbCount(mon,'{"pError":{"$exists":true}}'),1L)
+  expect_equal(mdbCount(mon,'{"pError":{"$ne":""}}'),1L)
   mess1c <- getOneRec(mon,buildJQuery("_id"=id))
   expect_false(is.null(mess1c))
   expect_equal(processingError(mess1c), "Error: Test Condition, don't \"worry\"\n")

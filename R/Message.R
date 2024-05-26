@@ -8,7 +8,7 @@ setClass("P4Message",
                  mess="character",      #Action Identifier
                  timestamp="POSIXt",      #When action took place.
                  processed="logical",     #Has this message been processed by the reciever.
-                 pError="ANY",     #Error occurred while processing.
+                 pError="character",     #Error occurred while processing.
                  data="list"              #More details.
                  ),
          contains="MongoRec")
@@ -69,14 +69,14 @@ setMethod("processed<-","P4Message",
 setMethod("processingError","P4Message", function(x) x@pError)
 setMethod("processingError<-","P4Message",
           function(x,value) {
-            x@pError <- value
+            x@pError <- toString(value)
             x})
 
 P4Message <- function(uid="",context="",sender="",mess="",timestamp=Sys.time(),
                         details=list(),app="default", processed=FALSE) {
   new("P4Message",app=app,uid=uid,context=context,sender=sender,
       mess=mess, timestamp=timestamp,data=details,processed=processed,
-      pError=NULL,
+      pError=character(),
       "_id"=c(oid=NA_character_))
 }
 
@@ -107,13 +107,14 @@ setMethod("as.jlist",c("P4Message","list"), function(obj,ml,serialize=TRUE) {
   ml$timestamp <- unboxer(ml$timestamp) # Auto_unbox bug.
   ## Saves name data
   ml$data <- unparseData(ml$data,serialize)
+  ## Changed to character vector, so no longer an issue.
   ## explicit null value creates problem, so drop pError if null.
   ## note attributes maps NULL to a symbol '\001NULL\001'
-  if (is.null(ml$pError) || ml$pError == '\001NULL\001') {
-    ml["pError"] <- NULL
-  } else {
+  # if (is.null(ml$pError) || ml$pError == '\001NULL\001') {
+  #   ml["pError"] <- NULL
+  # } else {
     ml$pError <- unboxer(toString(ml$pError))
-  }
+  #}
   ml
   })
 
@@ -176,8 +177,7 @@ cleanMessageJlist <- function (rec) {
   if (is.null(rec$processed) || is.na(rec$processed) || length(rec$processed)==0L) rec$processed <- FALSE
   rec$timestamp <- ununboxer(rec$timestamp)
   if (is.null(rec$timestamp)) rec$timestamp <- Sys.time()
-  if (is.list(rec$timestamp)) rec$timestamp <- rec$timestamp$`$date`
-  rec$timestamp <- as.POSIXct(rec$timestamp, origin="1970-01-01")
+  rec$timestamp <- parsePOSIX(rec$timestamp)
   rec$pError <- as.character(ununboxer(rec$pError))
   rec
 }
@@ -243,3 +243,4 @@ all.equal.P4Message <- function (target, current, ...,checkTimestamp=FALSE,check
   if (length(msg)==0L) TRUE
   else msg
 }
+

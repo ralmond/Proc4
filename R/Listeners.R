@@ -235,7 +235,7 @@ buildListener <- function (specs,app,dburi,defaultDB="Proc4",
   if (length(class)==0L)
     stop("Cannot find class ",type, "for listener ",name)
   args <- list(name=name)
-  
+
   ## Substitute for <app> in sender field
   if (!is.null(specs$sender)) {
     args <- c(args,
@@ -253,13 +253,13 @@ buildListener <- function (specs,app,dburi,defaultDB="Proc4",
   flog.trace("dburi",dburi,capture=TRUE)
   flog.trace("length(dburi)",length(dburi),capture=TRUE)
   flog.trace("nchar(dburi)",nchar(dburi),capture=TRUE)
-  
+
   if (is.null(mongoverbose) || is.na(mongoverbose) || length(mongoverbose)==0L)
     mongoverbose <- length(dburi)>0L && nchar(dburi) >0L
   ## Note name change here.
 
   flog.trace("Connecting to database %s:%s:%s, verbose=%s, noMongo=%s",
-             dburi,dbname,colname,verbose,noMongo)
+             dburi,dbname,colname,mongoverbose,noMongo)
   flog.trace("SSL options: ",ssl_options,capture=TRUE)
   messDB <- mongo::MongoDB(colname,dbname,dburi,
                            verbose=mongoverbose,

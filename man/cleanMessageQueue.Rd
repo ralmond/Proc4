@@ -11,8 +11,8 @@
 
 }
 \usage{
-cleanMessageQueue(queue, query, appid)
-\S4method{cleanMessageQueue}{MongoQueue}(queue, query, appid)
+cleanMessageQueue(queue, query)
+\S4method{cleanMessageQueue}{MongoQueue}(queue, query)
 }
 \arguments{
   \item{queue}{An object of class \code{\linkS4class{MessageQueue}} to
@@ -20,8 +20,6 @@ cleanMessageQueue(queue, query, appid)
   \item{query}{A list which forms a Mongo query for
     selecting the messages to be removed.  See
     \code{\link[mongo]{buildJQuery}}.}
-  \item{appid}{A character scalar giving the name of the application to
-    be cleaned.}
 }
 \value{
   Return value is undefined.  Called for its side effects (removing
@@ -42,9 +40,9 @@ cleanMessageQueue(queue, query, appid)
   mq <- new("MongoQueue","QueueTest",mongo::MongoDB("Messages",noMongo=TRUE),
                    builder=buildMessage)
   ## Remove Fred's messages from the database.
-  cleanMessageQueue(mq,list(c(uid="Fred")),"QueueTest")
+  cleanMessageQueue(mq,list(c(uid="Fred")))
   ## Purge NO-OP messages from the imported data.
-  cleanMessageQueue(mq,list(c(mess="NO-OP")),"QueueTest")
+  cleanMessageQueue(mq,list(c(mess="NO-OP")))
 
 }
 \keyword{ database }
