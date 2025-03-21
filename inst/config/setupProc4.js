@@ -13,13 +13,14 @@
 // ];
 // Then load that file.  Change the next line
 // To reflect the name of that path.
-load("/usr/local/share/Proc4/Proc4.js")
+//load("/usr/local/share/Proc4/Proc4.js")
 
-c4User = pwds.filter(function(u) {return u.user == "C4";})[0];
+//c4User = pwds.filter(function(u) {return u.user == "C4";})[0];
 
 con = new Mongo();
 db=con.getDB("Proc4");                 
-db.auth(c4User.user,c4User.pwd);
+//db.auth(c4User.user,c4User.pwd);
+db.AuthorizedApps.drop();
 db.createCollection("AuthorizedApps", {
     validator: {
         $jsonSchema: {
@@ -75,6 +76,7 @@ db.createCollection("AuthorizedApps", {
 // apps.forEach(function (row) {
 //     db.AuthorizedApps.replaceOne({"app":row.app},row,{"upsert":true});
 // });
+db.Players.drop();
 db.createCollection("Players", {
     validator: {
         $jsonSchema: {
@@ -111,6 +113,7 @@ db.createCollection("Players", {
     validationAction: "warn"
 });
 db.Players.createIndex( { app:1, uid: 1});
+db.Statistics.drop();
 db.createCollection("Statistics", {
     validator: {
         $jsonSchema: {
@@ -151,6 +154,7 @@ db.createCollection("Statistics", {
     validationAction: "warn"
 });
 db.Statistics.createIndex( { app:1, uid: 1, timestamp: -1});
+db.Activities.drop();
 db.createCollection("Activities", {
     validator: {
         $jsonSchema: {
@@ -195,6 +199,7 @@ db.Activity.createIndex( { app:1, uid: 1, timestamp: -1});
 
 
 
+db.OutputFiles.drop();
 db.createCollection("OutputFiles", {
     validator: {
         $jsonSchema: {

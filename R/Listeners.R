@@ -226,7 +226,7 @@ generateListenerExports <- function(ls, exportlist, appid, outdir,
 ## messSet
 buildListener <- function (specs,app,dburi,defaultDB="Proc4",
                            ssl_options=mongolite::ssl_options(),
-                           noMongo=!missing(dburi)&&length(dburi)>0L&&nchar(dburi)>0L) {
+                           noMongo=missing(dburi)||length(dburi)==0L||nchar(dburi)==0L) {
   name <- gsub("<app>",basename(app),as.character(specs$name),fixed=TRUE)
   type <- specs$type
   flog.info("Building %s with type %s.\n",name,type)
