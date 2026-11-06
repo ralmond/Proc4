@@ -100,8 +100,8 @@ processingError(x)
 }
 \seealso{
 
-  \code{\linkS4class{P4Message}}, \code{\link{getOneRec}},
-  \code{\link{buildJQuery}}, \code{\link{timestamp}}, \code{\linkS4class{MessageQueue}},
+  \code{\linkS4class{P4Message}}, \code{\link[mongo]{getOneRec}},
+  \code{\link[mongo]{buildJQuery}}, \code{\link{timestamp}}, \code{\linkS4class{MessageQueue}},
   \code{\link{resetProcessedMessages}}
 
 }

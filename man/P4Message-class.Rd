@@ -30,15 +30,15 @@
   This class represents a semi-structured data object with certain
   header fields which can be indexed plus the free-form \code{details()}
   field which contains the body of the message.  It can be serielized in
-  JSON format (using \code{\link{as.json}}) or saved
+  JSON format (using \code{\link[mongo]{as.json}}) or saved
   in the Mongo database (using the \code{\link[mongolite]{mongo}lite}
-  package).  
+  package).
 
 }
 \section{Objects from the Class}{
 
 Objects can be created by calls to the \code{\link{P4Message}()}
-function. 
+function.
 
 }
 \section{Message Queues}{
@@ -47,12 +47,12 @@ function.
   collection becomes a queue.  Simply search for the message with the
   earliest timestamp with \code{\link{processed}(mess)==FALSE} and
   excute that.  Then sets processed equal to true using
-  \code{\link{markAsProcessed}}.  
+  \code{\link{markAsProcessed}}.
 
   If an error occurs during processing, the error can be associated with
   the message by setting the pError field using
-  \code{\link{markAsError}}.  
-  
+  \code{\link{markAsError}}.
+
 }
 \section{Slots}{
   \describe{
@@ -116,7 +116,7 @@ function.
   the design and delivery of Assessment Systems:  A Four-Process
   Architecture.  \emph{Journal of Technology, Learning, and Assessment},
   \bold{1},
-  \url{http://ejournals.bc.edu/ojs/index.php/jtla/article/view/1671}. 
+  \url{http://ejournals.bc.edu/ojs/index.php/jtla/article/view/1671}.
 }
 \author{ Russell G. Almond}
 

@@ -81,7 +81,7 @@ details(x) <- value
   This class represents a semi-structured data object with certain
   header fields which can be indexed plus the free-form \code{details()}
   field which contains the body of the message.  It can be serielized in
-  JSON format (using \code{\link{as.json}}
+  JSON format (using \code{\link[mongo]{as.json}}
   in the Mongo database (using the
   \code{\link[mongolite]{mongo}lite} package).
 
@@ -123,8 +123,8 @@ details(x) <- value
 \author{Russell G. Almond}
 \seealso{
   \code{\linkS4class{P4Message}} --- class
-  \code{\link{buildMessage}}, \code{\link{saveRec}},
-  \code{\link{getOneRec}}
+  \code{\link{buildMessage}}, \code{\link[mongo]{saveRec}},
+  \code{\link[mongo]{getOneRec}}
 
 }
 \examples{

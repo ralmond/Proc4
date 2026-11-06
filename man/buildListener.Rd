@@ -12,7 +12,7 @@
 \usage{
 buildListener(specs, app, dburi, defaultDB="Proc4",
               ssl_options=mongolite::ssl_options(),
-              noMongo = !missing(dburi) && length(dburi) > 0L && nchar(dburi) > 0L)
+              noMongo = missing(dburi) || length(dburi) == 0L || nchar(dburi) == 0L)
 }
 \arguments{
   \item{specs}{A named list (from the JSON) containing the instructions

@@ -83,7 +83,7 @@
   \code{\linkS4class{TableListener}},
   \code{\link[mongolite]{mongo}}
 
-  The function \code{\link{unparseData}} is the default encoder.
+  The function \code{\link[mongo]{unparseData}} is the default encoder.
 }
 \examples{
 
@@ -147,11 +147,11 @@ receiveMessage(upwind,mess2)
     \item{\code{jsonEncoder}:}{A \code{function} or a non-empty
       \code{character} scalar naming a function which will be used to encode
       \code{details(mess)} as a JSON object.  The default is
-      \code{\link{unparseData}}.} 
+      \code{\link[mongo]{unparseData}}.}
     \item{\code{decoderEncoder}:}{A \code{function} or \code{character}
       scalar naming a function which will be used to decode
       the target field when building a data table.
-      The default is \code{\link{parseData}}.}
+      The default is \code{\link[mongo]{parseData}}.}
   }
 }
 \section{Class-Based Methods}{

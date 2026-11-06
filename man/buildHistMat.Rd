@@ -27,7 +27,7 @@ buildAppHist(col, app)
 \details{
 
   The statistics must be logged in a database collection for this to
-  work.  Note that the \code{\link{configStats}} function will determine
+  work.  Note that the \code{\link[EABN]{configStats}} function will determine
   which values are logged.
 
 }

@@ -44,7 +44,7 @@ All reference classes extend and inherit methods from
   method should receive as its argument a \code{\linkS4class{P4Message}} object.
   (The protocol is fairly robust to the type of message and the
   type is not enforced. In fact, any object which has a
-  \code{\link{as.jlist}} method should work.)
+  \code{\link[mongo]{as.jlist}} method should work.)
 
   When the notifier is called it performs the following functions:
   \enumerate{
@@ -119,7 +119,7 @@ showClass("ListenerSet")
     \item{\code{listeners}:}{A named \code{list} of
       \code{\link{Listener}} objects, that is objects for which
       \code{\link{isListener}} is true.}
-    \item{\code{db}:}{Object of class \code{\linkS4class{MongoDB}} which
+    \item{\code{db}:}{Object of class \code{\linkS4class[mongo]{MongoDB}} which
       is a handle
       to the collection where messages are logged, or \code{NULL} if the
       log database has not been initialized.  As the database may have
